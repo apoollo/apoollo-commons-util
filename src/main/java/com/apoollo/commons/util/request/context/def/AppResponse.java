@@ -1,0 +1,28 @@
+/**
+ * 
+ */
+package com.apoollo.commons.util.request.context.def;
+
+import com.apoollo.commons.util.request.context.Response;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * @author liuyulong
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class AppResponse<T> extends DefaultRequestId implements Response<T> {
+
+	private Boolean success;
+	private String code;
+	private String message;
+	private Long elapsedTime;
+	private T data;
+
+}
