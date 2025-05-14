@@ -11,6 +11,8 @@ import java.util.List;
  * @since 2023年8月30日
  */
 public interface User extends UserKeyPair {
+	
+	public String getSecretKeySaltValue();
 
 	public String getId();
 

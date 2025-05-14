@@ -13,5 +13,4 @@ public interface UserKeyPair {
 	
 	public String getSecretKey();
 	
-	public String getSecretKeySaltValue();
 }
