@@ -19,6 +19,8 @@ public interface RequestResource {
 
 	public String getAccessStrategy();
 
+	public Class<? extends RequestResourceAccessStrategy> getCustomizeAccessStrategyClass();
+
 	public Long getLimtUserQps();
 
 	public Long getLimtPlatformQps();

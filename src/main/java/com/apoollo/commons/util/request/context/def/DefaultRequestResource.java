@@ -4,6 +4,7 @@
 package com.apoollo.commons.util.request.context.def;
 
 import com.apoollo.commons.util.request.context.RequestResource;
+import com.apoollo.commons.util.request.context.RequestResourceAccessStrategy;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class DefaultRequestResource implements RequestResource {
 	private String name;
 	private String requestMappingPath;
 	private String accessStrategy;
+	private Class<? extends RequestResourceAccessStrategy> customizeAccessStrategyClass;
 	private Long limtUserQps;
 	private Long limtPlatformQps;
 	private String[] roles;
@@ -30,13 +32,15 @@ public class DefaultRequestResource implements RequestResource {
 	}
 
 	public DefaultRequestResource(Boolean enable, String resourcePin, String name, String requestMappingPath,
-			String accessStrategy, Long limtUserQps, Long limtPlatformQps, String[] roles, Boolean enableSync) {
+			String accessStrategy, Class<? extends RequestResourceAccessStrategy> customizeAccessStrategyClass,
+			Long limtUserQps, Long limtPlatformQps, String[] roles, Boolean enableSync) {
 		super();
 		this.enable = enable;
 		this.resourcePin = resourcePin;
 		this.name = name;
 		this.requestMappingPath = requestMappingPath;
 		this.accessStrategy = accessStrategy;
+		this.customizeAccessStrategyClass = customizeAccessStrategyClass;
 		this.limtUserQps = limtUserQps;
 		this.limtPlatformQps = limtPlatformQps;
 		this.roles = roles;

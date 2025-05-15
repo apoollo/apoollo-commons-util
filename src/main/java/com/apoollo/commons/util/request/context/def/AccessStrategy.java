@@ -14,7 +14,7 @@ public enum AccessStrategy {
 
 	PRIVATE_REQUEST("private"), //
 	PUBLIC_REQUEST("public"),
-	CUSTOM("custom");
+	CUSTOMIZE("customize");
 
 	private String accessStrategyPin;
 

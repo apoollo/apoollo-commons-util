@@ -106,7 +106,7 @@ public interface HttpCodeNameHandler {
 
 	public <T> Response<T> newInstance();
 
-	public default void restResponse(Object requestBody, Response<?> resopnse) {
+	public default void resetResponse(Object requestBody, Response<?> resopnse) {
 
 	}
 
