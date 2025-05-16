@@ -28,5 +28,9 @@ public interface RequestResource {
 	public String[] getRoles();
 
 	public Boolean getEnableSync();
+	
+	public Boolean getEnableBodyDigestValidate();
+	
+	public String getBodyDigestSecret();
 
 }

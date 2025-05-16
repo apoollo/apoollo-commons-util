@@ -27,13 +27,16 @@ public class DefaultRequestResource implements RequestResource {
 	private Long limtPlatformQps;
 	private String[] roles;
 	private Boolean enableSync;
+	private Boolean enableBodyDigestValidate;
+	private String bodyDigestSecret;
 
 	public DefaultRequestResource() {
 	}
 
 	public DefaultRequestResource(Boolean enable, String resourcePin, String name, String requestMappingPath,
 			String accessStrategy, Class<? extends RequestResourceAccessStrategy> customizeAccessStrategyClass,
-			Long limtUserQps, Long limtPlatformQps, String[] roles, Boolean enableSync) {
+			Long limtUserQps, Long limtPlatformQps, String[] roles, Boolean enableSync,
+			Boolean enableBodyDigestValidate, String bodyDigestSecret) {
 		super();
 		this.enable = enable;
 		this.resourcePin = resourcePin;
@@ -45,6 +48,8 @@ public class DefaultRequestResource implements RequestResource {
 		this.limtPlatformQps = limtPlatformQps;
 		this.roles = roles;
 		this.enableSync = enableSync;
+		this.enableBodyDigestValidate = enableBodyDigestValidate;
+		this.bodyDigestSecret = bodyDigestSecret;
 	}
 
 }
