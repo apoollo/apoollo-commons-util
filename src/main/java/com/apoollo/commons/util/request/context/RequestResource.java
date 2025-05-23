@@ -3,6 +3,8 @@
  */
 package com.apoollo.commons.util.request.context;
 
+import com.apoollo.commons.util.request.context.def.AccessStrategy;
+
 /**
  * @author liuyulong
  * @since 2023年9月25日
@@ -17,9 +19,7 @@ public interface RequestResource {
 
 	public String getRequestMappingPath();
 
-	public String getAccessStrategy();
-
-	public Class<? extends RequestResourceAccessStrategy> getCustomizeAccessStrategyClass();
+	public AccessStrategy getAccessStrategy();
 
 	public Long getLimtUserQps();
 
@@ -29,8 +29,16 @@ public interface RequestResource {
 
 	public Boolean getEnableSync();
 	
-	public Boolean getEnableBodyDigestValidate();
+	public Boolean getEnableBodySignatureValidate();
 	
-	public String getBodyDigestSecret();
-
+	public String getBodySignatureDecyptorSecret();
+	
+	public SignatureDecryptor getBodySignatureDecyptor();
+	
+	public Boolean getEnableContentEscape();
+	
+	public EscapeMethod getContentEscapeMethod();
+	
+	public HttpCodeNameHandler getHttpCodeNameHandler();
+	
 }

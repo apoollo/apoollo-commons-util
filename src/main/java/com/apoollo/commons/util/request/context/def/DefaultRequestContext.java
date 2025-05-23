@@ -57,8 +57,8 @@ public class DefaultRequestContext implements RequestContext {
 
 	private Boolean responseIsChargeForUseTimesLimit;
 
-	private Object requestBody;
-
+	private byte[] requestBody;
+	
 	/**
 	 * @return the startTime
 	 */
@@ -155,7 +155,7 @@ public class DefaultRequestContext implements RequestContext {
 	}
 
 	@Override
-	public void beforeBodyWrite(Response<?> response) {
+	public void setResponse(Response<?> response) {
 		this.response = response;
 	}
 
@@ -268,17 +268,11 @@ public class DefaultRequestContext implements RequestContext {
 		this.responseIsChargeForUseTimesLimit = responseIsChargeForUseTimesLimit;
 	}
 
-	/**
-	 * @return the requestBody
-	 */
-	public Object getRequestBody() {
+	public byte[] getRequestBody() {
 		return requestBody;
 	}
 
-	/**
-	 * @param requestBody the requestBody to set
-	 */
-	public void setRequestBody(Object requestBody) {
+	public void setRequestBody(byte[] requestBody) {
 		this.requestBody = requestBody;
 	}
 

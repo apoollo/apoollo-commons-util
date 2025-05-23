@@ -3,9 +3,11 @@
  */
 package com.apoollo.commons.util;
 
-import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.function.Function;
 
-import org.bouncycastle.crypto.digests.MD5Digest;
 import org.bouncycastle.util.encoders.Hex;
 
 /**
@@ -14,33 +16,30 @@ import org.bouncycastle.util.encoders.Hex;
  */
 public class Md5Utils {
 
-	public static String digest(byte[] data) {
-		String hash = null;
-		if (null != data) {
-			MD5Digest digest = new MD5Digest();
-			digest.update(data, 0, data.length);
-			byte[] hashValue = new byte[digest.getDigestSize()];
-			digest.doFinal(hashValue, 0);
-			hash = Hex.toHexString(hashValue);
+	public static <T> T digest(byte[] data, Function<byte[], T> map) {
+		MessageDigest messageDigest;
+		try {
+			messageDigest = MessageDigest.getInstance("Md5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
 		}
-		return hash;
+		byte[] digest = messageDigest.digest(data);
+		return map.apply(digest);
 	}
 
-	public static String digest(String message) {
-		String hash = null;
-		if (null != message) {
-			byte[] data = message.getBytes(StandardCharsets.UTF_8);
-			hash = digest(data);
-		}
-		return hash;
+	public static byte[] digest(byte[] data) {
+		return digest(data, Function.identity());
 	}
 
-	public static boolean compare(String digest, String message) {
-		return digest.equals(digest(message));
+	public static String digestToHexString(byte[] data) {
+		return digest(data, Hex::toHexString);
 	}
 
-	public static boolean compare(String digest, byte[] data) {
-		return digest.equals(digest(data));
+	public static String digestToBase64String(byte[] data) {
+		return digest(data, Base64Utils::encodeToString);
 	}
 
+	public static boolean compare(byte[] digest, byte[] data) {
+		return Arrays.equals(digest, digest(data));
+	}
 }

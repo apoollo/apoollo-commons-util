@@ -3,23 +3,15 @@
  */
 package com.apoollo.commons.util.request.context;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 
 import com.apoollo.commons.util.MdcUtils;
 import com.apoollo.commons.util.exception.AppForbbidenException;
 import com.apoollo.commons.util.exception.AppHttpCodeMessageException;
-import com.apoollo.commons.util.request.context.def.AccessStrategy;
-import com.apoollo.commons.util.request.context.def.DefaultHttpCodeNameHandler;
 import com.apoollo.commons.util.request.context.def.DefaultRequestContext;
-import com.apoollo.commons.util.request.context.def.PrivateRequestResourceAccessStrategy;
-import com.apoollo.commons.util.request.context.def.PublicRequestResourceAccessStrategy;
 import com.apoollo.commons.util.request.context.model.Authorized;
 
 /**
@@ -29,62 +21,6 @@ import com.apoollo.commons.util.request.context.model.Authorized;
 public interface RequestContext {
 
 	public static final ThreadLocal<RequestContext> CONTEXT = new ThreadLocal<>();
-
-	public static final HttpCodeNameHandler DEFAULT_HTTP_CODE_NAME_HANDLER = new DefaultHttpCodeNameHandler();
-
-	public static final Map<String, RequestResourceAccessStrategy> REQUEST_RESOUCE_ACCESS_STRATEGY = new ConcurrentHashMap<String, RequestResourceAccessStrategy>() {
-		private static final long serialVersionUID = -5404055407185446469L;
-
-		{
-			put(AccessStrategy.PRIVATE_REQUEST.getAccessStrategyPin(), new PrivateRequestResourceAccessStrategy());
-			put(AccessStrategy.PUBLIC_REQUEST.getAccessStrategyPin(), new PublicRequestResourceAccessStrategy());
-		}
-	};
-
-	public default RequestResourceAccessStrategy getRequestResourceAccessStrategy() {
-		RequestResourceAccessStrategy requestResourceAccessStrategy = null;
-		RequestResource requestResource = getRequestResource();
-		if (null != requestResource) {
-			String accessStrategyKey = requestResource.getAccessStrategy();
-			requestResourceAccessStrategy = REQUEST_RESOUCE_ACCESS_STRATEGY.get(accessStrategyKey);
-			if (null == requestResourceAccessStrategy
-					&& AccessStrategy.CUSTOMIZE.getAccessStrategyPin().equals(accessStrategyKey)) {
-				Class<? extends RequestResourceAccessStrategy> clazz = requestResource
-						.getCustomizeAccessStrategyClass();
-				if (null == clazz || PrivateRequestResourceAccessStrategy.class == clazz
-						|| PublicRequestResourceAccessStrategy.class == clazz) {
-					throw new RuntimeException("customAccessStrategyClass must set customize:" + accessStrategyKey);
-				}
-				try {
-					synchronized (REQUEST_RESOUCE_ACCESS_STRATEGY) {
-						requestResourceAccessStrategy = REQUEST_RESOUCE_ACCESS_STRATEGY.get(accessStrategyKey);
-						if (null == requestResourceAccessStrategy) {
-							requestResourceAccessStrategy = clazz.getDeclaredConstructor().newInstance();
-							REQUEST_RESOUCE_ACCESS_STRATEGY.put(accessStrategyKey, requestResourceAccessStrategy);
-						}
-					}
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-		return requestResourceAccessStrategy;
-	}
-
-	public default RequestResourceAccessStrategy getDefaultResourceAccessStrategy() {
-		RequestResourceAccessStrategy requestResourceAccessStrategy = getRequestResourceAccessStrategy();
-		if (null == requestResourceAccessStrategy) {
-			requestResourceAccessStrategy = new PrivateRequestResourceAccessStrategy();
-		}
-		return requestResourceAccessStrategy;
-	}
-
-	public default RequestResourceAccessStrategy getResourceAccessStrategyRequired() {
-		RequestResourceAccessStrategy requestResourceAccessStrategy = getRequestResourceAccessStrategy();
-		Validate.notNull(requestResourceAccessStrategy, "resourceAccessStrategy must not be null");
-		return requestResourceAccessStrategy;
-	}
 
 	public static RequestContext reset(String requestId, String contextPath, String requestUri) {
 		return reset(requestId, contextPath, requestUri, DefaultRequestContext::new);
@@ -149,7 +85,7 @@ public interface RequestContext {
 		String accessKey = RequestContext.getRequired().getUser().getAccessKey();
 		if (!StringUtils.equals(loginAccessKey, accessKey)) {
 			throw new AppHttpCodeMessageException(
-					requestContext.getResourceAccessStrategyRequired().getHttpCodeNameHandler().getForbbiden(),
+					requestContext.getRequestResource().getHttpCodeNameHandler().getForbbiden(),
 					new String[] { message.get() });
 		}
 	}
@@ -229,7 +165,7 @@ public interface RequestContext {
 
 	public Boolean getResponseIsChargeForUseTimesLimit();
 
-	public Object getRequestBody();
+	public byte[] getRequestBody();
 
 	public void setRequestIp(String requestIp);
 
@@ -245,7 +181,7 @@ public interface RequestContext {
 
 	public void set(String requestId, Long requestTime, String contextPath, String requestUri);
 
-	public void beforeBodyWrite(Response<?> response);
+	public void setResponse(Response<?> response);
 
 	public void setThreadPoolExecutor(ThreadPoolExecutor threadPoolExecutor);
 
@@ -261,6 +197,6 @@ public interface RequestContext {
 
 	public void setResponseIsChargeForUseTimesLimit(Boolean responseIsChargeForUseTimesLimit);
 
-	public void setRequestBody(Object requestBody);
+	public void setRequestBody(byte[] requestBody);
 
 }

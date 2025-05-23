@@ -12,17 +12,12 @@ import lombok.Getter;
 @Getter
 public enum AccessStrategy {
 
-	PRIVATE_REQUEST("private"), //
-	PUBLIC_REQUEST("public"),
-	CUSTOMIZE("customize");
-
-	private String accessStrategyPin;
-
-	/**
-	 * @param accessStrategyPin
-	 */
-	private AccessStrategy(String accessStrategyPin) {
-		this.accessStrategyPin = accessStrategyPin;
-	}
+	PUBLIC, //
+	PRIVATE_HEADER_JWT_TOKEN, //
+	PRIVATE_HEADER_KEY_PAIR, //
+	PRIVATE_PARAMETER_KEY_PAIR, //
+	PRIVATE_BODY_JWT_TOKEN, //
+	PRIVATE_BODY_KEY_PAIR//
+	;
 
 }

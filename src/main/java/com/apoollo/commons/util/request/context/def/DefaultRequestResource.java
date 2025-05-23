@@ -3,8 +3,10 @@
  */
 package com.apoollo.commons.util.request.context.def;
 
+import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.HttpCodeNameHandler;
 import com.apoollo.commons.util.request.context.RequestResource;
-import com.apoollo.commons.util.request.context.RequestResourceAccessStrategy;
+import com.apoollo.commons.util.request.context.SignatureDecryptor;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,35 +23,42 @@ public class DefaultRequestResource implements RequestResource {
 	private String resourcePin;
 	private String name;
 	private String requestMappingPath;
-	private String accessStrategy;
-	private Class<? extends RequestResourceAccessStrategy> customizeAccessStrategyClass;
+	private AccessStrategy accessStrategy;
 	private Long limtUserQps;
 	private Long limtPlatformQps;
 	private String[] roles;
 	private Boolean enableSync;
-	private Boolean enableBodyDigestValidate;
-	private String bodyDigestSecret;
+	private Boolean enableBodySignatureValidate;
+	private String bodySignatureDecyptorSecret;
+	private SignatureDecryptor bodySignatureDecyptor;
+	private Boolean enableContentEscape;
+	private EscapeMethod contentEscapeMethod;
+	private HttpCodeNameHandler httpCodeNameHandler;
 
 	public DefaultRequestResource() {
 	}
 
 	public DefaultRequestResource(Boolean enable, String resourcePin, String name, String requestMappingPath,
-			String accessStrategy, Class<? extends RequestResourceAccessStrategy> customizeAccessStrategyClass,
-			Long limtUserQps, Long limtPlatformQps, String[] roles, Boolean enableSync,
-			Boolean enableBodyDigestValidate, String bodyDigestSecret) {
+			AccessStrategy accessStrategy, Long limtUserQps, Long limtPlatformQps, String[] roles, Boolean enableSync,
+			Boolean enableBodySignatureValidate, String bodySignatureDecyptorSecret,
+			SignatureDecryptor bodySignatureDecyptor, Boolean enableContentEscape, EscapeMethod contentEscapeMethod,
+			HttpCodeNameHandler httpCodeNameHandler) {
 		super();
 		this.enable = enable;
 		this.resourcePin = resourcePin;
 		this.name = name;
 		this.requestMappingPath = requestMappingPath;
 		this.accessStrategy = accessStrategy;
-		this.customizeAccessStrategyClass = customizeAccessStrategyClass;
 		this.limtUserQps = limtUserQps;
 		this.limtPlatformQps = limtPlatformQps;
 		this.roles = roles;
 		this.enableSync = enableSync;
-		this.enableBodyDigestValidate = enableBodyDigestValidate;
-		this.bodyDigestSecret = bodyDigestSecret;
+		this.enableBodySignatureValidate = enableBodySignatureValidate;
+		this.bodySignatureDecyptorSecret = bodySignatureDecyptorSecret;
+		this.bodySignatureDecyptor = bodySignatureDecyptor;
+		this.enableContentEscape = enableContentEscape;
+		this.contentEscapeMethod = contentEscapeMethod;
+		this.httpCodeNameHandler = httpCodeNameHandler;
 	}
 
 }
