@@ -18,30 +18,30 @@ import com.apoollo.commons.util.crypto.symmetric.SymmetricEncryption;
  */
 public class Main {
 
-    static {
-        Security.addProvider(new BouncyCastleProvider());
-    }
+	static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
-        // 16 * 8 = 128 位
-        byte[] keyBytes = ("abc45678abE45678").getBytes(StandardCharsets.UTF_8);
+		// 16 * 8 = 128 位
+		byte[] keyBytes = ("abc45678abE45678").getBytes(StandardCharsets.UTF_8);
 
-        encryptAndDecrypt(new SM4(), keyBytes, "中文");
-        // encryptAndDecrypt(new DESede(), keyBytes, "1213");
-        // encryptAndDecrypt(new AES(), keyBytes, "1213");
-        // encryptAndDecrypt(new DESCryptor(), keyBytes, "1213");
-    }
+		encryptAndDecrypt(new SM4(), keyBytes, "中文");
+		// encryptAndDecrypt(new DESede(), keyBytes, "1213");
+		// encryptAndDecrypt(new AES(), keyBytes, "1213");
+		// encryptAndDecrypt(new DESCryptor(), keyBytes, "1213");
+	}
 
-    public static void encryptAndDecrypt(SymmetricEncryption symmetricEncryption, byte[] key, String input) {
+	public static void encryptAndDecrypt(SymmetricEncryption symmetricEncryption, byte[] key, String input) {
 
-        byte[] encrypt = symmetricEncryption.encrypt(key, input.getBytes());
+		byte[] encrypt = symmetricEncryption.encrypt(key, input.getBytes());
 
-        byte[] decrypt = symmetricEncryption.decrypt(key, encrypt);
+		byte[] decrypt = symmetricEncryption.decrypt(key, encrypt);
 
-        Assert.isTrue(new String(decrypt).equals(input), "crypto logic failed ");
+		Assert.isTrue(new String(decrypt).equals(input), "crypto logic failed ");
 
-        System.out.println("验证成功:" + Base64Utils.encodeToString(encrypt));
-    }
+		System.out.println("验证成功:" + Base64Utils.encodeToString(encrypt, StandardCharsets.UTF_8));
+	}
 
 }

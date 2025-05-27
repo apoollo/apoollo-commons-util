@@ -3,6 +3,8 @@
  */
 package com.apoollo.commons.util.request.context;
 
+import java.util.List;
+
 import com.apoollo.commons.util.request.context.def.AccessStrategy;
 
 /**
@@ -29,11 +31,13 @@ public interface RequestResource {
 
 	public Boolean getEnableSync();
 	
-	public Boolean getEnableBodySignatureValidate();
+	public Boolean getEnableSignature();
 	
-	public String getBodySignatureDecyptorSecret();
+	public String getSignatureSecret();
 	
-	public SignatureDecryptor getBodySignatureDecyptor();
+	public List<String> getSignatureExcludeHeaderNames();
+	
+	public List<String> getSignatureIncludeHeaderNames();
 	
 	public Boolean getEnableContentEscape();
 	

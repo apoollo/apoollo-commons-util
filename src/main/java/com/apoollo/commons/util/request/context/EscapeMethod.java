@@ -3,6 +3,7 @@
  */
 package com.apoollo.commons.util.request.context;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -15,5 +16,5 @@ public interface EscapeMethod {
 
 	public List<String> getSupportEscapeContentTypes();
 
-	public String escapeByContentType(String contentType, String content);
+	public byte[] escapeByContentType(Charset charset, String contentType, byte[] content);
 }

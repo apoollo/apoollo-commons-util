@@ -14,7 +14,9 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+
+import com.apoollo.commons.util.crypto.key.Key;
+import com.apoollo.commons.util.crypto.key.SecretKeySpec;
 
 /**
  * @author liuyulong
@@ -33,55 +35,47 @@ public class DefaultSymmetricEncryption implements SymmetricEncryption {
 	}
 
 	@Override
-	public byte[] encrypt(byte[] key, byte[] input) {
+	public byte[] encrypt(Key key, AlgorithmParameterSpec params, byte[] input) {
 		try {
-			SecretKey secretKey = new SecretKeySpec(key, algorithm);
+			SecretKey secretKey = key.getSecretKey();
 			Cipher cipher = Cipher.getInstance(transformation, provider);
-			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			if (null != params) {
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
+			} else {
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			}
 			return cipher.doFinal(input);
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException
-				| IllegalBlockSizeException | BadPaddingException e) {
+				| IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public byte[] decrypt(Key key, AlgorithmParameterSpec params, byte[] input) {
+		try {
+			SecretKey secretKey = key.getSecretKey();
+			Cipher cipher = Cipher.getInstance(transformation, provider);
+			if (null != params) {
+				cipher.init(Cipher.DECRYPT_MODE, secretKey, params);
+			} else {
+				cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			}
+			return cipher.doFinal(input);
+		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException
+				| IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public byte[] encrypt(byte[] key, byte[] input) {
+		return encrypt(new SecretKeySpec(key, algorithm), null, input);
 	}
 
 	@Override
 	public byte[] decrypt(byte[] key, byte[] input) {
-		try {
-			SecretKey secretKey = new SecretKeySpec(key, algorithm);
-			Cipher cipher = Cipher.getInstance(transformation, provider);
-			cipher.init(Cipher.DECRYPT_MODE, secretKey);
-			return cipher.doFinal(input);
-		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException
-				| IllegalBlockSizeException | BadPaddingException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public byte[] encrypt(byte[] key, AlgorithmParameterSpec params, byte[] input) {
-		try {
-			SecretKey secretKey = new SecretKeySpec(key, algorithm);
-			Cipher cipher = Cipher.getInstance(transformation, provider);
-			cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
-			return cipher.doFinal(input);
-		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException
-				| IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public byte[] decrypt(byte[] key, AlgorithmParameterSpec params, byte[] input) {
-		try {
-			SecretKey secretKey = new SecretKeySpec(key, algorithm);
-			Cipher cipher = Cipher.getInstance(transformation, provider);
-			cipher.init(Cipher.DECRYPT_MODE, secretKey, params);
-			return cipher.doFinal(input);
-		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException
-				| IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e) {
-			throw new RuntimeException(e);
-		}
+		return decrypt(new SecretKeySpec(key, algorithm), null, input);
 	}
 
 }

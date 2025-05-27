@@ -3,6 +3,7 @@
  */
 package com.apoollo.commons.util;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -35,8 +36,8 @@ public class Md5Utils {
 		return digest(data, Hex::toHexString);
 	}
 
-	public static String digestToBase64String(byte[] data) {
-		return digest(data, Base64Utils::encodeToString);
+	public static String digestToBase64String(byte[] data, Charset charset) {
+		return digest(data, digest -> Base64Utils.encodeToString(digest, charset));
 	}
 
 	public static boolean compare(byte[] digest, byte[] data) {

@@ -3,6 +3,7 @@
  */
 package com.apoollo.commons.util;
 
+import java.nio.charset.Charset;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,9 +46,9 @@ public class ServiceUtils {
 	}
 
 	public static byte[] base64Decode(String base64, HttpCodeName<String, String> httpCodeName,
-			String messageCompileArg) {
+			String messageCompileArg, Charset charset) {
 		try {
-			return Base64Utils.decode(base64);
+			return Base64Utils.decode(base64, charset);
 		} catch (Exception e) {
 			if (null == messageCompileArg) {
 				throw new AppHttpCodeMessageException(httpCodeName, null);
