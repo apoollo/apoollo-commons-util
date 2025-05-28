@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.util.encoders.Hex;
 
 import com.apoollo.commons.util.crypto.hash.MacHash;
 
@@ -17,29 +18,31 @@ import com.apoollo.commons.util.crypto.hash.MacHash;
  */
 public class HttpContentUtils {
 
-	public static String getHttpContentSignature(MacHash macHash, byte[] key, Charset httpCharset, String method,
-			String uri, String queryString, TreeMap<String, String> headers, byte[] body) {
-		String content = getHttpContent(httpCharset, method, uri, queryString, null, headers, body);
-		byte[] digest = macHash.hash(key, content.getBytes(httpCharset));
+	public static String getHttpContentSignature(MacHash macHash, String key, Charset httpCharset, String method,
+			String requestPath, String queryString, TreeMap<String, String> headers, byte[] body) {
+		String content = getHttpContent(httpCharset, method, requestPath, queryString, headers, body);
+		return getHttpContentSignature(macHash, key, httpCharset, content);
+	}
+
+	public static String getHttpContentSignature(MacHash macHash, String key, Charset httpCharset, String content) {
+		byte[] digest = macHash.hash(Hex.decodeStrict(key), content.getBytes(httpCharset));
 		return Base64Utils.encodeToString(digest, httpCharset);
 	}
 
-	public static String getHttpContent(Charset httpCharset, String method, String uri, String queryString,
-			String protocol, TreeMap<String, String> headers, byte[] body) {
+	public static String getHttpContent(Charset httpCharset, String method, String requestPath, String queryString,
+			TreeMap<String, String> headers, byte[] body) {
 		String newLine = "\r\n";
 		String newSpace = " ";
 		String colon = ": ";
 
-		String requestLine = method.toUpperCase() + newSpace + uri;
+		String requestLine = method.toUpperCase() + newSpace + requestPath;
 		if (StringUtils.isNotBlank(queryString)) {
 			requestLine += "?" + queryString;
 		}
-		if (StringUtils.isNotBlank(protocol)) {
-			requestLine += newSpace + protocol.toUpperCase();
-		}
-
-		String header = null != headers ? headers.entrySet().stream()
-				.map(entry -> entry.getKey() + colon + entry.getValue()).collect(Collectors.joining(newLine)) : null;
+		String header = null != headers
+				? headers.entrySet().stream().map(entry -> entry.getKey().toLowerCase() + colon + entry.getValue())
+						.collect(Collectors.joining(newLine))
+				: null;
 
 		StringBuilder stringBuilder = new StringBuilder();
 		// request line

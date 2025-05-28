@@ -26,21 +26,27 @@ public class HttpContentUtilsTest {
 	public static void main(String[] args) {
 		Charset httpCharset = StandardCharsets.UTF_8;
 		MacHash macHash = new HmacSHA256();
-		byte[] key = "123".getBytes(httpCharset);
-	
+		String key = "08f4129e78219ebf19a4971667de589d";
 
 		String body = "{\"name\":\"a\",\"password\":\"<abc><890>\",\"accessKey\":\"accessKey1\",\"secretKey\":\"secretKey1\"}";
 
+		byte[] bodyBytes = body.getBytes(httpCharset);
 
-		String signature = HttpContentUtils.getHttpContentSignature(macHash, key, httpCharset, "post", "/demo8",
-				"c=d&1=3&a=b", new TreeMap<>() {
+		String httpContent = HttpContentUtils.getHttpContent(httpCharset, "GET", "/demo8", "c=d&1=3&a=b",
+				new TreeMap<>() {
 
 					private static final long serialVersionUID = 5810947227127465856L;
 					{
-						put("Content-Type", "application/json");
+						put("cache-control", "no-cache");
+						put("content-type", "application/json");
+						put("host", "127.0.0.1:8080");
+						put("content-length", bodyBytes.length + "");
 					}
 
-				}, body.getBytes(httpCharset));
+				}, bodyBytes);
+
+		String signature = HttpContentUtils.getHttpContentSignature(macHash, key, httpCharset, httpContent);
+		System.out.println(httpContent);
 		System.out.println(signature);
 	}
 }
