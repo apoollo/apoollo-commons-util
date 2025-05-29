@@ -11,7 +11,7 @@ import com.apoollo.commons.util.RegexUtils;
 /**
  * @author liuyulong
  */
-public interface HttpCodeNameHandler {
+public interface WrapResponseHandler {
 
 	/**
 	 * 默认成功Code

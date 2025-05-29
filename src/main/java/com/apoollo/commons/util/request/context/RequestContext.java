@@ -85,7 +85,7 @@ public interface RequestContext {
 		String accessKey = RequestContext.getRequired().getUser().getAccessKey();
 		if (!StringUtils.equals(loginAccessKey, accessKey)) {
 			throw new AppHttpCodeMessageException(
-					requestContext.getRequestResource().getHttpCodeNameHandler().getForbbiden(),
+					requestContext.getRequestResource().getWrapResponseHandler().getForbbiden(),
 					new String[] { message.get() });
 		}
 	}

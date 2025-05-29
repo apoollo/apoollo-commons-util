@@ -43,6 +43,8 @@ public interface RequestResource {
 	
 	public EscapeMethod getContentEscapeMethod();
 	
-	public HttpCodeNameHandler getHttpCodeNameHandler();
+	public Boolean getEnableResponseWrapper();
+	
+	public WrapResponseHandler getWrapResponseHandler();
 	
 }

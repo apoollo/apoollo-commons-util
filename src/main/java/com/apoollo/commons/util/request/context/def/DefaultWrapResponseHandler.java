@@ -4,13 +4,13 @@
 package com.apoollo.commons.util.request.context.def;
 
 import com.apoollo.commons.util.request.context.HttpCodeName;
-import com.apoollo.commons.util.request.context.HttpCodeNameHandler;
+import com.apoollo.commons.util.request.context.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.Response;
 
 /**
  * @author liuyulong
  */
-public class DefaultHttpCodeNameHandler implements HttpCodeNameHandler {
+public class DefaultWrapResponseHandler implements WrapResponseHandler {
 
 	@Override
 	public HttpCodeName<String, String> getOk() {

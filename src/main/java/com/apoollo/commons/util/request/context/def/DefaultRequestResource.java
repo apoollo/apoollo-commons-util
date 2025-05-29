@@ -6,7 +6,7 @@ package com.apoollo.commons.util.request.context.def;
 import java.util.List;
 
 import com.apoollo.commons.util.request.context.EscapeMethod;
-import com.apoollo.commons.util.request.context.HttpCodeNameHandler;
+import com.apoollo.commons.util.request.context.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.RequestResource;
 
 import lombok.Getter;
@@ -35,9 +35,7 @@ public class DefaultRequestResource implements RequestResource {
 	private List<String> signatureIncludeHeaderNames;
 	private Boolean enableContentEscape;
 	private EscapeMethod contentEscapeMethod;
-	private HttpCodeNameHandler httpCodeNameHandler;
-
-	public DefaultRequestResource() {
-	}
+	private Boolean enableResponseWrapper;
+	private WrapResponseHandler wrapResponseHandler;
 
 }
