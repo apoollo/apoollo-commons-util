@@ -31,6 +31,12 @@ public interface RequestResource {
 
 	public Boolean getEnableSync();
 	
+	public Boolean getEnableNonce();
+	
+	public Long getNonceDuration();
+	
+	public NonceValidator getNonceValidator();
+	
 	public Boolean getEnableSignature();
 	
 	public String getSignatureSecret();

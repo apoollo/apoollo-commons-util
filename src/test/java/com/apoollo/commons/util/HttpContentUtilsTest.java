@@ -41,6 +41,8 @@ public class HttpContentUtilsTest {
 						put("content-type", "application/json");
 						put("host", "127.0.0.1:8080");
 						put("content-length", bodyBytes.length + "");
+						put("x-timestamp", System.currentTimeMillis() + "");
+						put("x-nonce",LangUtils.getUppercaseUUID());
 					}
 
 				}, bodyBytes);

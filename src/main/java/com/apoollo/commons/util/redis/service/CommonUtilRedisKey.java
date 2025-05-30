@@ -17,6 +17,10 @@ public interface CommonUtilRedisKey {
     }
 
     public default String getCaptchaKey(String token) {
-        return getCommonsUtilKey("captcha", token);
+    	return getCommonsUtilKey("captcha", token);
+    }
+    
+    public default String getNonceKey(String nonce) {
+        return getCommonsUtilKey("nonce", nonce);
     }
 }

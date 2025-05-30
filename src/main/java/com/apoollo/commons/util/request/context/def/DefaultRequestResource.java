@@ -6,6 +6,7 @@ package com.apoollo.commons.util.request.context.def;
 import java.util.List;
 
 import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.NonceValidator;
 import com.apoollo.commons.util.request.context.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.RequestResource;
 
@@ -29,6 +30,9 @@ public class DefaultRequestResource implements RequestResource {
 	private Long limtPlatformQps;
 	private String[] roles;
 	private Boolean enableSync;
+	private Boolean enableNonce;
+	private Long nonceDuration;
+	private NonceValidator nonceValidator;
 	private Boolean enableSignature;
 	private String signatureSecret;
 	private List<String> signatureExcludeHeaderNames;
