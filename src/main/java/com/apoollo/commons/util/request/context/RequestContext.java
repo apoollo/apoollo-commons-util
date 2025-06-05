@@ -71,13 +71,13 @@ public interface RequestContext {
 	}
 
 	public static String getRequestMappingPath(String contextPath, String requestUri) {
-		String requestPath = null;
-		if (StringUtils.isBlank(contextPath) || contextPath.equals("/")) {
-			requestPath = requestUri;
+		String requestMappingPath = null;
+		if (StringUtils.isBlank(contextPath) || "/".equals(contextPath)) {
+			requestMappingPath = requestUri;
 		} else {
-			requestPath = StringUtils.substringAfter(requestUri, contextPath);
+			requestMappingPath = StringUtils.substringAfter(requestUri, contextPath);
 		}
-		return requestPath;
+		return requestMappingPath;
 	}
 
 	public static void validateDataPermission(String loginAccessKey, Supplier<String> message) {
@@ -161,10 +161,6 @@ public interface RequestContext {
 
 	public <T> T getHint(String key);
 
-	public String getDailyMaximumUseTimesLimitKey();
-
-	public Boolean getResponseIsChargeForUseTimesLimit();
-
 	public byte[] getRequestBody();
 
 	public void setRequestIp(String requestIp);
@@ -192,10 +188,6 @@ public interface RequestContext {
 	public void setRequestServerName(String requestServerName);
 
 	public void addHint(String key, Object value);
-
-	public void setDailyMaximumUseTimesLimitKey(String dailyMaximumUseTimesLimitKey);
-
-	public void setResponseIsChargeForUseTimesLimit(Boolean responseIsChargeForUseTimesLimit);
 
 	public void setRequestBody(byte[] requestBody);
 

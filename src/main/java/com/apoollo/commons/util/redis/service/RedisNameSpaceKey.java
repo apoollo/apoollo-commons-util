@@ -4,8 +4,11 @@
 package com.apoollo.commons.util.redis.service;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import com.apoollo.commons.util.LangUtils;
 
@@ -38,5 +41,9 @@ public interface RedisNameSpaceKey {
     public default String getSplitor() {
         return ":";
     }
+    
+    public static Supplier<String> getDaily(Long currentTimeMillis) {
+		return () -> DateFormatUtils.format(currentTimeMillis, "yyyyMMdd");
+	}
 
 }

@@ -5,14 +5,16 @@ package com.apoollo.commons.util.redis.service.impl;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 
 import com.alibaba.fastjson2.JSON;
-import com.apoollo.commons.util.redis.service.AbstractRedisEvalLua;
+import com.apoollo.commons.util.redis.service.AbstractNamespaceRedisEvalLua;
 import com.apoollo.commons.util.redis.service.CountLimiter;
+import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,59 +24,63 @@ import lombok.Setter;
 /**
  * @author liuyulong
  */
-public class CommonsCountLimiter extends AbstractRedisEvalLua implements CountLimiter {
+public class CommonsCountLimiter extends AbstractNamespaceRedisEvalLua implements CountLimiter {
 
-    // private static final Logger LOGGER =
-    // LoggerFactory.getLogger(CommonsInvocationTimesLimiter.class);
+	private static final RedisScript<String> REDIS_SCRIPT = getRedisScript("IncrementLimiter.lua", String.class);
 
-    private static final RedisScript<String> REDIS_SCRIPT = getRedisScript("InvocationTimesLimiter.lua", String.class);
+	public CommonsCountLimiter(RedisTemplate<String, String> redisTemplate, RedisNameSpaceKey redisNameSpaceKey) {
+		super(redisTemplate, redisNameSpaceKey);
+	}
 
-    public CommonsCountLimiter(RedisTemplate<String, String> redisTemplate) {
-        super(redisTemplate);
-    }
+	@Override
+	public Incremented increment(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
+			long limitCount) {
+		return increment(key, null, currentTimeMillis, timeout, timeoutUnit, limitCount);
+	}
 
-    @Override
-    public Incremented increment(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
-            long limitCount) {
-        // if (limitCount < 1) {
-        // throw new IllegalArgumentException("limitCount must great than 0");
-        // }
-        Date expireAt = DateUtils.addSeconds(//
-                new Date(currentTimeMillis), // 当前时间
-                Long.valueOf(timeoutUnit.toSeconds(timeout)).intValue()// 超时时间
-        );
-        String result = execute(REDIS_SCRIPT, key, getRedisExpireAt(expireAt), limitCount);
-        Incremented incremented = JSON.parseObject(result, Incremented.class);
-        incremented.setKey(key);
-        return incremented;
-    }
+	public Incremented increment(String key, Supplier<String> keyAppender, long currentTimeMillis, long timeout,
+			TimeUnit timeoutUnit, long limitCount) {
+		String targetKey = getKey(key, keyAppender);
+		Date expireAt = DateUtils.addSeconds(//
+				new Date(currentTimeMillis), // 当前时间
+				Long.valueOf(timeoutUnit.toSeconds(timeout)).intValue()// 超时时间
+		);
+		String result = execute(REDIS_SCRIPT, targetKey, getRedisExpireAt(expireAt), limitCount);
+		Incremented incremented = JSON.parseObject(result, Incremented.class);
+		incremented.setKey(targetKey);
+		return incremented;
+	}
 
-    @Override
-    public Incremented incrementDate(String key, int timeoutDays, long limitCount) {
-        if (timeoutDays < 1) {
-            throw new IllegalArgumentException("timeoutDays must great than 0");
-        }
-        long currentTimeMillis = System.currentTimeMillis();
-        String finalKey = getDailyKey(key, currentTimeMillis);
-        return increment(finalKey, currentTimeMillis, timeoutDays, TimeUnit.DAYS, limitCount);
+	@Override
+	public Incremented incrementDate(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
+			long limitCount) {
+		if (timeout < 1) {
+			throw new IllegalArgumentException("timeoutDays must great than 0");
+		}
+		return increment(key, RedisNameSpaceKey.getDaily(currentTimeMillis), currentTimeMillis, timeout, timeoutUnit,
+				limitCount);
 
-    }
+	}
 
-   
+	/*
+	 * @Override public void decrement(String key) { decrement(key, null); }
+	 * 
+	 * @Override public void decrementDate(String key, long currentTimeMillis) {
+	 * decrement(key, RedisNameSpaceKey.getDaily(currentTimeMillis)); }
+	 * 
+	 * private void decrement(String key, Supplier<String> keyAppender) { String
+	 * targetKey = getKey(key, keyAppender);
+	 * redisTemplate.opsForValue().decrement(targetKey); }
+	 */
 
-    @Override
-    public void decrement(String key) {
-        redisTemplate.opsForValue().decrement(key);
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Incremented {
-        private Boolean accessed;// 是否通过
-        private Long currentCount;// 当前计数，如果accessed=false ，真实数量为currentCount-1
-        private String key;// key
-    }
+	@Getter
+	@Setter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class Incremented {
+		private Boolean accessed;// 是否通过
+		private Long currentCount;// 当前计数，如果accessed=false ，真实数量为currentCount-1
+		private String key;// key
+	}
 
 }

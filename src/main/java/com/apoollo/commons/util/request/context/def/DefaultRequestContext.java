@@ -53,10 +53,6 @@ public class DefaultRequestContext implements RequestContext {
 
 	private Map<String, Object> hint = new HashMap<>();
 
-	private String dailyMaximumUseTimesLimitKey;
-
-	private Boolean responseIsChargeForUseTimesLimit;
-
 	private byte[] requestBody;
 	
 	/**
@@ -246,26 +242,6 @@ public class DefaultRequestContext implements RequestContext {
 		if (null != key && null != value) {
 			hint.put(key, value);
 		}
-	}
-
-	@Override
-	public String getDailyMaximumUseTimesLimitKey() {
-		return this.dailyMaximumUseTimesLimitKey;
-	}
-
-	@Override
-	public void setDailyMaximumUseTimesLimitKey(String dailyMaximumUseTimesLimitKey) {
-		this.dailyMaximumUseTimesLimitKey = dailyMaximumUseTimesLimitKey;
-	}
-
-	@Override
-	public Boolean getResponseIsChargeForUseTimesLimit() {
-		return responseIsChargeForUseTimesLimit;
-	}
-
-	@Override
-	public void setResponseIsChargeForUseTimesLimit(Boolean responseIsChargeForUseTimesLimit) {
-		this.responseIsChargeForUseTimesLimit = responseIsChargeForUseTimesLimit;
 	}
 
 	public byte[] getRequestBody() {

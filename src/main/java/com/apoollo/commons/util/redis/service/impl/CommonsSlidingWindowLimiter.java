@@ -15,9 +15,6 @@ import com.apoollo.commons.util.redis.service.model.SlidingWindowCount;
  */
 public class CommonsSlidingWindowLimiter extends CommonsSlidingWindowCounter implements SlidingWindowLimiter {
 
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(CommonsSlidingWindowLimiter.class);
-
 	public CommonsSlidingWindowLimiter(RedisTemplate<String, String> redisTemplate,
 			RedisNameSpaceKey redisNameSpaceKey) {
 		super(redisTemplate, redisNameSpaceKey);
@@ -26,9 +23,6 @@ public class CommonsSlidingWindowLimiter extends CommonsSlidingWindowCounter imp
 	@Override
 	public boolean access(String key, long windowTimeMillis, long limitCount) {
 		SlidingWindowCount slidingWindowCount = count(key, windowTimeMillis);
-
-		// LOGGER.info(key + ":" + JSON.toJSONString(slidingWindowCount));
-
 		return limitCount >= slidingWindowCount.getCount();
 	}
 

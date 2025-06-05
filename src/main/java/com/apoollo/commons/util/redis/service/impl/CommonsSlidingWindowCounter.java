@@ -20,9 +20,6 @@ import com.apoollo.commons.util.redis.service.model.SlidingWindowCount;
  */
 public class CommonsSlidingWindowCounter extends AbstractNamespaceRedisEvalLua implements SlidingWindowCounter {
 
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(CommonsSlidingWindowCounter.class);
-
 	@SuppressWarnings("rawtypes")
 	private static final RedisScript<List> REDIS_SCRIPT = getRedisScript("SlidingWindowCounter.lua", List.class);
 
@@ -38,10 +35,6 @@ public class CommonsSlidingWindowCounter extends AbstractNamespaceRedisEvalLua i
 		List<?> list = execute(REDIS_SCRIPT, targetKey, System.currentTimeMillis(), windowTimeMillis);
 		SlidingWindowCount slidingWindowCount = new SlidingWindowCount(LangUtils.toLong(list.get(0)),
 				LangUtils.toLong(list.get(1)));
-		// LOGGER.info("key: " + targetKey + ", window: " +
-		// slidingWindowCount.getWindow() + ", count: " +
-		// slidingWindowCount.getCount());
-
 		return slidingWindowCount;
 	}
 

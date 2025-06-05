@@ -10,37 +10,47 @@ import com.apoollo.commons.util.redis.service.impl.CommonsCountLimiter.Increment
 /**
  * @author liuyulong
  */
-public interface CountLimiter extends RedisKey {
+public interface CountLimiter {
 
-    /**
-     * 一定时间内限制数量增长
-     * 
-     * @param key
-     * @param currentTimeMillis 当前时间
-     * @param timeout           过期时间
-     * @param timeoutUnit       过期单位
-     * @param limitCount        限制增长的数量
-     * @return
-     */
-    public Incremented increment(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
-            long limitCount);
+	/**
+	 * 一定时间内限制数量增长
+	 * 
+	 * @param key
+	 * @param currentTimeMillis 当前时间
+	 * @param timeout           过期时间
+	 * @param timeoutUnit       过期单位
+	 * @param limitCount        限制增长的数量
+	 * @return
+	 */
+	public Incremented increment(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
+			long limitCount);
 
-    /**
-     * 按照天数限制
-     * 
-     * @param key
-     * @param timeoutDays 限制天数
-     * @param limitCount  限制增长的数量
-     * @return
-     */
-    public Incremented incrementDate(String key, int timeoutDays, long limitCount);
+	/**
+	 * 按照天数限制
+	 * 
+	 * @param key
+	 * @param timeoutDays 限制天数
+	 * @param limitCount  限制增长的数量
+	 * @return
+	 */
+	public Incremented incrementDate(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
+			long limitCount);
 
-    /**
-     * 用于冲正，减一
-     * 
-     * @param key
-     */
 
-    public void decrement(String key);
+	/**
+	 * 用于冲正，减一
+	 * 
+	 * @param key
+	 */
+
+	//public void decrement(String key);
+
+	/**
+	 * 用于冲正，减一
+	 * 
+	 * @param key
+	 */
+
+	//public void decrementDate(String key, long currentTimeMillis);
 
 }

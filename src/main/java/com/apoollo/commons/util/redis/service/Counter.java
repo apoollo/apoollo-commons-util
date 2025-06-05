@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author liuyulong
  */
-public interface Counter extends RedisKey {
+public interface Counter {
 
 	/**
 	 * 
