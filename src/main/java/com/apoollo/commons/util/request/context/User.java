@@ -3,7 +3,6 @@
  */
 package com.apoollo.commons.util.request.context;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,13 +29,12 @@ public interface User extends UserKeyPair, CapacitySupport {
 
 	public List<String> getAllowRequestAntPathPatterns();
 
-	public Date getChangePasswordExpireDate();
+	public Long getChangePasswordExpireTime();
 
 	public Object getAttachement();
 
 	public default boolean needResetPassword() {
-		return null != getChangePasswordExpireDate()
-				&& getChangePasswordExpireDate().getTime() < System.currentTimeMillis();
+		return null != getChangePasswordExpireTime() && getChangePasswordExpireTime() < System.currentTimeMillis();
 
 	}
 }

@@ -52,4 +52,7 @@ public interface RedisNameSpaceKey {
 	public static final String COUNTER = "counter";
 	public static final String NONCE = "nonce";
 	public static final String CAPTCHA = "captcha";
+	public static final String AUTHORIZATION = "authorization";
+	public static final String REQUEST_RESOURCE = "request-resource";
+	public static final String USER = "user";
 }
