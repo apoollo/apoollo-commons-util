@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.apoollo.commons.util.request.context.def;
+package com.apoollo.commons.util.request.context.core;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

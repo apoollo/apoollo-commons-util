@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.apoollo.commons.util.request.context.def;
+package com.apoollo.commons.util.request.context.core;
 
 import com.apoollo.commons.util.request.context.HttpCodeName;
 import com.apoollo.commons.util.request.context.WrapResponseHandler;

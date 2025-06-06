@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.request.context.CodeName;
-import com.apoollo.commons.util.request.context.def.DefaultCodeName;
+import com.apoollo.commons.util.request.context.core.DefaultCodeName;
 
 /**
  * @author liuyulong

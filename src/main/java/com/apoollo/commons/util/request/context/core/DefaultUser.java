@@ -1,16 +1,14 @@
 /**
  * 
  */
-package com.apoollo.commons.util.request.context.def;
+package com.apoollo.commons.util.request.context.core;
 
 import java.util.Date;
 import java.util.List;
 
 import com.apoollo.commons.util.request.context.User;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -19,19 +17,19 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class DefaultUser implements User {
+public class DefaultUser extends DefaultCapacitySupport implements User {
 
 	private String id;
 	private Boolean enable;
-	private String accessKey;
 	private String secretKey;
 	private String secretKeySaltValue;
-	private Boolean allowRenewal;
-	private List<String> ipWhiteList;
-	private List<String> allowRequestAntPathPatterns;
+	private String username;
+	private String userType;
+	private String userTypeName;
+	private Boolean enableRenewal;
 	private List<String> roles;
+	private List<String> allowRequestAntPathPatterns;
+	private Date changePasswordExpireDate;
 	private Object attachement;
-	private Date enableChangePasswordExpireDate;
+	
 }

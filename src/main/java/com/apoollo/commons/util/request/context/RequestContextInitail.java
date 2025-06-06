@@ -3,7 +3,7 @@
  */
 package com.apoollo.commons.util.request.context;
 
-import com.apoollo.commons.util.request.context.def.DefaultRequestContext;
+import com.apoollo.commons.util.request.context.core.DefaultRequestContext;
 
 /**
  * @author liuyulong

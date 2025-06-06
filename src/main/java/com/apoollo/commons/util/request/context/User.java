@@ -10,53 +10,33 @@ import java.util.List;
  * @author liuyulong
  * @since 2023年8月30日
  */
-public interface User extends UserKeyPair {
-	
-	public String getSecretKeySaltValue();
+public interface User extends UserKeyPair, CapacitySupport {
 
 	public String getId();
 
 	public Boolean getEnable();
 
-	public default List<String> getIpWhiteList() {
-		return null;
-	}
+	public String getSecretKeySaltValue();
 
-	public default String getUsername() {
-		return null;
-	}
+	public String getUsername();
 
-	public default String getUserType() {
-		return null;
-	}
+	public String getUserType();
 
-	public default String getUserTypeName() {
-		return null;
-	}
+	public String getUserTypeName();
 
-	public default Boolean getAllowRenewal() {
-		return false;
-	}
+	public Boolean getEnableRenewal();
 
-	public default List<String> getRoles() {
-		return null;
-	}
+	public List<String> getRoles();
 
-	public default List<String> getAllowRequestAntPathPatterns() {
-		return null;
-	}
+	public List<String> getAllowRequestAntPathPatterns();
 
-	public default Object getAttachement() {
-		return null;
-	}
+	public Date getChangePasswordExpireDate();
 
-	public default Date getEnableChangePasswordExpireDate() {
-		return null;
-	}
+	public Object getAttachement();
 
 	public default boolean needResetPassword() {
-		return null != getEnableChangePasswordExpireDate()
-				&& getEnableChangePasswordExpireDate().getTime() < System.currentTimeMillis();
+		return null != getChangePasswordExpireDate()
+				&& getChangePasswordExpireDate().getTime() < System.currentTimeMillis();
 
 	}
 }
