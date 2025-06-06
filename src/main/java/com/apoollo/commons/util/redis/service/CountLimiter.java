@@ -15,10 +15,10 @@ public interface CountLimiter {
 	/**
 	 * 一定时间内限制数量增长
 	 * 
-	 * @param key
+	 * @param key               唯一标识符
 	 * @param currentTimeMillis 当前时间
 	 * @param timeout           过期时间
-	 * @param timeoutUnit       过期单位
+	 * @param timeoutUnit       过期时间单位
 	 * @param limitCount        限制增长的数量
 	 * @return
 	 */
@@ -28,9 +28,11 @@ public interface CountLimiter {
 	/**
 	 * 按照天数限制
 	 * 
-	 * @param key
-	 * @param timeoutDays 限制天数
-	 * @param limitCount  限制增长的数量
+	 * @param key               唯一标识符
+	 * @param currentTimeMillis 当前时间
+	 * @param timeout           过期时间
+	 * @param timeoutUnit       过期时间单位
+	 * @param limitCount        限制增长的数量
 	 * @return
 	 */
 	public Incremented incrementDate(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
