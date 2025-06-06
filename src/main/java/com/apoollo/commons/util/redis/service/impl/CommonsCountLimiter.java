@@ -5,7 +5,6 @@ package com.apoollo.commons.util.redis.service.impl;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,9 +37,9 @@ public class CommonsCountLimiter extends AbstractNamespaceRedisEvalLua implement
 		return increment(key, null, currentTimeMillis, timeout, timeoutUnit, limitCount);
 	}
 
-	public Incremented increment(String key, Supplier<String> keyAppender, long currentTimeMillis, long timeout,
+	public Incremented increment(String key, String keyPrefix, long currentTimeMillis, long timeout,
 			TimeUnit timeoutUnit, long limitCount) {
-		String targetKey = getKey(key, keyAppender);
+		String targetKey = getKey(RedisNameSpaceKey.COUNT_LIMITER, key, keyPrefix);
 		Date expireAt = DateUtils.addSeconds(//
 				new Date(currentTimeMillis), // 当前时间
 				Long.valueOf(timeoutUnit.toSeconds(timeout)).intValue()// 超时时间
@@ -61,17 +60,6 @@ public class CommonsCountLimiter extends AbstractNamespaceRedisEvalLua implement
 				limitCount);
 
 	}
-
-	/*
-	 * @Override public void decrement(String key) { decrement(key, null); }
-	 * 
-	 * @Override public void decrementDate(String key, long currentTimeMillis) {
-	 * decrement(key, RedisNameSpaceKey.getDaily(currentTimeMillis)); }
-	 * 
-	 * private void decrement(String key, Supplier<String> keyAppender) { String
-	 * targetKey = getKey(key, keyAppender);
-	 * redisTemplate.opsForValue().decrement(targetKey); }
-	 */
 
 	@Getter
 	@Setter

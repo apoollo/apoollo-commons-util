@@ -30,8 +30,7 @@ public class CommonsSlidingWindowCounter extends AbstractNamespaceRedisEvalLua i
 
 	@Override
 	public SlidingWindowCount count(String key, long windowTimeMillis) {
-
-		String targetKey = getCommonUtilRedisKey().getCommonsUtilKey(key);
+		String targetKey = getKey(RedisNameSpaceKey.SLIDING_WINDOW_COUNTER, key, null);
 		List<?> list = execute(REDIS_SCRIPT, targetKey, System.currentTimeMillis(), windowTimeMillis);
 		SlidingWindowCount slidingWindowCount = new SlidingWindowCount(LangUtils.toLong(list.get(0)),
 				LangUtils.toLong(list.get(1)));

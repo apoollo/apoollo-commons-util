@@ -5,7 +5,6 @@ package com.apoollo.commons.util.redis.service.impl;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,9 +30,8 @@ public class CommonsCounter extends AbstractNamespaceRedisEvalLua implements Cou
 		return increment(key, null, currentTimeMillis, timeout, timeoutUnit);
 	}
 
-	public Long increment(String key, Supplier<String> keyAppender, long currentTimeMillis, long timeout,
-			TimeUnit timeoutUnit) {
-		String targetKey = getKey(key, keyAppender);
+	public Long increment(String key, String keySuffix, long currentTimeMillis, long timeout, TimeUnit timeoutUnit) {
+		String targetKey = getKey(RedisNameSpaceKey.COUNTER, key, keySuffix);
 		Date expireAt = DateUtils.addSeconds(//
 				new Date(currentTimeMillis), // 当前时间
 				Long.valueOf(timeoutUnit.toSeconds(timeout)).intValue()// 超时时间

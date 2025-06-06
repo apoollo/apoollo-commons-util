@@ -36,21 +36,4 @@ public interface CountLimiter {
 	public Incremented incrementDate(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
 			long limitCount);
 
-
-	/**
-	 * 用于冲正，减一
-	 * 
-	 * @param key
-	 */
-
-	//public void decrement(String key);
-
-	/**
-	 * 用于冲正，减一
-	 * 
-	 * @param key
-	 */
-
-	//public void decrementDate(String key, long currentTimeMillis);
-
 }
