@@ -27,8 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * @author liuyulong
  * @since 2025-06-05
  */
-public class DefaultLimiters<T extends LimitersSupport>
-		implements Limiters<T> {
+public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 
 	private NonceLimiter nonceLimiter;
 	private SignatureLimiter signatureLimter;
@@ -87,7 +86,7 @@ public class DefaultLimiters<T extends LimitersSupport>
 	@Override
 	public void unlimit(HttpServletRequest request, HttpServletResponse response, RequestContext requestContext,
 			T support) {
-		if (BooleanUtils.isTrue(support.getEnableSyncLimiter())) {
+		if (null != support && BooleanUtils.isTrue(support.getEnableSyncLimiter())) {
 			syncLimiter.unlimit(support.getAccessKey(), support.getResourcePin());
 		}
 	}
