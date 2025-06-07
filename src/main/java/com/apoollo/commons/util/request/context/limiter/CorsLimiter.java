@@ -3,7 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.limiter;
 
-import com.apoollo.commons.util.request.context.limiter.support.CorsLimiterSupport;
+import org.springframework.web.cors.CorsConfiguration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,5 +14,5 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public interface CorsLimiter {
 
-	public void limit(HttpServletRequest request, HttpServletResponse response, CorsLimiterSupport corsLimiterSupport);
+	public void limit(HttpServletRequest request, HttpServletResponse response, CorsConfiguration corsLimiterConfiguration);
 }

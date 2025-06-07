@@ -6,12 +6,12 @@ package com.apoollo.commons.util.request.context.limiter.core;
 import java.io.IOException;
 
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsProcessor;
 import org.springframework.web.cors.DefaultCorsProcessor;
 
 import com.apoollo.commons.util.exception.AppIllegalArgumentException;
 import com.apoollo.commons.util.request.context.limiter.CorsLimiter;
-import com.apoollo.commons.util.request.context.limiter.support.CorsLimiterSupport;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,9 +30,9 @@ public class DefaultCorsLimiter implements CorsLimiter {
 	};
 
 	@Override
-	public void limit(HttpServletRequest request, HttpServletResponse response, CorsLimiterSupport corsLimiterSupport) {
+	public void limit(HttpServletRequest request, HttpServletResponse response, CorsConfiguration corsLimiterConfiguration) {
 		try {
-			if (!corsProcessor.processRequest(corsLimiterSupport.getCorsLimiterConfiguration(), request, response)) {
+			if (!corsProcessor.processRequest(corsLimiterConfiguration, request, response)) {
 				throw new AppIllegalArgumentException("cors refused");
 			}
 		} catch (IOException e) {

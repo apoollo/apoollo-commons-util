@@ -10,7 +10,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.detailed.IpLimterException;
 import com.apoollo.commons.util.request.context.limiter.IpLimiter;
-import com.apoollo.commons.util.request.context.limiter.support.IpLimiterSupport;
 
 /**
  * @author liuyulong
@@ -18,13 +17,13 @@ import com.apoollo.commons.util.request.context.limiter.support.IpLimiterSupport
  */
 public class DefaultIpLimiter implements IpLimiter {
 
-	public void limit(IpLimiterSupport ipLimterSupport, String requestIp) {
+	public void limit(List<String> ipLimiterExcludes,List<String> ipLimiterIncludes, String requestIp) {
 
-		if (maches(ipLimterSupport.getIpLimiterExcludes(), requestIp)) {
+		if (maches(ipLimiterExcludes, requestIp)) {
 			throw new IpLimterException("request ip disabled by  black ip list : " + requestIp);
 		}
-		if (CollectionUtils.isNotEmpty(ipLimterSupport.getIpLimiterIncludes())
-				&& !maches(ipLimterSupport.getIpLimiterIncludes(), requestIp)) {
+		if (CollectionUtils.isNotEmpty(ipLimiterIncludes)
+				&& !maches(ipLimiterIncludes, requestIp)) {
 			throw new IpLimterException("request ip disabled by white ip list : " + requestIp);
 		}
 	}

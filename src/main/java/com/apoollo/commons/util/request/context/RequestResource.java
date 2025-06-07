@@ -22,5 +22,5 @@ public interface RequestResource extends CapacitySupport {
 	public AccessStrategy getAccessStrategy();
 
 	public List<String> getRoles();
-	
+
 }

@@ -36,26 +36,26 @@ public class DefaultRequestResource extends DefaultCapacitySupport implements Re
 	}
 
 	public static RequestResource toRequestResource(Instance instance,
-			SerializableRequestResource serializableRequestResource) {
-		DefaultRequestResource requestResource = new DefaultRequestResource();
-		requestResource.setEnable(serializableRequestResource.getEnable());
-		requestResource.setName(serializableRequestResource.getName());
-		requestResource.setRequestMappingPath(serializableRequestResource.getRequestMappingPath());
-		requestResource.setAccessStrategy(serializableRequestResource.getAccessStrategy());
-		requestResource.setRoles(serializableRequestResource.getRoles());
-		DefaultCapacitySupport.evlaute(instance, serializableRequestResource, requestResource);
-		return requestResource;
+			SerializableRequestResource source) {
+		DefaultRequestResource target = new DefaultRequestResource();
+		target.setEnable(source.getEnable());
+		target.setName(source.getName());
+		target.setRequestMappingPath(source.getRequestMappingPath());
+		target.setAccessStrategy(source.getAccessStrategy());
+		target.setRoles(source.getRoles());
+		DefaultCapacitySupport.evlaute(instance, source, target);
+		return target;
 	}
 
-	public static SerializableRequestResource toSerializableRequestResource(RequestResource requestResource) {
-		SerializableRequestResource serializableRequestResource = new SerializableRequestResource();
-		serializableRequestResource.setEnable(requestResource.getEnable());
-		serializableRequestResource.setName(requestResource.getName());
-		serializableRequestResource.setRequestMappingPath(requestResource.getRequestMappingPath());
-		serializableRequestResource.setAccessStrategy(requestResource.getAccessStrategy());
-		serializableRequestResource.setRoles(requestResource.getRoles());
-		DefaultCapacitySupport.evlaute(requestResource, serializableRequestResource);
-		return serializableRequestResource;
+	public static SerializableRequestResource toSerializableRequestResource(RequestResource source) {
+		SerializableRequestResource target = new SerializableRequestResource();
+		target.setEnable(source.getEnable());
+		target.setName(source.getName());
+		target.setRequestMappingPath(source.getRequestMappingPath());
+		target.setAccessStrategy(source.getAccessStrategy());
+		target.setRoles(source.getRoles());
+		DefaultCapacitySupport.evlaute(source, target);
+		return target;
 	}
 
 }

@@ -24,6 +24,7 @@ import lombok.Setter;
 @Setter
 public class DefaultCapacitySupport extends DefaultLimitersSupport implements CapacitySupport {
 
+	private Boolean enableCapacity;
 	private Boolean enableContentEscape;
 	private EscapeMethod contentEscapeMethod;
 	private Boolean enableResponseWrapper;
@@ -51,9 +52,11 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		private Long flowLimiterLimitCount;
 		private Boolean enableDailyCountLimiter;
 		private Long dailyCountLimiterLimitCount;
+		private Boolean enableCapacity;
 		private Boolean enableContentEscape;
 		private Boolean enableResponseWrapper;
 
+		//
 		private String contentEscapeMethodClass;
 		private String corsLimiterConfigurationClass;
 		private String nonceLimiterValidatorClass;
@@ -81,6 +84,7 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setFlowLimiterLimitCount(source.getFlowLimiterLimitCount());
 		target.setEnableDailyCountLimiter(source.getEnableDailyCountLimiter());
 		target.setDailyCountLimiterLimitCount(source.getDailyCountLimiterLimitCount());
+		target.setEnableCapacity(source.getEnableCapacity());
 		target.setEnableContentEscape(source.getEnableContentEscape());
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());
 
@@ -118,6 +122,7 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setFlowLimiterLimitCount(source.getFlowLimiterLimitCount());
 		target.setEnableDailyCountLimiter(source.getEnableDailyCountLimiter());
 		target.setDailyCountLimiterLimitCount(source.getDailyCountLimiterLimitCount());
+		target.setEnableCapacity(source.getEnableCapacity());
 		target.setEnableContentEscape(source.getEnableContentEscape());
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());
 		if (null != source.getContentEscapeMethod()) {

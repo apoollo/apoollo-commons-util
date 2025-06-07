@@ -55,6 +55,11 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 	@Override
 	public void limit(HttpServletRequest request, HttpServletResponse response, RequestContext requestContext,
 			T support) {
+
+		// TODO list
+		// 一个请求中，同一个limiter 最多只能请求一次，防止配置混乱
+		// Limiters 中的异常需要重新规划，返回的Code码
+
 		if (BooleanUtils.isTrue(support.getEnableNonceLimiter())) {
 			nonceLimiter.limit(request, support);
 		}
@@ -63,13 +68,14 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 					() -> ServletInputStreamHelper.getCachingBodyByteArray(requestContext, request));
 		}
 		if (BooleanUtils.isTrue(support.getEnableCorsLimiter())) {
-			corsLimiter.limit(request, response, support);
+			corsLimiter.limit(request, response, support.getCorsLimiterConfiguration());
 		}
 		if (BooleanUtils.isTrue(support.getEnableIpLimiter())) {
-			ipLimiter.limit(support, requestContext.getRequestIp());
+			ipLimiter.limit(support.getIpLimiterExcludes(), support.getIpLimiterIncludes(),
+					requestContext.getRequestIp());
 		}
 		if (BooleanUtils.isTrue(support.getEnableRefererLimiter())) {
-			refererLimiter.limit(request, support);
+			refererLimiter.limit(request, support.getRefererLimiterIncludeReferers());
 		}
 		if (BooleanUtils.isTrue(support.getEnableSyncLimiter())) {
 			syncLimiter.limit(support.getAccessKey(), support.getResourcePin(), Duration.ofSeconds(30));
@@ -86,7 +92,7 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 	@Override
 	public void unlimit(HttpServletRequest request, HttpServletResponse response, RequestContext requestContext,
 			T support) {
-		if (null != support && BooleanUtils.isTrue(support.getEnableSyncLimiter())) {
+		if (BooleanUtils.isTrue(support.getEnableSyncLimiter())) {
 			syncLimiter.unlimit(support.getAccessKey(), support.getResourcePin());
 		}
 	}

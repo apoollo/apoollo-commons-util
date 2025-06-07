@@ -3,7 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.limiter;
 
-import com.apoollo.commons.util.request.context.limiter.support.IpLimiterSupport;
+import java.util.List;
 
 /**
  * @author liuyulong
@@ -11,5 +11,5 @@ import com.apoollo.commons.util.request.context.limiter.support.IpLimiterSupport
  */
 public interface IpLimiter {
 
-	public void limit(IpLimiterSupport ipLimterSupport, String requestIp);
+	public void limit(List<String> ipLimiterExcludes,List<String> ipLimiterIncludes, String requestIp);
 }

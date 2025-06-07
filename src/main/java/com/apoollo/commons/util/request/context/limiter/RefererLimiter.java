@@ -3,7 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.limiter;
 
-import com.apoollo.commons.util.request.context.limiter.support.RefererLimiterSupport;
+import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -13,5 +13,5 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface RefererLimiter {
 
-	public void limit(HttpServletRequest request, RefererLimiterSupport refererLimiterSupport);
+	public void limit(HttpServletRequest request, List<String> refererLimiterIncludeReferers);
 }

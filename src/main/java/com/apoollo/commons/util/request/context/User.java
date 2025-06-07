@@ -10,10 +10,10 @@ import java.util.List;
  * @since 2023年8月30日
  */
 public interface User extends UserKeyPair, CapacitySupport {
+	
+	public Boolean getEnable();
 
 	public String getId();
-
-	public Boolean getEnable();
 
 	public String getSecretKeySaltValue();
 
@@ -29,12 +29,12 @@ public interface User extends UserKeyPair, CapacitySupport {
 
 	public List<String> getAllowRequestAntPathPatterns();
 
-	public Long getChangePasswordExpireTime();
+	public Long getPasswordExpireTime();
 
 	public Object getAttachement();
 
-	public default boolean needResetPassword() {
-		return null != getChangePasswordExpireTime() && getChangePasswordExpireTime() < System.currentTimeMillis();
+	public default boolean passwordIsExpired() {
+		return null != getPasswordExpireTime() && getPasswordExpireTime() < System.currentTimeMillis();
 
 	}
 }

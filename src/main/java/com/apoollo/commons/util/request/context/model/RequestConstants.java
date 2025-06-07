@@ -21,7 +21,7 @@ public class RequestConstants {
 
 	public static final String RESPONSE_HEADER_VERSION = "x-version";
 
-	public static final String RESPONSE_HEADER_NEED_RESET_PASSWORD = "x-need-reset-password";
+	public static final String RESPONSE_USER_PASSWORD_EXPIRED = "x-user-password-expired";
 
 	public static final String RESPONSE_HEADER_RENEWAL_AUTHORIZATION = "x-renewal-authorization";
 }
