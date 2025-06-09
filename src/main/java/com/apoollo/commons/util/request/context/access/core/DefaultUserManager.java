@@ -16,10 +16,9 @@ import com.alibaba.fastjson2.JSON;
 import com.apoollo.commons.util.JwtUtils.Renewal;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
-import com.apoollo.commons.util.request.context.User;
+import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
-import com.apoollo.commons.util.request.context.core.DefaultUser;
-import com.apoollo.commons.util.request.context.core.DefaultUser.SerializableUser;
+import com.apoollo.commons.util.request.context.access.core.DefaultUser.SerializableUser;
 import com.apoollo.commons.util.web.spring.Instance;
 
 /**

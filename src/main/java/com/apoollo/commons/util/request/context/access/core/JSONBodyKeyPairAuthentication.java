@@ -11,22 +11,30 @@ import com.apoollo.commons.util.request.context.core.AccessStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * liuyulong
+ * @author liuyulong
+ * @since 2025-06-09
  */
-public class HeaderKeyPairAuthentication extends AbstractKeyPairAuthentication {
+public class JSONBodyKeyPairAuthentication extends AbstractKeyPairAuthentication {
 
-	public HeaderKeyPairAuthentication(UserManager userManager, String accessKeyProperty, String secretKeyProperty) {
+	/**
+	 * @param userManager
+	 * @param accessKeyProperty
+	 * @param secretKeyProperty
+	 */
+	public JSONBodyKeyPairAuthentication(UserManager userManager, String accessKeyProperty, String secretKeyProperty) {
 		super(userManager, accessKeyProperty, secretKeyProperty);
 	}
 
 	@Override
 	public boolean support(AccessStrategy accessStrategy) {
-		return AccessStrategy.PRIVATE_HEADER_KEY_PAIR == accessStrategy;
+		return AccessStrategy.PRIVATE_JSON_BODY_KEY_PAIR == accessStrategy;
 	}
 
 	@Override
 	public TokenPair<String> getTokenPair(HttpServletRequest request, RequestContext requestContext) {
-		return new KeyTokenPair(request.getHeader(accessKeyProperty), request.getHeader(secretKeyProperty));
+		return getTokenPair(request, requestContext, json -> {
+			return new KeyTokenPair(json.getString(accessKeyProperty), json.getString(secretKeyProperty));
+		});
 	}
 
 }

@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.apoollo.commons.util.request.context.EscapeMethod;
 import com.apoollo.commons.util.request.context.RequestContext;
-import com.apoollo.commons.util.request.context.RequestResource;
+import com.apoollo.commons.util.request.context.access.RequestResource;
 import com.apoollo.commons.util.request.context.limiter.ContentEscapeHandler;
 
 /**

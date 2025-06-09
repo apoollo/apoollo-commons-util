@@ -17,9 +17,9 @@ import org.springframework.util.AntPathMatcher;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppForbbidenException;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
-import com.apoollo.commons.util.request.context.RequestResource;
-import com.apoollo.commons.util.request.context.User;
 import com.apoollo.commons.util.request.context.access.Authorization;
+import com.apoollo.commons.util.request.context.access.RequestResource;
+import com.apoollo.commons.util.request.context.access.User;
 
 /**
  * liuyulong

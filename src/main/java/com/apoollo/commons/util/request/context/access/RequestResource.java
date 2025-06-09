@@ -1,11 +1,12 @@
 /**
  * 
  */
-package com.apoollo.commons.util.request.context;
+package com.apoollo.commons.util.request.context.access;
 
 import java.util.List;
 
 import com.apoollo.commons.util.request.context.core.AccessStrategy;
+import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
 
 /**
  * @author liuyulong

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppForbbidenException;
 import com.apoollo.commons.util.exception.detailed.TokenEmptyExcetion;
-import com.apoollo.commons.util.request.context.User;
+import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
 
 /**

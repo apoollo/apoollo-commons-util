@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.apoollo.commons.util.request.context.CapacitySupport;
 import com.apoollo.commons.util.request.context.EscapeMethod;
-import com.apoollo.commons.util.request.context.WrapResponseHandler;
+import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.limiter.core.DefaultLimitersSupport;
+import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
 import com.apoollo.commons.util.web.spring.Instance;
 
 import lombok.Getter;

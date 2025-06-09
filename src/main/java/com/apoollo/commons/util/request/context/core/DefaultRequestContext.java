@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.apoollo.commons.util.request.context.RequestContext;
-import com.apoollo.commons.util.request.context.RequestResource;
 import com.apoollo.commons.util.request.context.Response;
-import com.apoollo.commons.util.request.context.User;
+import com.apoollo.commons.util.request.context.access.RequestResource;
+import com.apoollo.commons.util.request.context.access.User;
 
 /**
  * @author liuyulong

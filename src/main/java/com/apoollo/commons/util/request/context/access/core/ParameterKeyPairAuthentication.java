@@ -3,6 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.access.core;
 
+import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.access.TokenPair;
 import com.apoollo.commons.util.request.context.access.UserManager;
 import com.apoollo.commons.util.request.context.core.AccessStrategy;
@@ -24,7 +25,7 @@ public class ParameterKeyPairAuthentication extends AbstractKeyPairAuthenticatio
 	}
 
 	@Override
-	public TokenPair<String> getTokenPair(HttpServletRequest request) {
+	public TokenPair<String> getTokenPair(HttpServletRequest request, RequestContext requestContext) {
 		return new KeyTokenPair(request.getParameter(accessKeyProperty), request.getParameter(secretKeyProperty));
 	}
 

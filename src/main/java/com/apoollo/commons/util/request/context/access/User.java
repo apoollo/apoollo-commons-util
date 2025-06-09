@@ -1,19 +1,25 @@
 /**
  * 
  */
-package com.apoollo.commons.util.request.context;
+package com.apoollo.commons.util.request.context.access;
 
 import java.util.List;
+
+import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
 
 /**
  * @author liuyulong
  * @since 2023年8月30日
  */
-public interface User extends UserKeyPair, CapacitySupport {
-	
+public interface User extends CapacitySupport {
+
 	public Boolean getEnable();
 
 	public String getId();
+
+	public String getAccessKey();
+
+	public String getSecretKey();
 
 	public String getSecretKeySaltValue();
 

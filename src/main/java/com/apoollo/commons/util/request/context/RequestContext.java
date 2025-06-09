@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.apoollo.commons.util.MdcUtils;
 import com.apoollo.commons.util.exception.AppForbbidenException;
 import com.apoollo.commons.util.exception.AppHttpCodeMessageException;
+import com.apoollo.commons.util.request.context.access.RequestResource;
+import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.core.DefaultRequestContext;
 
 /**

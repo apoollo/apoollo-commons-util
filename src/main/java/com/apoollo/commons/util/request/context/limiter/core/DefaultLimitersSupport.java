@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.apoollo.commons.util.request.context.NonceValidator;
+import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 import com.apoollo.commons.util.request.context.limiter.support.LimitersSupport;
 
 import lombok.Getter;

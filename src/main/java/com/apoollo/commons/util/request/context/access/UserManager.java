@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import com.apoollo.commons.util.JwtUtils;
 import com.apoollo.commons.util.JwtUtils.Renewal;
 import com.apoollo.commons.util.request.context.RequestContext;
-import com.apoollo.commons.util.request.context.User;
 
 /**
  * @author liuyulong

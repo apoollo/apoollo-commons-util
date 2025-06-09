@@ -3,7 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.limiter.support;
 
-import com.apoollo.commons.util.request.context.NonceValidator;
+import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 
 /**
  * @author liuyulong

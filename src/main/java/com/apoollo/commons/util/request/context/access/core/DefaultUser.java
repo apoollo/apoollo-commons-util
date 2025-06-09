@@ -1,11 +1,12 @@
 /**
  * 
  */
-package com.apoollo.commons.util.request.context.core;
+package com.apoollo.commons.util.request.context.access.core;
 
 import java.util.List;
 
-import com.apoollo.commons.util.request.context.User;
+import com.apoollo.commons.util.request.context.access.User;
+import com.apoollo.commons.util.request.context.core.DefaultCapacitySupport;
 import com.apoollo.commons.util.web.spring.Instance;
 
 import lombok.Getter;
