@@ -35,11 +35,9 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 	public Authority<T> authenticate(HttpServletRequest request) {
 		TokenPair<T> tokenPair = getTokenPair(request);
 		String accessKey = tokenPair.getAccessKey();
-
 		if (StringUtils.isBlank(accessKey)) {
 			throw new AccessKeyEmptyException("[accessKey] must not be blank");
 		}
-
 		T token = tokenPair.getToken();
 		if (null == token) {
 			throw new TokenEmptyExcetion("[token] must not be null");
@@ -53,9 +51,9 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 		}
 		String secretKey = user.getSecretKey();
 		if (StringUtils.isBlank(secretKey)) {
-			throw new RuntimeException("can't find [secretKey] by accesskey : " + accessKey);
+			throw new RuntimeException("user [secretKey] must not be blank");
 		}
-		authenticate(user, tokenPair.getToken());
+		authenticate(user, token);
 		return new Authority<>(user, token);
 	}
 

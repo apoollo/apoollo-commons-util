@@ -46,7 +46,9 @@ public class TimeoutContextInvocation<I, O> extends LoggingInvocation<I, O> {
 			}
 			LOGGER.info("clientRequestId：" + requestContext.getClientRequestId());
 		}
-		RequestAccessParameter requestAccessParameter = requestContext.getAuthorizedValue(RequestAccessParameter.class);
+		// RequestAccessParameter requestAccessParameter =
+		// requestContext.getAuthorizedValue(RequestAccessParameter.class);
+		RequestAccessParameter requestAccessParameter = new DefaultRequestAccessParameter();
 		if (null != requestAccessParameter && null != requestAccessParameter.getRequestDefaultTimeoutMillis()
 				&& null != requestAccessParameter.getRequestTimeoutRangeMillis()) {
 			return timeoutExecute(function, input, requestContext,

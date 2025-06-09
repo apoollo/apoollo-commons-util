@@ -11,7 +11,6 @@ import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.RequestResource;
 import com.apoollo.commons.util.request.context.Response;
 import com.apoollo.commons.util.request.context.User;
-import com.apoollo.commons.util.request.context.model.Authorized;
 
 /**
  * @author liuyulong
@@ -38,8 +37,6 @@ public class DefaultRequestContext implements RequestContext {
 	private String requestMappingPath;
 
 	private User user;
-
-	private Authorized<?> authorized;
 
 	private RequestResource requestResource;
 
@@ -127,17 +124,6 @@ public class DefaultRequestContext implements RequestContext {
 	@Override
 	public <T extends User> T getCastUser() {
 		return (T) getUser();
-	}
-
-	@Override
-	public Authorized<?> getAuthorized() {
-		return authorized;
-	}
-
-	@Override
-	public void setAuthorized(Authorized<?> authorized) {
-		this.authorized = authorized;
-
 	}
 
 	@Override

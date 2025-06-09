@@ -12,7 +12,6 @@ import com.apoollo.commons.util.MdcUtils;
 import com.apoollo.commons.util.exception.AppForbbidenException;
 import com.apoollo.commons.util.exception.AppHttpCodeMessageException;
 import com.apoollo.commons.util.request.context.core.DefaultRequestContext;
-import com.apoollo.commons.util.request.context.model.Authorized;
 
 /**
  * @author liuyulong
@@ -94,26 +93,6 @@ public interface RequestContext {
 		validateDataPermission(loginAccessKey, () -> "数据权限越界");
 	}
 
-	@SuppressWarnings("unchecked")
-	public default <T> T getAuthorizedValue(Class<T> clazz) {
-		T result = null;
-		Authorized<?> authorized = getAuthorized();
-		if (null != authorized) {
-			Object authorizedValue = authorized.getAuthorizedValue();
-			if (null != authorizedValue && clazz.isAssignableFrom(authorizedValue.getClass())) {
-				result = (T) authorizedValue;
-			}
-		}
-		return result;
-	}
-
-	public default <T> T getAuthorizedValueRequired(Class<T> clazz) {
-		T result = getAuthorizedValue(clazz);
-		if (null == result) {
-			throw new ClassCastException("authorizedValue cast faild");
-		}
-		return result;
-	}
 
 	public default <T> T getHintOfExceptionCatchedData() {
 		return getHint("exception.catched.data");
@@ -138,8 +117,6 @@ public interface RequestContext {
 	public String getRequestMappingPath();
 
 	public User getUser();
-
-	public Authorized<?> getAuthorized();
 
 	public RequestResource getRequestResource();
 
@@ -168,8 +145,6 @@ public interface RequestContext {
 	public void setClientRequestId(String clientRequestId);
 
 	public void setUser(User user);
-
-	public void setAuthorized(Authorized<?> authorized);
 
 	public void setRequestResource(RequestResource requestResource);
 
