@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.BooleanUtils;
 
+import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.request.context.EscapeMethod;
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
@@ -31,7 +32,9 @@ public interface CapacitySupport extends LimitersSupport {
 
 	public static boolean support(RequestContext requestContext, CapacitySupport capacitySupport,
 			Function<CapacitySupport, Boolean> function) {
-		return support(List.of(capacitySupport, requestContext.getRequestResource(), requestContext.getUser()),
+
+		return support(LangUtils
+				.getStream(capacitySupport, requestContext.getRequestResource(), requestContext.getUser()).toList(),
 				function);
 	}
 
