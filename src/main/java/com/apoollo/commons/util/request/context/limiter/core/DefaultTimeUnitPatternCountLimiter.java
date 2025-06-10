@@ -35,11 +35,39 @@ public class DefaultTimeUnitPatternCountLimiter implements TimeUnitPatternCountL
 		if (null == timeUnitPattern) {
 			throw new RuntimeException("timeUnitPattern must not be null");
 		}
+		TimeUnit timeUnit = null;
+		long timeout = 0;
+		switch (timeUnitPattern) {
+		case YEAR:
+			timeout = 367;
+			timeUnit = TimeUnit.DAYS;
+			break;
+		case MONTH:
+			timeout = 32;
+			timeUnit = TimeUnit.DAYS;
+			break;
+		case DAY:
+			timeout = 2;
+			timeUnit = TimeUnit.DAYS;
+			break;
+		case HOUR:
+			timeout = 2;
+			timeUnit = TimeUnit.HOURS;
+			break;
+		case MINUTE:
+			timeout = 2;
+			timeUnit = TimeUnit.MINUTES;
+			break;
+		case SECONDS:
+			timeout = 2;
+			timeUnit = TimeUnit.SECONDS;
+			break;
+		}
 
 		String key = Stream.of(accessKey, resourcePin).filter(StringUtils::isNotBlank).collect(Collectors.joining(":"));
 
-		Incremented incremented = countLimiter.increment(key, timeUnitPattern, System.currentTimeMillis(), 2,
-				TimeUnit.DAYS, limitCount);
+		Incremented incremented = countLimiter.increment(key, timeUnitPattern, System.currentTimeMillis(), timeout,
+				timeUnit, limitCount);
 		if (BooleanUtils.isTrue(incremented.getAccessed())) {
 			return incremented;
 		} else {
