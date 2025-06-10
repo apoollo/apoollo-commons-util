@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.web.cors.CorsConfiguration;
 
+import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
 import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 import com.apoollo.commons.util.request.context.limiter.support.LimitersSupport;
 
@@ -40,6 +41,7 @@ public class DefaultLimitersSupport implements LimitersSupport {
 	private Boolean enableSyncLimiter;
 	private Boolean enableFlowLimiter;
 	private Long flowLimiterLimitCount;
-	private Boolean enableDailyCountLimiter;
-	private Long dailyCountLimiterLimitCount;
+	private Boolean enableCountLimiter;
+	private TimeUnitPattern countLimiterTimeUnitPattern;
+	private Long countLimiterLimitCount;
 }

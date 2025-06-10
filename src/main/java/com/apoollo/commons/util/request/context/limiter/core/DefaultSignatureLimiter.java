@@ -20,7 +20,6 @@ import com.apoollo.commons.util.crypto.hash.HmacSHA256;
 import com.apoollo.commons.util.crypto.hash.MacHash;
 import com.apoollo.commons.util.exception.AppIllegalArgumentException;
 import com.apoollo.commons.util.request.context.limiter.SignatureLimiter;
-import com.apoollo.commons.util.request.context.limiter.support.SignatureLimiterSupport;
 import com.apoollo.commons.util.request.context.model.RequestConstants;
 import com.apoollo.commons.util.request.context.model.ServletInputStreamHelper;
 
@@ -37,24 +36,22 @@ public class DefaultSignatureLimiter implements SignatureLimiter {
 	private static final MacHash HMAC_SHA256 = new HmacSHA256();
 
 	@Override
-	public void limit(HttpServletRequest request, SignatureLimiterSupport signatureLimterSupport,
-			Supplier<byte[]> body) {
+	public void limit(HttpServletRequest request, String secret, List<String> signatureLimiterExcludeHeaderNames,
+			List<String> signatureLimiterIncludeHeaderNames, Supplier<byte[]> body) {
 
 		String requestSignature = request.getHeader(RequestConstants.REQUEST_HEADER_SIGNATURE);
 		if (StringUtils.isBlank(requestSignature)) {
 			throw new AppIllegalArgumentException(
 					"header [" + RequestConstants.REQUEST_HEADER_SIGNATURE + "] must not be null");
 		}
-		String secret = signatureLimterSupport.getSignatureLimiterSecret();
 		if (StringUtils.isBlank(secret)) {
 			throw new RuntimeException("secret must not be blank");
 		}
 		String requestMehtod = request.getMethod();
 		String requestUri = request.getRequestURI();
 		String queryString = request.getQueryString();
-		TreeMap<String, String> headers = getHeaders(request,
-				signatureLimterSupport.getSignatureLimiterExcludeHeaderNames(),
-				signatureLimterSupport.getSignatureLimiterIncludeHeaderNames());
+		TreeMap<String, String> headers = getHeaders(request, signatureLimiterExcludeHeaderNames,
+				signatureLimiterIncludeHeaderNames);
 		Charset charset = ServletInputStreamHelper.getCharset(request);
 		String httpContent = HttpContentUtils.getHttpContent(charset, requestMehtod, requestUri, queryString, headers,
 				body.get());

@@ -9,7 +9,7 @@ import org.apache.commons.lang3.BooleanUtils;
 
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.limiter.CorsLimiter;
-import com.apoollo.commons.util.request.context.limiter.DailyCountLimiter;
+import com.apoollo.commons.util.request.context.limiter.TimeUnitPatternCountLimiter;
 import com.apoollo.commons.util.request.context.limiter.FlowLimiter;
 import com.apoollo.commons.util.request.context.limiter.IpLimiter;
 import com.apoollo.commons.util.request.context.limiter.Limiters;
@@ -36,11 +36,11 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 	private RefererLimiter refererLimiter;
 	private SyncLimiter syncLimiter;
 	private FlowLimiter flowLimiter;
-	private DailyCountLimiter dailyCountLimiter;
+	private TimeUnitPatternCountLimiter timeUnitPatternCountLimiter;
 
 	public DefaultLimiters(NonceLimiter nonceLimiter, SignatureLimiter signatureLimter, CorsLimiter corsLimiter,
 			IpLimiter ipLimiter, RefererLimiter refererLimiter, SyncLimiter syncLimiter, FlowLimiter flowLimiter,
-			DailyCountLimiter dailyCountLimiter) {
+			TimeUnitPatternCountLimiter timeUnitPatternCountLimiter) {
 		super();
 		this.nonceLimiter = nonceLimiter;
 		this.signatureLimter = signatureLimter;
@@ -49,7 +49,7 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 		this.refererLimiter = refererLimiter;
 		this.syncLimiter = syncLimiter;
 		this.flowLimiter = flowLimiter;
-		this.dailyCountLimiter = dailyCountLimiter;
+		this.timeUnitPatternCountLimiter = timeUnitPatternCountLimiter;
 	}
 
 	@Override
@@ -61,10 +61,11 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 		// Limiters 中的异常需要重新规划，返回的Code码
 
 		if (BooleanUtils.isTrue(support.getEnableNonceLimiter())) {
-			nonceLimiter.limit(request, support);
+			nonceLimiter.limit(request, support.getNonceLimiterValidator(), support.getNonceLimiterDuration());
 		}
 		if (BooleanUtils.isTrue(support.getEnableSignatureLimiter())) {
-			signatureLimter.limit(request, support,
+			signatureLimter.limit(request, support.getSignatureLimiterSecret(),
+					support.getSignatureLimiterExcludeHeaderNames(), support.getSignatureLimiterIncludeHeaderNames(),
 					() -> ServletInputStreamHelper.getCachingBodyByteArray(requestContext, request));
 		}
 		if (BooleanUtils.isTrue(support.getEnableCorsLimiter())) {
@@ -83,9 +84,9 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 		if (BooleanUtils.isTrue(support.getEnableFlowLimiter())) {
 			flowLimiter.limit(support.getAccessKey(), support.getResourcePin(), support.getFlowLimiterLimitCount());
 		}
-		if (BooleanUtils.isTrue(support.getEnableDailyCountLimiter())) {
-			dailyCountLimiter.limit(support.getAccessKey(), support.getResourcePin(),
-					support.getDailyCountLimiterLimitCount());
+		if (BooleanUtils.isTrue(support.getEnableCountLimiter())) {
+			timeUnitPatternCountLimiter.limit(support.getAccessKey(), support.getResourcePin(),
+					support.getCountLimiterTimeUnitPattern(), support.getCountLimiterLimitCount());
 		}
 	}
 

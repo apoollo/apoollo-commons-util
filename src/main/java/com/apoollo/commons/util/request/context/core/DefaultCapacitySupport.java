@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
 import com.apoollo.commons.util.request.context.EscapeMethod;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.limiter.core.DefaultLimitersSupport;
@@ -50,8 +51,9 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		private Boolean enableSyncLimiter;
 		private Boolean enableFlowLimiter;
 		private Long flowLimiterLimitCount;
-		private Boolean enableDailyCountLimiter;
-		private Long dailyCountLimiterLimitCount;
+		private Boolean enableCountLimiter;
+		private TimeUnitPattern countLimiterTimeUnitPattern;
+		private Long countLimiterLimitCount;
 		private Boolean enableCapacity;
 		private Boolean enableContentEscape;
 		private Boolean enableResponseWrapper;
@@ -82,8 +84,9 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setEnableSyncLimiter(source.getEnableSyncLimiter());
 		target.setEnableFlowLimiter(source.getEnableFlowLimiter());
 		target.setFlowLimiterLimitCount(source.getFlowLimiterLimitCount());
-		target.setEnableDailyCountLimiter(source.getEnableDailyCountLimiter());
-		target.setDailyCountLimiterLimitCount(source.getDailyCountLimiterLimitCount());
+		target.setEnableCountLimiter(source.getEnableCountLimiter());
+		target.setCountLimiterTimeUnitPattern(source.getCountLimiterTimeUnitPattern());
+		target.setCountLimiterLimitCount(source.getCountLimiterLimitCount());
 		target.setEnableCapacity(source.getEnableCapacity());
 		target.setEnableContentEscape(source.getEnableContentEscape());
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());
@@ -120,8 +123,9 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setEnableSyncLimiter(source.getEnableSyncLimiter());
 		target.setEnableFlowLimiter(source.getEnableFlowLimiter());
 		target.setFlowLimiterLimitCount(source.getFlowLimiterLimitCount());
-		target.setEnableDailyCountLimiter(source.getEnableDailyCountLimiter());
-		target.setDailyCountLimiterLimitCount(source.getDailyCountLimiterLimitCount());
+		target.setEnableCountLimiter(source.getEnableCountLimiter());
+		target.setCountLimiterTimeUnitPattern(source.getCountLimiterTimeUnitPattern());
+		target.setCountLimiterLimitCount(source.getCountLimiterLimitCount());
 		target.setEnableCapacity(source.getEnableCapacity());
 		target.setEnableContentEscape(source.getEnableContentEscape());
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());

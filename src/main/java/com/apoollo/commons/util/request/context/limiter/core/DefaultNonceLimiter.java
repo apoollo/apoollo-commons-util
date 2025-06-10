@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.apoollo.commons.util.exception.AppIllegalArgumentException;
 import com.apoollo.commons.util.request.context.limiter.NonceLimiter;
 import com.apoollo.commons.util.request.context.limiter.NonceValidator;
-import com.apoollo.commons.util.request.context.limiter.support.NonceLimiterSupport;
 import com.apoollo.commons.util.request.context.model.RequestConstants;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,14 +29,14 @@ public class DefaultNonceLimiter implements NonceLimiter {
 		this.nonceValidator = nonceValidator;
 	}
 
-	public void limit(HttpServletRequest request, NonceLimiterSupport nonceLimiterSupport) {
+	public void limit(HttpServletRequest request, NonceValidator nonceLimiterValidator, Long nonceLimiterDuration) {
 
 		String timestamp = request.getHeader(RequestConstants.REQUEST_HEADER_TIMESTAMP);
 		if (StringUtils.isBlank(timestamp)) {
 			throw new AppIllegalArgumentException(
 					"header [" + RequestConstants.REQUEST_HEADER_TIMESTAMP + "] must not be null");
 		}
-		Long expireTimestampLong = nonceLimiterSupport.getNonceLimiterDuration();
+		Long expireTimestampLong = nonceLimiterDuration;
 		if (null == expireTimestampLong) {
 			throw new RuntimeException("nonceDuration must not be null");
 		}
@@ -57,11 +56,11 @@ public class DefaultNonceLimiter implements NonceLimiter {
 			throw new AppIllegalArgumentException(
 					"header [" + RequestConstants.REQUEST_HEADER_NONCE + "] must not be null");
 		}
-		NonceValidator nonceValidator = nonceLimiterSupport.getNonceLimiterValidator();
+		NonceValidator nonceValidator = nonceLimiterValidator;
 		if (null == nonceValidator) {
 			nonceValidator = this.nonceValidator;
 		}
-		if (!nonceValidator.isValid(nonce, nonceLimiterSupport.getNonceLimiterDuration())) {
+		if (!nonceValidator.isValid(nonce, nonceLimiterDuration)) {
 			throw new AppIllegalArgumentException("header [" + RequestConstants.REQUEST_HEADER_NONCE + "] invalid");
 		}
 	}

@@ -42,9 +42,31 @@ public interface RedisNameSpaceKey {
 		return ":";
 	}
 
-	public static String getDaily(Long currentTimeMillis) {
-		return DateFormatUtils.format(currentTimeMillis, "yyyyMMdd");
+	public static enum TimeUnitPattern {
+		
+		YEAR("yyyy"), //
+		MONTH("yyyyMM"), //
+		DAY("yyyyMMdd"), //
+		HOUR("yyyyMMddHH"), //
+		MINUTE("yyyyMMddHHmm"), //
+		SECONDS("yyyyMMddHHmmss");
+
+		private String pattern;
+
+		private TimeUnitPattern(String pattern) {
+			this.pattern = pattern;
+		}
+
+		public String getPattern() {
+			return pattern;
+		}
+		
+		public static String getTimeUnitPattern(long currentTimeMillis, TimeUnitPattern timeUnitPattern) {
+			return DateFormatUtils.format(currentTimeMillis, timeUnitPattern.getPattern());
+		}
 	}
+
+
 
 	public static final String SYNC_LIMITER = "sync-limiter";
 	public static final String COUNT_LIMITER = "count-limiter";

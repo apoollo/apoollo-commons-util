@@ -14,6 +14,7 @@ import com.alibaba.fastjson2.JSON;
 import com.apoollo.commons.util.redis.service.AbstractNamespaceRedisEvalLua;
 import com.apoollo.commons.util.redis.service.CountLimiter;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
+import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,9 +33,11 @@ public class CommonsCountLimiter extends AbstractNamespaceRedisEvalLua implement
 	}
 
 	@Override
-	public Incremented increment(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
-			long limitCount) {
-		return increment(key, null, currentTimeMillis, timeout, timeoutUnit, limitCount);
+	public Incremented increment(String key, TimeUnitPattern timeUnitPattern, long currentTimeMillis, long timeout,
+			TimeUnit timeoutUnit, long limitCount) {
+		String keyPrefix = null == timeUnitPattern ? null
+				: TimeUnitPattern.getTimeUnitPattern(currentTimeMillis, timeUnitPattern);
+		return increment(key, keyPrefix, currentTimeMillis, timeout, timeoutUnit, limitCount);
 	}
 
 	public Incremented increment(String key, String keyPrefix, long currentTimeMillis, long timeout,
@@ -48,17 +51,6 @@ public class CommonsCountLimiter extends AbstractNamespaceRedisEvalLua implement
 		Incremented incremented = JSON.parseObject(result, Incremented.class);
 		incremented.setKey(targetKey);
 		return incremented;
-	}
-
-	@Override
-	public Incremented incrementDate(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit,
-			long limitCount) {
-		if (timeout < 1) {
-			throw new IllegalArgumentException("timeoutDays must great than 0");
-		}
-		return increment(key, RedisNameSpaceKey.getDaily(currentTimeMillis), currentTimeMillis, timeout, timeoutUnit,
-				limitCount);
-
 	}
 
 	@Getter

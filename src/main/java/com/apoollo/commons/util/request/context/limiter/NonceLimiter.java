@@ -3,8 +3,6 @@
  */
 package com.apoollo.commons.util.request.context.limiter;
 
-import com.apoollo.commons.util.request.context.limiter.support.NonceLimiterSupport;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -13,5 +11,5 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface NonceLimiter {
 
-	public void limit(HttpServletRequest request, NonceLimiterSupport nonceLimiterSupport);
+	public void limit(HttpServletRequest request, NonceValidator nonceLimiterValidator, Long nonceLimiterDuration);
 }

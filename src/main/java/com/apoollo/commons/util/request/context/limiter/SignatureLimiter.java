@@ -3,9 +3,8 @@
  */
 package com.apoollo.commons.util.request.context.limiter;
 
+import java.util.List;
 import java.util.function.Supplier;
-
-import com.apoollo.commons.util.request.context.limiter.support.SignatureLimiterSupport;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -15,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface SignatureLimiter {
 
-	public void limit(HttpServletRequest request, SignatureLimiterSupport signatureLimterSupport, Supplier<byte[]> body);
+	public void limit(HttpServletRequest request, String secret, List<String> signatureLimiterExcludeHeaderNames,
+			List<String> signatureLimiterIncludeHeaderNames, Supplier<byte[]> body);
 
 }

@@ -5,6 +5,7 @@ package com.apoollo.commons.util.request.context.limiter.support;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -29,6 +30,14 @@ public interface CapacitySupport extends LimitersSupport {
 	public Boolean getEnableResponseWrapper();
 
 	public WrapResponseHandler getWrapResponseHandler();
+
+	public static void doSupport(List<CapacitySupport> capacitySupports, Consumer<CapacitySupport> consumer) {
+		capacitySupports//
+				.stream()//
+				.filter(Objects::nonNull)//
+				.filter(support -> BooleanUtils.isNotFalse(support.getEnableCapacity()))//
+				.forEach(consumer);
+	}
 
 	public static boolean supportAbility(RequestContext requestContext, CapacitySupport capacitySupport,
 			Function<CapacitySupport, Boolean> function) {

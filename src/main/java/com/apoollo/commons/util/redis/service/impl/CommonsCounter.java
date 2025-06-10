@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.script.RedisScript;
 import com.apoollo.commons.util.redis.service.AbstractNamespaceRedisEvalLua;
 import com.apoollo.commons.util.redis.service.Counter;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
+import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
 
 /**
  * @author liuyulong
@@ -26,8 +27,11 @@ public class CommonsCounter extends AbstractNamespaceRedisEvalLua implements Cou
 	}
 
 	@Override
-	public Long increment(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit) {
-		return increment(key, null, currentTimeMillis, timeout, timeoutUnit);
+	public Long increment(String key, TimeUnitPattern timeUnitPattern, long currentTimeMillis, long timeout,
+			TimeUnit timeoutUnit) {
+		String keyPrefix = null == timeUnitPattern ? null
+				: TimeUnitPattern.getTimeUnitPattern(currentTimeMillis, timeUnitPattern);
+		return increment(key, keyPrefix, currentTimeMillis, timeout, timeoutUnit);
 	}
 
 	public Long increment(String key, String keySuffix, long currentTimeMillis, long timeout, TimeUnit timeoutUnit) {
@@ -38,11 +42,6 @@ public class CommonsCounter extends AbstractNamespaceRedisEvalLua implements Cou
 		);
 		Long result = execute(REDIS_SCRIPT, targetKey, getRedisExpireAt(expireAt));
 		return result;
-	}
-
-	@Override
-	public Long incrementDate(String key, long currentTimeMillis, long timeout, TimeUnit timeoutUnit) {
-		return increment(key, RedisNameSpaceKey.getDaily(currentTimeMillis), currentTimeMillis, timeout, timeoutUnit);
 	}
 
 }
