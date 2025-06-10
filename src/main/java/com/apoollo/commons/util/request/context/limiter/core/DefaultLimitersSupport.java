@@ -22,44 +22,24 @@ import lombok.Setter;
 public class DefaultLimitersSupport implements LimitersSupport {
 	
 	private String resourcePin;
-
 	private String accessKey;
-
 	private Boolean enableNonceLimiter;
-
 	private NonceValidator nonceLimiterValidator;
-
 	private Long nonceLimiterDuration;
-
 	private Boolean enableSignatureLimiter;
-
 	private String signatureLimiterSecret;
-
 	private List<String> signatureLimiterExcludeHeaderNames;
-
 	private List<String> signatureLimiterIncludeHeaderNames;
-
 	private Boolean enableCorsLimiter;
-
 	private CorsConfiguration corsLimiterConfiguration;
-
 	private Boolean enableIpLimiter;
-
 	private List<String> ipLimiterExcludes;
-
 	private List<String> ipLimiterIncludes;
-
 	private Boolean enableRefererLimiter;
-
 	private List<String> refererLimiterIncludeReferers;
-
 	private Boolean enableSyncLimiter;
-
 	private Boolean enableFlowLimiter;
-
 	private Long flowLimiterLimitCount;
-
 	private Boolean enableDailyCountLimiter;
-
 	private Long dailyCountLimiterLimitCount;
 }

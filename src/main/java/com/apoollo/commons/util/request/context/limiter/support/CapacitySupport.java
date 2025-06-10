@@ -30,21 +30,30 @@ public interface CapacitySupport extends LimitersSupport {
 
 	public WrapResponseHandler getWrapResponseHandler();
 
-	public static boolean support(RequestContext requestContext, CapacitySupport capacitySupport,
+	public static boolean supportAbility(RequestContext requestContext, CapacitySupport capacitySupport,
 			Function<CapacitySupport, Boolean> function) {
+		Boolean support = getAbility(LangUtils
+				.getStream(capacitySupport, requestContext.getRequestResource(), requestContext.getUser()).toList(),
+				function);
+		return BooleanUtils.isTrue(support);
+	}
 
-		return support(LangUtils
+	public static <T> T getAbility(RequestContext requestContext, CapacitySupport capacitySupport,
+			Function<CapacitySupport, T> function) {
+		return getAbility(LangUtils
 				.getStream(capacitySupport, requestContext.getRequestResource(), requestContext.getUser()).toList(),
 				function);
 	}
 
-	public static boolean support(List<CapacitySupport> capacitySupports, Function<CapacitySupport, Boolean> function) {
+	public static <T> T getAbility(List<CapacitySupport> capacitySupports, Function<CapacitySupport, T> function) {
 		return capacitySupports//
 				.stream()//
 				.filter(Objects::nonNull)//
 				.filter(support -> BooleanUtils.isNotFalse(support.getEnableCapacity()))//
-				.filter(support -> BooleanUtils.isTrue(function.apply(support)))//
+				.map(support -> function.apply(support))//
+				.filter(Objects::nonNull)//
 				.findAny()//
-				.isPresent();
+				.orElse(null)//
+		;
 	}
 }
