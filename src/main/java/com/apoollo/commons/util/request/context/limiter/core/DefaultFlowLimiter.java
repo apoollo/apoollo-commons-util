@@ -25,19 +25,20 @@ public class DefaultFlowLimiter implements FlowLimiter {
 
 	@Override
 	public void limit(String accessKey, String resourcePin, Long limitCount) {
-		if (null != limitCount && limitCount > 0) {
 
-			if (limitCount % 2 != 0) {
-				throw new IllegalArgumentException("limitCount illegal: " + limitCount);
-			}
+		if (null == limitCount || limitCount < 1) {
+			throw new RuntimeException("limitCount must ge 1");
+		}
 
-			String key = Stream.of(accessKey, resourcePin).filter(StringUtils::isNotBlank)
-					.collect(Collectors.joining(":"));
+		if (limitCount % 2 != 0) {
+			throw new IllegalArgumentException("limitCount illegal: " + limitCount);
+		}
 
-			// 500毫秒内可以调用的次数
-			if (!slidingWindowLimiter.access(key, 500, limitCount / 2)) {
-				throw new AppServerOverloadedException("流量超限");
-			}
+		String key = Stream.of(accessKey, resourcePin).filter(StringUtils::isNotBlank).collect(Collectors.joining(":"));
+
+		// 500毫秒内可以调用的次数
+		if (!slidingWindowLimiter.access(key, 500, limitCount / 2)) {
+			throw new AppServerOverloadedException("流量超限");
 		}
 	}
 

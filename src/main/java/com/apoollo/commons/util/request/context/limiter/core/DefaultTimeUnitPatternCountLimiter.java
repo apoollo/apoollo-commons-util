@@ -35,6 +35,11 @@ public class DefaultTimeUnitPatternCountLimiter implements TimeUnitPatternCountL
 		if (null == timeUnitPattern) {
 			throw new RuntimeException("timeUnitPattern must not be null");
 		}
+
+		if (null == limitCount || limitCount < 1) {
+			throw new RuntimeException("limitCount must ge 1");
+		}
+
 		TimeUnit timeUnit = null;
 		long timeout = 0;
 		switch (timeUnitPattern) {
