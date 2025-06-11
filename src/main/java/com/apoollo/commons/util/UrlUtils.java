@@ -3,9 +3,12 @@
  */
 package com.apoollo.commons.util;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -95,6 +98,36 @@ public class UrlUtils {
 
 		public String serialize() {
 			return StringUtils.join(serializeHome(), serializePathQuery());
+		}
+	}
+
+	public static class QueryBuilder<T> {
+		private final StringBuilder builder = new StringBuilder();
+		private final T queryObject;
+
+		public QueryBuilder(T queryObject) {
+			this.queryObject = queryObject;
+		}
+
+		public QueryBuilder<T> append(String name, Function<T, Object> valueExtractor) {
+			return append(queryObject -> name, valueExtractor);
+		}
+
+		public QueryBuilder<T> append(Function<T, String> nameExtractor, Function<T, Object> valueExtractor) {
+			String name = nameExtractor.apply(queryObject);
+			Object value = valueExtractor.apply(queryObject);
+			if (null != name && null != value) {
+				if (builder.length() > 0) {
+					builder.append("&");
+				}
+				builder.append(URLEncoder.encode(name, StandardCharsets.UTF_8)).append("=")
+						.append(URLEncoder.encode(value.toString(), StandardCharsets.UTF_8));
+			}
+			return this;
+		}
+
+		public String build() {
+			return builder.toString();
 		}
 	}
 }
