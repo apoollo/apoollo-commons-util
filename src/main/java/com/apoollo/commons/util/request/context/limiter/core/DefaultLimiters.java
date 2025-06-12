@@ -9,7 +9,6 @@ import org.apache.commons.lang3.BooleanUtils;
 
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.limiter.CorsLimiter;
-import com.apoollo.commons.util.request.context.limiter.TimeUnitPatternCountLimiter;
 import com.apoollo.commons.util.request.context.limiter.FlowLimiter;
 import com.apoollo.commons.util.request.context.limiter.IpLimiter;
 import com.apoollo.commons.util.request.context.limiter.Limiters;
@@ -17,6 +16,7 @@ import com.apoollo.commons.util.request.context.limiter.NonceLimiter;
 import com.apoollo.commons.util.request.context.limiter.RefererLimiter;
 import com.apoollo.commons.util.request.context.limiter.SignatureLimiter;
 import com.apoollo.commons.util.request.context.limiter.SyncLimiter;
+import com.apoollo.commons.util.request.context.limiter.TimeUnitPatternCountLimiter;
 import com.apoollo.commons.util.request.context.limiter.support.LimitersSupport;
 import com.apoollo.commons.util.request.context.model.ServletInputStreamHelper;
 
@@ -56,35 +56,31 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 	public void limit(HttpServletRequest request, HttpServletResponse response, RequestContext requestContext,
 			T support) {
 
-		// TODO list
-		// 一个请求中，同一个limiter 最多只能请求一次，防止配置混乱
-		// Limiters 中的异常需要重新规划，返回的Code码
-
-		if (BooleanUtils.isTrue(support.getEnableNonceLimiter())) {
+		if (enableEnableNonceLimiter(requestContext, support)) {
 			nonceLimiter.limit(request, support.getNonceLimiterValidator(), support.getNonceLimiterDuration());
 		}
-		if (BooleanUtils.isTrue(support.getEnableSignatureLimiter())) {
+		if (enableSignatureLimiter(requestContext, support)) {
 			signatureLimter.limit(request, support.getSignatureLimiterSecret(),
 					support.getSignatureLimiterExcludeHeaderNames(), support.getSignatureLimiterIncludeHeaderNames(),
 					() -> ServletInputStreamHelper.getCachingBodyByteArray(requestContext, request));
 		}
-		if (BooleanUtils.isTrue(support.getEnableCorsLimiter())) {
+		if (enableCorsLimiter(requestContext, support)) {
 			corsLimiter.limit(request, response, support.getCorsLimiterConfiguration());
 		}
-		if (BooleanUtils.isTrue(support.getEnableIpLimiter())) {
+		if (enableIpLimiter(requestContext, support)) {
 			ipLimiter.limit(support.getIpLimiterExcludes(), support.getIpLimiterIncludes(),
 					requestContext.getRequestIp());
 		}
-		if (BooleanUtils.isTrue(support.getEnableRefererLimiter())) {
+		if (enableRefererLimiter(requestContext, support)) {
 			refererLimiter.limit(request, support.getRefererLimiterIncludeReferers());
 		}
-		if (BooleanUtils.isTrue(support.getEnableSyncLimiter())) {
+		if (enableSyncLimiter(requestContext, support)) {
 			syncLimiter.limit(support.getAccessKey(), support.getResourcePin(), Duration.ofSeconds(30));
 		}
-		if (BooleanUtils.isTrue(support.getEnableFlowLimiter())) {
+		if (enableFlowLimiter(requestContext, support)) {
 			flowLimiter.limit(support.getAccessKey(), support.getResourcePin(), support.getFlowLimiterLimitCount());
 		}
-		if (BooleanUtils.isTrue(support.getEnableCountLimiter())) {
+		if (enableCountLimiter(requestContext, support)) {
 			timeUnitPatternCountLimiter.limit(support.getAccessKey(), support.getResourcePin(),
 					support.getCountLimiterTimeUnitPattern(), support.getCountLimiterLimitCount());
 		}
@@ -96,6 +92,38 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 		if (BooleanUtils.isTrue(support.getEnableSyncLimiter())) {
 			syncLimiter.unlimit(support.getAccessKey(), support.getResourcePin());
 		}
+	}
+
+	protected boolean enableEnableNonceLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableNonceLimiter());
+	}
+
+	protected boolean enableSignatureLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableSignatureLimiter());
+	}
+
+	protected boolean enableCorsLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableCorsLimiter());
+	}
+
+	protected boolean enableIpLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableIpLimiter());
+	}
+
+	protected boolean enableRefererLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableRefererLimiter());
+	}
+
+	protected boolean enableSyncLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableSyncLimiter());
+	}
+
+	protected boolean enableFlowLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableFlowLimiter());
+	}
+
+	protected boolean enableCountLimiter(RequestContext requestContext, T support) {
+		return BooleanUtils.isTrue(support.getEnableCountLimiter());
 	}
 
 }

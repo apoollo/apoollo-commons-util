@@ -3,8 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.access;
 
-import java.util.List;
-
+import com.apoollo.commons.util.request.context.access.UserRequestResourceMatcher.UserMatchesRequestResourceCondition;
 import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
 
 /**
@@ -31,13 +30,27 @@ public interface User extends CapacitySupport {
 
 	public Boolean getEnableRenewal();
 
-	public List<String> getRoles();
-
-	public List<String> getAllowRequestAntPathPatterns();
+	public UserMatchesRequestResourceCondition getAuthorizationCondition();
 
 	public Long getPasswordExpireTime();
 
 	public Object getAttachement();
+
+	public UserMatchesRequestResourceCondition getNonceLimiterCondition();
+
+	public UserMatchesRequestResourceCondition getSignatureLimiterCondition();
+
+	public UserMatchesRequestResourceCondition getCorsLimiterCondition();
+
+	public UserMatchesRequestResourceCondition getIpLimiterCondition();
+
+	public UserMatchesRequestResourceCondition getRefererLimiterCondition();
+
+	public UserMatchesRequestResourceCondition getSyncLimiterCondition();
+
+	public UserMatchesRequestResourceCondition getFlowLimiterCondition();
+
+	public UserMatchesRequestResourceCondition getCountLimiterCondition();
 
 	public default boolean passwordIsExpired() {
 		return null != getPasswordExpireTime() && getPasswordExpireTime() < System.currentTimeMillis();

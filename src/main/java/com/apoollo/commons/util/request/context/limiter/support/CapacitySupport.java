@@ -31,7 +31,7 @@ public interface CapacitySupport extends LimitersSupport {
 
 	public WrapResponseHandler getWrapResponseHandler();
 
-	public static void doSupport(List<CapacitySupport> capacitySupports, Consumer<CapacitySupport> consumer) {
+	public static <T extends CapacitySupport> void doSupport(List<T> capacitySupports, Consumer<T> consumer) {
 		capacitySupports//
 				.stream()//
 				.filter(Objects::nonNull)//

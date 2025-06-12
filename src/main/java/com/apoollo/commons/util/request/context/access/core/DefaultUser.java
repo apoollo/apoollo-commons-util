@@ -3,9 +3,8 @@
  */
 package com.apoollo.commons.util.request.context.access.core;
 
-import java.util.List;
-
 import com.apoollo.commons.util.request.context.access.User;
+import com.apoollo.commons.util.request.context.access.UserRequestResourceMatcher.UserMatchesRequestResourceCondition;
 import com.apoollo.commons.util.request.context.core.DefaultCapacitySupport;
 import com.apoollo.commons.util.web.spring.Instance;
 
@@ -28,10 +27,17 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 	private String userType;
 	private String userTypeName;
 	private Boolean enableRenewal;
-	private List<String> roles;
-	private List<String> allowRequestAntPathPatterns;
+	private UserMatchesRequestResourceCondition authorizationCondition;
 	private Long passwordExpireTime;
 	private Object attachement;
+	private UserMatchesRequestResourceCondition nonceLimiterCondition;
+	private UserMatchesRequestResourceCondition signatureLimiterCondition;
+	private UserMatchesRequestResourceCondition corsLimiterCondition;
+	private UserMatchesRequestResourceCondition ipLimiterCondition;
+	private UserMatchesRequestResourceCondition refererLimiterCondition;
+	private UserMatchesRequestResourceCondition syncLimiterCondition;
+	private UserMatchesRequestResourceCondition flowLimiterCondition;
+	private UserMatchesRequestResourceCondition countLimiterCondition;
 
 	@Getter
 	@Setter
@@ -44,10 +50,17 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		private String userType;
 		private String userTypeName;
 		private Boolean enableRenewal;
-		private List<String> roles;
-		private List<String> allowRequestAntPathPatterns;
+		private UserMatchesRequestResourceCondition authorizationCondition;
 		private Long passwordExpireTime;
 		private Object attachement;
+		private UserMatchesRequestResourceCondition nonceLimiterCondition;
+		private UserMatchesRequestResourceCondition signatureLimiterCondition;
+		private UserMatchesRequestResourceCondition corsLimiterCondition;
+		private UserMatchesRequestResourceCondition ipLimiterCondition;
+		private UserMatchesRequestResourceCondition refererLimiterCondition;
+		private UserMatchesRequestResourceCondition syncLimiterCondition;
+		private UserMatchesRequestResourceCondition flowLimiterCondition;
+		private UserMatchesRequestResourceCondition countLimiterCondition;
 	}
 
 	public static User toUser(Instance instance, SerializableUser source) {
@@ -60,10 +73,17 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		target.setUserType(source.getUserType());
 		target.setUserTypeName(source.getUserTypeName());
 		target.setEnableRenewal(source.getEnableRenewal());
-		target.setRoles(source.getRoles());
-		target.setAllowRequestAntPathPatterns(source.getAllowRequestAntPathPatterns());
+		target.setAuthorizationCondition(source.getAuthorizationCondition());
 		target.setPasswordExpireTime(source.getPasswordExpireTime());
 		target.setAttachement(source.getAttachement());
+		target.setNonceLimiterCondition(source.getNonceLimiterCondition());
+		target.setSignatureLimiterCondition(source.getSignatureLimiterCondition());
+		target.setCorsLimiterCondition(source.getCorsLimiterCondition());
+		target.setIpLimiterCondition(source.getIpLimiterCondition());
+		target.setRefererLimiterCondition(source.getRefererLimiterCondition());
+		target.setSyncLimiterCondition(source.getSyncLimiterCondition());
+		target.setFlowLimiterCondition(source.getFlowLimiterCondition());
+		target.setCountLimiterCondition(source.getCountLimiterCondition());
 		DefaultCapacitySupport.evlaute(instance, source, target);
 		return target;
 	}
@@ -78,10 +98,17 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		target.setUserType(source.getUserType());
 		target.setUserTypeName(source.getUserTypeName());
 		target.setEnableRenewal(source.getEnableRenewal());
-		target.setRoles(source.getRoles());
-		target.setAllowRequestAntPathPatterns(source.getAllowRequestAntPathPatterns());
+		target.setAuthorizationCondition(source.getAuthorizationCondition());
 		target.setPasswordExpireTime(source.getPasswordExpireTime());
 		target.setAttachement(source.getAttachement());
+		target.setNonceLimiterCondition(source.getNonceLimiterCondition());
+		target.setSignatureLimiterCondition(source.getSignatureLimiterCondition());
+		target.setCorsLimiterCondition(source.getCorsLimiterCondition());
+		target.setIpLimiterCondition(source.getIpLimiterCondition());
+		target.setRefererLimiterCondition(source.getRefererLimiterCondition());
+		target.setSyncLimiterCondition(source.getSyncLimiterCondition());
+		target.setFlowLimiterCondition(source.getFlowLimiterCondition());
+		target.setCountLimiterCondition(source.getCountLimiterCondition());
 		DefaultCapacitySupport.evlaute(source, target);
 		return target;
 	}
