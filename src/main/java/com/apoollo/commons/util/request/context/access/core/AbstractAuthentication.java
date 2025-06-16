@@ -11,9 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.apoollo.commons.util.exception.AppForbbidenException;
-import com.apoollo.commons.util.exception.detailed.AccessKeyEmptyException;
-import com.apoollo.commons.util.exception.detailed.TokenEmptyExcetion;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationAccessKeyIllegalException;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationTokenIllegalException;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationUserDisabledException;
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.access.Authentication;
 import com.apoollo.commons.util.request.context.access.TokenPair;
@@ -43,18 +43,18 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 		TokenPair<T> tokenPair = getTokenPair(request, requestContext);
 		String accessKey = tokenPair.getAccessKey();
 		if (StringUtils.isBlank(accessKey)) {
-			throw new AccessKeyEmptyException("[accessKey] must not be blank");
+			throw new AppAuthenticationAccessKeyIllegalException("[accessKey] must not be blank");
 		}
 		T token = tokenPair.getToken();
 		if (null == token) {
-			throw new TokenEmptyExcetion("[token] must not be null");
+			throw new AppAuthenticationTokenIllegalException("[token] must not be null");
 		}
 		User user = userManager.getUser(accessKey);
 		if (null == user) {
-			throw new AppForbbidenException("Not Logged In : " + accessKey);
+			throw new AppAuthenticationAccessKeyIllegalException("Not Logged In : " + accessKey);
 		}
 		if (!BooleanUtils.isTrue(user.getEnable())) {
-			throw new AppForbbidenException("user disabled : " + accessKey);
+			throw new AppAuthenticationUserDisabledException("user disabled : " + accessKey);
 		}
 		String secretKey = user.getSecretKey();
 		if (StringUtils.isBlank(secretKey)) {
@@ -72,7 +72,7 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 					ServletInputStreamHelper.getCharset(request));
 			return map.apply(jsonObject);
 		} else {
-			throw new RuntimeException("body must not be null");
+			throw new AppAuthenticationTokenIllegalException("body required");
 		}
 	}
 

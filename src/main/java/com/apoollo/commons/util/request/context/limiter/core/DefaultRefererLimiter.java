@@ -9,7 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import com.apoollo.commons.util.UrlUtils;
 import com.apoollo.commons.util.UrlUtils.Url;
-import com.apoollo.commons.util.exception.AppIllegalArgumentException;
+import com.apoollo.commons.util.exception.refactor.AppRefererLimiterRefusedException;
 import com.apoollo.commons.util.request.context.limiter.RefererLimiter;
 import com.apoollo.commons.util.request.context.model.RequestConstants;
 
@@ -36,7 +36,7 @@ public class DefaultRefererLimiter implements RefererLimiter {
 						matches = domain.equals(includeReferer);
 					}
 					if (!matches) {
-						throw new AppIllegalArgumentException(
+						throw new AppRefererLimiterRefusedException(
 								"header [" + RequestConstants.REQUEST_HEADER_REFERER + "]  not allowed");
 					}
 				});

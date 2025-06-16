@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import com.apoollo.commons.util.exception.AppForbbidenException;
+import com.apoollo.commons.util.exception.refactor.AppAuthorizationForbiddenException;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
 import com.apoollo.commons.util.request.context.access.Authorization;
 import com.apoollo.commons.util.request.context.access.RequestResource;
@@ -68,7 +68,7 @@ public class DefaultAuthorization implements Authorization {
 					authorized = result;
 				}
 				if (!authorized) {
-					throw new AppForbbidenException("unauthorized");
+					throw new AppAuthorizationForbiddenException("unauthorized");
 				}
 			}
 		}

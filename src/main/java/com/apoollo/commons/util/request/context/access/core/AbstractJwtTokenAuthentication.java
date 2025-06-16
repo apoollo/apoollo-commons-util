@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import com.apoollo.commons.util.JwtUtils;
 import com.apoollo.commons.util.JwtUtils.JwtToken;
-import com.apoollo.commons.util.exception.AppForbbidenException;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationJwtTokenExpiredException;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationJwtTokenForbiddenException;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationJwtTokenIllegalException;
 import com.apoollo.commons.util.request.context.access.AuthorizationJwtTokenDecoder;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
@@ -33,19 +35,18 @@ public abstract class AbstractJwtTokenAuthentication extends AbstractAuthenticat
 
 	@Override
 	public void authenticate(User user, JwtToken token) {
-
 		try {
 			JwtUtils.jwtVerify(token.getJwtTokenDecoded(), user.getSecretKey(), user.getSecretKeySaltValue());
 			LOGGER.info("jwt token verify success");
 		} catch (TokenExpiredException e) {
 			LOGGER.error("signature expired:", e);
-			throw new AppForbbidenException("signature expired");
+			throw new AppAuthenticationJwtTokenExpiredException("signature expired");
 		} catch (SignatureVerificationException e) {
 			LOGGER.error("signature verify failed:", e);
-			throw new AppForbbidenException("signature verify failed");
+			throw new AppAuthenticationJwtTokenForbiddenException("signature forbbiden");
 		} catch (Exception e) {
 			LOGGER.error("signature verify error:", e);
-			throw new AppForbbidenException("signature verify error");
+			throw new AppAuthenticationJwtTokenIllegalException("signature verify error");
 		}
 
 	}

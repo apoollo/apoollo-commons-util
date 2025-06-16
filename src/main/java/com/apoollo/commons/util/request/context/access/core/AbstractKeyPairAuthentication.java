@@ -6,8 +6,8 @@ package com.apoollo.commons.util.request.context.access.core;
 import org.apache.commons.lang3.StringUtils;
 
 import com.apoollo.commons.util.LangUtils;
-import com.apoollo.commons.util.exception.AppForbbidenException;
-import com.apoollo.commons.util.exception.detailed.TokenEmptyExcetion;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationKeyPairSecretKeyForbiddenException;
+import com.apoollo.commons.util.exception.refactor.AppAuthenticationKeyPairTokenIllegalException;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
 
@@ -28,10 +28,11 @@ public abstract class AbstractKeyPairAuthentication extends AbstractAuthenticati
 	@Override
 	public void authenticate(User user, String token) {
 		if (StringUtils.isBlank(token)) {
-			throw new TokenEmptyExcetion("[token] must not be blank");
+			throw new AppAuthenticationKeyPairTokenIllegalException(this.accessKeyProperty + " must not be blank");
 		}
 		if (!StringUtils.equals(user.getSecretKey(), token)) {
-			throw new AppForbbidenException("secretKey verify failed");
+			throw new AppAuthenticationKeyPairSecretKeyForbiddenException(
+					this.secretKeyProperty + "secretKey verify failed");
 		}
 	}
 

@@ -7,7 +7,7 @@ import java.time.Duration;
 
 import org.springframework.data.redis.core.RedisTemplate;
 
-import com.apoollo.commons.util.exception.AppServerOverloadedException;
+import com.apoollo.commons.util.exception.refactor.AppSyncLimiterRefusedException;
 import com.apoollo.commons.util.redis.RedisUtils;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
 import com.apoollo.commons.util.request.context.limiter.SyncLimiter;
@@ -31,7 +31,7 @@ public class DefaultSyncLimiter implements SyncLimiter {
 	public void limit(String accessKey, String resourcePin, Duration duration) {
 		String key = redisNameSpaceKey.getKey(RedisNameSpaceKey.SLIDING_WINDOW_COUNTER, accessKey, resourcePin);
 		if (!RedisUtils.fight(redisTemplate, key, duration)) {
-			throw new AppServerOverloadedException("当前操作只能同步执行");
+			throw new AppSyncLimiterRefusedException("sync limit refused");
 		}
 	}
 

@@ -7,7 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.apoollo.commons.util.exception.AppIllegalArgumentException;
+import com.apoollo.commons.util.exception.refactor.AppNonceLimiterNonceIllegalException;
+import com.apoollo.commons.util.exception.refactor.AppNonceLimiterTimestampIllegalException;
 import com.apoollo.commons.util.request.context.limiter.NonceLimiter;
 import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 import com.apoollo.commons.util.request.context.model.RequestConstants;
@@ -33,7 +34,7 @@ public class DefaultNonceLimiter implements NonceLimiter {
 
 		String timestamp = request.getHeader(RequestConstants.REQUEST_HEADER_TIMESTAMP);
 		if (StringUtils.isBlank(timestamp)) {
-			throw new AppIllegalArgumentException(
+			throw new AppNonceLimiterTimestampIllegalException(
 					"header [" + RequestConstants.REQUEST_HEADER_TIMESTAMP + "] must not be null");
 		}
 		Long expireTimestampLong = nonceLimiterDuration;
@@ -44,16 +45,16 @@ public class DefaultNonceLimiter implements NonceLimiter {
 			expireTimestampLong += Long.valueOf(timestamp);
 		} catch (NumberFormatException e) {
 			LOGGER.error("parse timestamp error:", e);
-			throw new AppIllegalArgumentException("parse timestamp [" + timestamp + "] error");
+			throw new AppNonceLimiterTimestampIllegalException("parse timestamp [" + timestamp + "] error");
 		}
 		long currentTimestamp = System.currentTimeMillis();
 		if (currentTimestamp > expireTimestampLong) {
 			LOGGER.error("currentTimestamp :" + currentTimestamp + ", expireTimestamp:" + expireTimestampLong);
-			throw new AppIllegalArgumentException("timestamp [" + timestamp + "] already expire");
+			throw new AppNonceLimiterTimestampIllegalException("timestamp [" + timestamp + "] already expire");
 		}
 		String nonce = request.getHeader(RequestConstants.REQUEST_HEADER_NONCE);
 		if (StringUtils.isBlank(nonce)) {
-			throw new AppIllegalArgumentException(
+			throw new AppNonceLimiterNonceIllegalException(
 					"header [" + RequestConstants.REQUEST_HEADER_NONCE + "] must not be null");
 		}
 		NonceValidator nonceValidator = nonceLimiterValidator;
@@ -61,7 +62,7 @@ public class DefaultNonceLimiter implements NonceLimiter {
 			nonceValidator = this.nonceValidator;
 		}
 		if (!nonceValidator.isValid(nonce, nonceLimiterDuration)) {
-			throw new AppIllegalArgumentException("header [" + RequestConstants.REQUEST_HEADER_NONCE + "] invalid");
+			throw new AppNonceLimiterNonceIllegalException("header [" + RequestConstants.REQUEST_HEADER_NONCE + "] invalid");
 		}
 	}
 }

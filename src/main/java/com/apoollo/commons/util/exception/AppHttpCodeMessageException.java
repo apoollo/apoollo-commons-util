@@ -30,9 +30,6 @@ public class AppHttpCodeMessageException extends AppException {
 		return httpCodeName;
 	}
 
-	/**
-	 * @return the messageCompileArgs
-	 */
 	public Object[] getMessageCompileArgs() {
 		return messageCompileArgs;
 	}

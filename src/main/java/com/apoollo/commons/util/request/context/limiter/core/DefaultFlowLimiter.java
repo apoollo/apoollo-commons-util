@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.apoollo.commons.util.exception.AppServerOverloadedException;
+import com.apoollo.commons.util.exception.refactor.AppFlowLimiterRefusedException;
 import com.apoollo.commons.util.redis.service.SlidingWindowLimiter;
 import com.apoollo.commons.util.request.context.limiter.FlowLimiter;
 
@@ -38,7 +38,7 @@ public class DefaultFlowLimiter implements FlowLimiter {
 
 		// 500毫秒内可以调用的次数
 		if (!slidingWindowLimiter.access(key, 500, limitCount / 2)) {
-			throw new AppServerOverloadedException("流量超限");
+			throw new AppFlowLimiterRefusedException("flow limiter refused");
 		}
 	}
 
