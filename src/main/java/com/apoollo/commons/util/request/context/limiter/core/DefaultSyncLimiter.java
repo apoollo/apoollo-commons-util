@@ -7,7 +7,7 @@ import java.time.Duration;
 
 import org.springframework.data.redis.core.RedisTemplate;
 
-import com.apoollo.commons.util.exception.refactor.AppSyncLimiterRefusedException;
+import com.apoollo.commons.util.exception.AppSyncLimiterRefusedException;
 import com.apoollo.commons.util.redis.RedisUtils;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
 import com.apoollo.commons.util.request.context.limiter.SyncLimiter;

@@ -37,10 +37,6 @@ public class RegexUtils {
         return ret;
     }
 
-    public static void assertion(Pattern regex, String input, String message) {
-        Assert.isTrue(matches(regex, input), message);
-    }
-
     public static String compile(String input, Object[] args) {
         String ret = null;
         if (StringUtils.isNotBlank(input)) {

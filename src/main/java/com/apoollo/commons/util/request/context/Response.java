@@ -10,13 +10,15 @@ public interface Response<T> extends RequestId {
 	
 	public Boolean getSuccess();
 	public Long getElapsedTime();
-	public String getCode();
+	public Integer getCode();
+	public String getName();
 	public String getMessage();
 	public T getData();
 	
 	public void setSuccess(Boolean success);
 	public void setElapsedTime(Long elapsedTime);
-	public void setCode(String code);
+	public void setCode(Integer code);
+	public void setName(String name);
 	public void setMessage(String message);
 	public void setData(T data);
 

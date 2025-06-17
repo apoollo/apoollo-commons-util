@@ -9,8 +9,6 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 
 import com.apoollo.commons.util.MdcUtils;
-import com.apoollo.commons.util.exception.AppForbbidenException;
-import com.apoollo.commons.util.exception.AppHttpCodeMessageException;
 import com.apoollo.commons.util.request.context.access.RequestResource;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.core.DefaultRequestContext;
@@ -56,7 +54,7 @@ public interface RequestContext {
 	public static <T extends RequestContext> T getRequired(Class<T> clazz) {
 		T requestContext = get(clazz);
 		if (null == requestContext) {
-			throw new AppForbbidenException("request context must not be null");
+			throw new RuntimeException("request context must not be null");
 		}
 		return requestContext;
 	}
@@ -80,21 +78,6 @@ public interface RequestContext {
 		}
 		return requestMappingPath;
 	}
-
-	public static void validateDataPermission(String loginAccessKey, Supplier<String> message) {
-		RequestContext requestContext = RequestContext.getRequired();
-		String accessKey = RequestContext.getRequired().getUser().getAccessKey();
-		if (!StringUtils.equals(loginAccessKey, accessKey)) {
-			throw new AppHttpCodeMessageException(
-					requestContext.getRequestResource().getWrapResponseHandler().getForbbiden(),
-					new String[] { message.get() });
-		}
-	}
-
-	public static void validateDataPermission(String loginAccessKey) {
-		validateDataPermission(loginAccessKey, () -> "数据权限越界");
-	}
-
 
 	public default <T> T getHintOfExceptionCatchedData() {
 		return getHint("exception.catched.data");

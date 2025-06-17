@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.apoollo.commons.util.exception.refactor;
+package com.apoollo.commons.util.exception;
 
 /**
  * @author liuyulong
@@ -9,11 +9,14 @@ package com.apoollo.commons.util.exception.refactor;
  */
 public class AppAuthenticationKeyPairTokenIllegalException extends AppException {
 
-
 	private static final long serialVersionUID = 7824276573124583109L;
 
 	public AppAuthenticationKeyPairTokenIllegalException(String message) {
 		super(message);
+	}
+
+	public AppAuthenticationKeyPairTokenIllegalException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

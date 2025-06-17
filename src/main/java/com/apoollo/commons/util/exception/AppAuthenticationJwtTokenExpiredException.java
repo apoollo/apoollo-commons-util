@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.apoollo.commons.util.exception.refactor;
+package com.apoollo.commons.util.exception;
 
 /**
  * @author liuyulong
@@ -13,6 +13,10 @@ public class AppAuthenticationJwtTokenExpiredException extends AppException {
 
 	public AppAuthenticationJwtTokenExpiredException(String message) {
 		super(message);
+	}
+
+	public AppAuthenticationJwtTokenExpiredException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

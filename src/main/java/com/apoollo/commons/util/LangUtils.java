@@ -114,11 +114,6 @@ public class LangUtils {
 		});
 	}
 
-	public static <T> T getRequiredArgument(Supplier<T> supplier, String message) {
-		return getIfPredicate(supplier, value -> null == value, (value) -> {
-			Assert.isTrue(false, message);
-		});
-	}
 
 	public static String getUppercaseUUID() {
 		return UUID.randomUUID().toString().replace("-", "").toUpperCase();

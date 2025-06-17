@@ -51,7 +51,7 @@ public class DefaultRequestContext implements RequestContext {
 	private Map<String, Object> hint = new HashMap<>();
 
 	private byte[] requestBody;
-	
+
 	/**
 	 * @return the startTime
 	 */

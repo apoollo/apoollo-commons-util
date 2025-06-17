@@ -20,7 +20,8 @@ import lombok.Setter;
 public class AppResponse<T> extends DefaultRequestId implements Response<T> {
 
 	private Boolean success;
-	private String code;
+	private Integer code;
+	private String name;
 	private String message;
 	private Long elapsedTime;
 	private T data;

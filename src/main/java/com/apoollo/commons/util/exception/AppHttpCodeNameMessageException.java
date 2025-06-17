@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.apoollo.commons.util.exception.refactor;
+package com.apoollo.commons.util.exception;
 
 import com.apoollo.commons.util.request.context.HttpCodeNameMessage;
 import com.apoollo.commons.util.request.context.HttpCodeNameMessageFormat;

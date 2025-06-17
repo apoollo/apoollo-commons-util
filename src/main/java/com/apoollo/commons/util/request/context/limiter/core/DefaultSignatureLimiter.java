@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.apoollo.commons.util.HttpContentUtils;
 import com.apoollo.commons.util.crypto.hash.HmacSHA256;
 import com.apoollo.commons.util.crypto.hash.MacHash;
-import com.apoollo.commons.util.exception.refactor.AppSignatureLimiterSignatureIllegalException;
+import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureIllegalException;
 import com.apoollo.commons.util.request.context.limiter.SignatureLimiter;
 import com.apoollo.commons.util.request.context.model.RequestConstants;
 import com.apoollo.commons.util.request.context.model.ServletInputStreamHelper;

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.apoollo.commons.util.exception.refactor.AppFlowLimiterRefusedException;
+import com.apoollo.commons.util.exception.AppFlowLimiterRefusedException;
 import com.apoollo.commons.util.redis.service.SlidingWindowLimiter;
 import com.apoollo.commons.util.request.context.limiter.FlowLimiter;
 

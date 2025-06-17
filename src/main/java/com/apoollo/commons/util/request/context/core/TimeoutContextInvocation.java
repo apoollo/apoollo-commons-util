@@ -15,8 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppException;
-import com.apoollo.commons.util.exception.AppRequestTimeoutLimitException;
-import com.apoollo.commons.util.exception.detailed.TimeoutIllegalArgumentException;
+import com.apoollo.commons.util.exception.AppParameterIllegalException;
 import com.apoollo.commons.util.model.MinMax;
 import com.apoollo.commons.util.request.context.RequestAccessParameter;
 import com.apoollo.commons.util.request.context.RequestContext;
@@ -88,7 +87,7 @@ public class TimeoutContextInvocation<I, O> extends LoggingInvocation<I, O> {
 			Long requestTimeout = null;
 			if (null != clientTimeout) {
 				if (clientTimeout.longValue() <= 0) {
-					throw new TimeoutIllegalArgumentException("client timeout must positive integer");
+					throw new AppParameterIllegalException("client timeout must positive integer");
 				}
 				requestTimeout = LangUtils.getInRange(requestTimeoutRangeMillis, clientTimeout);
 			} else {
@@ -104,7 +103,7 @@ public class TimeoutContextInvocation<I, O> extends LoggingInvocation<I, O> {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		} catch (TimeoutException e) {
-			throw new AppRequestTimeoutLimitException("AppTimeout");
+			throw new AppParameterIllegalException("AppTimeout");
 		} catch (ExecutionException e) {
 			Throwable throwable = e.getCause();
 			if (throwable instanceof AppException) {

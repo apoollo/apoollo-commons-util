@@ -6,8 +6,8 @@ package com.apoollo.commons.util.request.context.access.core;
 import org.apache.commons.lang3.StringUtils;
 
 import com.apoollo.commons.util.LangUtils;
-import com.apoollo.commons.util.exception.refactor.AppAuthenticationKeyPairSecretKeyForbiddenException;
-import com.apoollo.commons.util.exception.refactor.AppAuthenticationKeyPairTokenIllegalException;
+import com.apoollo.commons.util.exception.AppAuthenticationKeyPairSecretKeyForbiddenException;
+import com.apoollo.commons.util.exception.AppAuthenticationKeyPairTokenIllegalException;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
 

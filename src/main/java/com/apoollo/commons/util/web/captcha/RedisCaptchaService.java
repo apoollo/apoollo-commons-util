@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import com.apoollo.commons.util.CaptchaUtils;
-import com.apoollo.commons.util.exception.AppIllegalArgumentException;
+import com.apoollo.commons.util.exception.AppParameterIllegalException;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,12 +37,12 @@ public class RedisCaptchaService implements CaptchaService {
 	@Override
 	public void writeCaptchaImage(HttpServletResponse response, String token, Duration timeout) throws IOException {
 		if (StringUtils.isBlank(token)) {
-			throw new AppIllegalArgumentException("token must not be null");
+			throw new AppParameterIllegalException("token must not be null");
 		}
 		String captchaText = CaptchaUtils.generateCaptchaText();
 		String key = redisNameSpaceKey.getKey(RedisNameSpaceKey.CAPTCHA, token);
 		if (BooleanUtils.isNotTrue(redisTemplate.opsForValue().setIfAbsent(key, captchaText, timeout))) {
-			throw new AppIllegalArgumentException("token already in used");
+			throw new AppParameterIllegalException("token already in used");
 		}
 		response.setDateHeader("Expires", 0L);
 		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
@@ -62,7 +62,7 @@ public class RedisCaptchaService implements CaptchaService {
 		String key = redisNameSpaceKey.getKey(RedisNameSpaceKey.CAPTCHA, token);
 		String alreadyCaptchaText = redisTemplate.opsForValue().get(key);
 		if (null == alreadyCaptchaText) {
-			throw new AppIllegalArgumentException("验证码已失效");
+			throw new AppParameterIllegalException("验证码已失效");
 		}
 		redisTemplate.delete(key);
 		LOGGER.info("输入验证码: {}, 服务器验证码：{}", captchaText, alreadyCaptchaText);

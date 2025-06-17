@@ -7,8 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.apoollo.commons.util.exception.refactor.AppNonceLimiterNonceIllegalException;
-import com.apoollo.commons.util.exception.refactor.AppNonceLimiterTimestampIllegalException;
+import com.apoollo.commons.util.exception.AppNonceLimiterNonceIllegalException;
+import com.apoollo.commons.util.exception.AppNonceLimiterTimestampIllegalException;
 import com.apoollo.commons.util.request.context.limiter.NonceLimiter;
 import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 import com.apoollo.commons.util.request.context.model.RequestConstants;

@@ -41,9 +41,7 @@ public interface CapacitySupport extends LimitersSupport {
 
 	public static boolean supportAbility(RequestContext requestContext, CapacitySupport capacitySupport,
 			Function<CapacitySupport, Boolean> function) {
-		Boolean support = getAbility(LangUtils
-				.getStream(capacitySupport, requestContext.getRequestResource(), requestContext.getUser()).toList(),
-				function);
+		Boolean support = getAbility(requestContext, capacitySupport, function);
 		return BooleanUtils.isTrue(support);
 	}
 

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.apoollo.commons.util.exception.refactor.AppCountLimiterRefusedException;
+import com.apoollo.commons.util.exception.AppCountLimiterRefusedException;
 import com.apoollo.commons.util.redis.service.CountLimiter;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
 import com.apoollo.commons.util.redis.service.impl.CommonsCountLimiter.Incremented;
