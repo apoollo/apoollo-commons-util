@@ -251,14 +251,18 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 				httpCodeNameMessage.getMessage(), OK.getCode().equals(httpCodeNameMessage.getCode()),
 				requestContext.getRequestId(), requestContext.getElapsedTime(),
 				requestContext.getHintOfExceptionCatchedData());
+
+		writeResponse(response, httpCodeNameMessage.getHttpCode(), responseMap);
+	}
+
+	protected void writeResponse(HttpServletResponse response, int httpCode, Map<String, Object> responseMap) {
 		try {
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			response.setStatus(httpCodeNameMessage.getHttpCode());
+			response.setStatus(httpCode);
 			response.getOutputStream().write(objectMapper.writeValueAsBytes(responseMap));
 		} catch (IOException e) {
 			LOGGER.error("response error:", e);
 		}
-
 	}
 
 	protected HttpCodeNameMessage<Integer, String, String> getHttpCodeNameMessage(
