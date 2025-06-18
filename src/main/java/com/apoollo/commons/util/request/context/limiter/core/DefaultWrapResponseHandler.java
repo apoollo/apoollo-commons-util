@@ -106,7 +106,6 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 			put(TypeMismatchException.class, new DefaultHttpCodeName<>(4301, "TypeMismatch", 200));
 			put(HttpMessageNotReadableException.class, new DefaultHttpCodeName<>(4302, "HttpMessageNotReadable", 200));
 			put(BindException.class, new DefaultHttpCodeName<>(4303, "BindError", 200));
-
 			put(ConversionNotSupportedException.class, new DefaultHttpCodeName<>(5500, "ConversionNotSupported", 200));
 			put(HttpMessageNotWritableException.class, new DefaultHttpCodeName<>(5501, "HttpMessageNotWritable", 200));
 			put(MethodValidationException.class, new DefaultHttpCodeName<>(5502, "MethodValidation", 200));
@@ -114,8 +113,8 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		}
 	};
 
-	private static final HttpCodeNameMessage<Integer, String, String> OK = new DefaultHttpCodeNameMessage<>(2000,
-			"Ok", 200, "success");
+	private static final HttpCodeNameMessage<Integer, String, String> OK = new DefaultHttpCodeNameMessage<>(2000, "Ok",
+			200, "success");
 
 	private static final HttpCodeNameMessage<Integer, String, String> SYSTEM_ERROR = new DefaultHttpCodeNameMessage<>(
 			5000, "AppSystemError", 200, "app system error");
@@ -262,7 +261,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 
 	}
 
-	private HttpCodeNameMessage<Integer, String, String> getHttpCodeNameMessage(
+	protected HttpCodeNameMessage<Integer, String, String> getHttpCodeNameMessage(
 			Map<?, HttpCodeName<Integer, String>> mapping, Exception ex) {
 		HttpCodeNameMessage<Integer, String, String> httpCodeNameMessage = null;
 		HttpCodeName<Integer, String> httpCodeName = mapping.get(ex.getClass());
@@ -273,7 +272,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		return httpCodeNameMessage;
 	}
 
-	private Map<String, Object> getResponseMap(Integer code, String name, String message, Boolean success,
+	protected Map<String, Object> getResponseMap(Integer code, String name, String message, Boolean success,
 			String requestId, Long elapsedTime, Object data) {
 		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("code", code);
