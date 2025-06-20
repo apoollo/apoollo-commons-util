@@ -3,16 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.limiter.support;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import org.apache.commons.lang3.BooleanUtils;
-
-import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.request.context.EscapeMethod;
-import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
 
 /**
@@ -31,36 +22,5 @@ public interface CapacitySupport extends LimitersSupport {
 
 	public WrapResponseHandler getWrapResponseHandler();
 
-	public static <T extends CapacitySupport> void doSupport(List<T> capacitySupports, Consumer<T> consumer) {
-		capacitySupports//
-				.stream()//
-				.filter(Objects::nonNull)//
-				.filter(support -> BooleanUtils.isNotFalse(support.getEnableCapacity()))//
-				.forEach(consumer);
-	}
-
-	public static boolean supportAbility(RequestContext requestContext, CapacitySupport capacitySupport,
-			Function<CapacitySupport, Boolean> function) {
-		Boolean support = getAbility(requestContext, capacitySupport, function);
-		return BooleanUtils.isTrue(support);
-	}
-
-	public static <T> T getAbility(RequestContext requestContext, CapacitySupport capacitySupport,
-			Function<CapacitySupport, T> function) {
-		return getAbility(LangUtils
-				.getStream(capacitySupport, requestContext.getRequestResource(), requestContext.getUser()).toList(),
-				function);
-	}
-
-	public static <T> T getAbility(List<CapacitySupport> capacitySupports, Function<CapacitySupport, T> function) {
-		return capacitySupports//
-				.stream()//
-				.filter(Objects::nonNull)//
-				.filter(support -> BooleanUtils.isNotFalse(support.getEnableCapacity()))//
-				.map(support -> function.apply(support))//
-				.filter(Objects::nonNull)//
-				.findAny()//
-				.orElse(null)//
-		;
-	}
+	
 }

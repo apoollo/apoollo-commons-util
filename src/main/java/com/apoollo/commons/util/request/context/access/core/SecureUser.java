@@ -14,8 +14,8 @@ import com.apoollo.commons.util.request.context.access.SecurePrincipal;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.core.AbstractAuthentication.Authority;
 import com.apoollo.commons.util.request.context.limiter.Limiters;
-import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
 import com.apoollo.commons.util.request.context.model.RequestConstants;
+import com.apoollo.commons.util.request.context.model.RequestContextCapacitySupport;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,7 +56,7 @@ public class SecureUser implements SecurePrincipal<User> {
 									renewal.getRenewalAuthorizationJwtToken());
 						});
 					}
-					CapacitySupport.doSupport(List.of(user), capacitySupport -> {
+					RequestContextCapacitySupport.doSupport(List.of(user), capacitySupport -> {
 						limiters.limit(request, response, requestContext, capacitySupport);
 					});
 					return user;

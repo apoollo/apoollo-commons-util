@@ -17,34 +17,23 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.apoollo.commons.util.request.context.EscapeMethod;
 import com.apoollo.commons.util.request.context.RequestContext;
-import com.apoollo.commons.util.request.context.access.RequestResource;
 import com.apoollo.commons.util.request.context.limiter.ContentEscapeHandler;
+import com.apoollo.commons.util.request.context.model.RequestContextCapacitySupport;
 
 /**
  * liuyulong
  */
 public class DefaultContentEscapeHandler implements ContentEscapeHandler {
 
-	private EscapeMethod escapeMethod;
+	private RequestContextCapacitySupport requestContextCapacitySupport;
 
-	public DefaultContentEscapeHandler(EscapeMethod escapeMethod) {
+	public DefaultContentEscapeHandler(RequestContextCapacitySupport requestContextCapacitySupport) {
 		super();
-		this.escapeMethod = escapeMethod;
+		this.requestContextCapacitySupport = requestContextCapacitySupport;
 	}
 
 	public EscapeMethod getRequestContextEscapeMethod() {
-		EscapeMethod escapeMethod = null;
-		RequestContext requestContext = RequestContext.get();
-		if (null != requestContext) {
-			RequestResource requestResource = requestContext.getRequestResource();
-			if (null != requestResource) {
-				escapeMethod = requestResource.getContentEscapeMethod();
-			}
-		}
-		if (null == escapeMethod) {
-			escapeMethod = this.escapeMethod;
-		}
-		return escapeMethod;
+		return requestContextCapacitySupport.getEscapeMethod(RequestContext.getRequired());
 	}
 
 	@Override

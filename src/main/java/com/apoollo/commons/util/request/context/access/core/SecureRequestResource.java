@@ -14,8 +14,8 @@ import com.apoollo.commons.util.request.context.access.RequestResource;
 import com.apoollo.commons.util.request.context.access.RequestResourceManager;
 import com.apoollo.commons.util.request.context.access.SecurePrincipal;
 import com.apoollo.commons.util.request.context.limiter.Limiters;
-import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
 import com.apoollo.commons.util.request.context.limiter.support.LimitersSupport;
+import com.apoollo.commons.util.request.context.model.RequestContextCapacitySupport;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,7 +46,7 @@ public class SecureRequestResource implements SecurePrincipal<RequestResource> {
 		if (BooleanUtils.isNotTrue(requestResource.getEnable())) {
 			throw new AppRequestResourceDisabledException("requestResource disabled - " + requestMappingPath);
 		}
-		CapacitySupport.doSupport(List.of(requestResource), capacitySupport -> {
+		RequestContextCapacitySupport.doSupport(List.of(requestResource), capacitySupport -> {
 			limiters.limit(request, response, requestContext, capacitySupport);
 		});
 		return requestResource;
