@@ -197,7 +197,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 
 		}
 	};
-	
+
 	// 41000-41999 之间是SpringBoot编码
 	// 42000-42999 之间是框架编码
 	// 43000-49999 之间是应用编码
@@ -247,7 +247,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 					appException.getName(), appException.getHttpCode(), appException.getMessage());
 		} else if (ex instanceof AppException) {
 			httpCodeNameMessage = getHttpCodeNameMessage(CODE_NAME_EXCEPTION_MAPPING, ex);
-		} else if (ex instanceof ErrorResponse errorResponse) {
+		} else if (ex instanceof ErrorResponse) {
 			httpCodeNameMessage = getHttpCodeNameMessage(ERROR_RESPONSE_EXCEPTION_MAPPING, ex);
 		} else {
 			httpCodeNameMessage = getHttpCodeNameMessage(FRAMEWORK_EXCEPTION_MAPPING, ex);
