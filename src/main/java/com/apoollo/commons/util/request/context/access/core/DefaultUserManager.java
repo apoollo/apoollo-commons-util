@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import com.alibaba.fastjson2.JSON;
 import com.apoollo.commons.util.JwtUtils.Renewal;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
@@ -21,6 +20,8 @@ import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
 import com.apoollo.commons.util.request.context.access.core.DefaultUser.SerializableUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author liuyulong
@@ -30,15 +31,17 @@ public class DefaultUserManager implements UserManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultUserManager.class);
 
+	private ObjectMapper objectMapper;
 	private Instances instances;
 	private StringRedisTemplate redisTemplate;
 	private RedisNameSpaceKey redisNameSpaceKey;
 
 	private List<User> users;
 
-	public DefaultUserManager(Instances instances, StringRedisTemplate redisTemplate,
+	public DefaultUserManager(ObjectMapper objectMapper, Instances instances, StringRedisTemplate redisTemplate,
 			RedisNameSpaceKey redisNameSpaceKey, List<SerializableUser> users) {
 		super();
+		this.objectMapper = objectMapper;
 		this.instances = instances;
 		this.redisTemplate = redisTemplate;
 		this.redisNameSpaceKey = redisNameSpaceKey;
@@ -49,8 +52,12 @@ public class DefaultUserManager implements UserManager {
 	}
 
 	protected SerializableUser getUserFromRedis(String key) {
-		String userJsonString = redisTemplate.opsForValue().get(key);
-		return LangUtils.parseObject(userJsonString, SerializableUser.class);
+		String user = redisTemplate.opsForValue().get(key);
+		try {
+		return	objectMapper.readValue(user, SerializableUser.class);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	protected User getUserFromConfig(String accessKey) {
@@ -80,7 +87,12 @@ public class DefaultUserManager implements UserManager {
 	@Override
 	public void setUser(SerializableUser user, Long timeout, TimeUnit timeUnit) {
 		String key = getUserRedisKey(user.getAccessKey());
-		String value = JSON.toJSONString(user);
+		String value;
+		try {
+			value = objectMapper.writeValueAsString(user);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 		if (null != timeout && null != timeUnit && 0 != timeout) {
 			redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
 		} else {

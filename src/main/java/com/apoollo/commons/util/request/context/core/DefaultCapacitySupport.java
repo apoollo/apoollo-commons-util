@@ -5,11 +5,12 @@ package com.apoollo.commons.util.request.context.core;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
 import com.apoollo.commons.util.request.context.EscapeMethod;
 import com.apoollo.commons.util.request.context.Instances;
+import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.limiter.core.DefaultLimitersSupport;
 import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
@@ -59,11 +60,17 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		private Boolean enableResponseWrapper;
 
 		//
-		private String contentEscapeMethodClass;
-		private String corsLimiterConfigurationClass;
-		private String nonceLimiterValidatorClass;
-		private String wrapResponseHandlerClass;
+		private Class<? extends EscapeMethod> contentEscapeMethodClass;
+		private Class<? extends CorsConfiguration> corsLimiterConfigurationClass;
+		private Class<? extends NonceValidator> nonceLimiterValidatorClass;
+		private Class<? extends WrapResponseHandler> wrapResponseHandlerClass;
 
+	}
+
+	public static CapacitySupport toCapacitySupport(Instances instances, SerializebleCapacitySupport source) {
+		DefaultCapacitySupport capacitySupport = new DefaultCapacitySupport();
+		evlaute(instances, source, capacitySupport);
+		return capacitySupport;
 	}
 
 	public static void evlaute(Instances instances, SerializebleCapacitySupport source, DefaultCapacitySupport target) {
@@ -91,17 +98,17 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setEnableContentEscape(source.getEnableContentEscape());
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());
 
-		if (StringUtils.isNotBlank(source.getContentEscapeMethodClass())) {
+		if (null != source.getContentEscapeMethodClass()) {
 			target.setContentEscapeMethod(instances.getEscapeMethod(source.getContentEscapeMethodClass()));
 		}
-		if (StringUtils.isNotBlank(source.getCorsLimiterConfigurationClass())) {
+		if (null != source.getCorsLimiterConfigurationClass()) {
 			target.setCorsLimiterConfiguration(
 					instances.getCorsConfiguration(source.getCorsLimiterConfigurationClass()));
 		}
-		if (StringUtils.isNotBlank(source.getNonceLimiterValidatorClass())) {
+		if (null != source.getNonceLimiterValidatorClass()) {
 			target.setNonceLimiterValidator(instances.getNonceValidator(source.getNonceLimiterValidatorClass()));
 		}
-		if (StringUtils.isNotBlank(source.getWrapResponseHandlerClass())) {
+		if (null != source.getWrapResponseHandlerClass()) {
 			target.setWrapResponseHandler(instances.getWrapResponseHandler(source.getWrapResponseHandlerClass()));
 		}
 	}
@@ -131,16 +138,16 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setEnableContentEscape(source.getEnableContentEscape());
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());
 		if (null != source.getContentEscapeMethod()) {
-			target.setContentEscapeMethodClass(source.getContentEscapeMethod().getClass().getName());
+			target.setContentEscapeMethodClass(source.getContentEscapeMethod().getClass());
 		}
 		if (null != source.getCorsLimiterConfiguration()) {
-			target.setCorsLimiterConfigurationClass(source.getCorsLimiterConfiguration().getClass().getName());
+			target.setCorsLimiterConfigurationClass(source.getCorsLimiterConfiguration().getClass());
 		}
 		if (null != source.getNonceLimiterValidator()) {
-			target.setNonceLimiterValidatorClass(source.getNonceLimiterValidator().getClass().getName());
+			target.setNonceLimiterValidatorClass(source.getNonceLimiterValidator().getClass());
 		}
 		if (null != source.getWrapResponseHandler()) {
-			target.setWrapResponseHandlerClass(source.getWrapResponseHandler().getClass().getName());
+			target.setWrapResponseHandlerClass(source.getWrapResponseHandler().getClass());
 		}
 	}
 }
