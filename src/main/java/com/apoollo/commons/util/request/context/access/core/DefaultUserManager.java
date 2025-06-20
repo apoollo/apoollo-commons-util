@@ -3,6 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.access.core;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -16,10 +17,10 @@ import com.alibaba.fastjson2.JSON;
 import com.apoollo.commons.util.JwtUtils.Renewal;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
+import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
 import com.apoollo.commons.util.request.context.access.core.DefaultUser.SerializableUser;
-import com.apoollo.commons.util.web.spring.Instance;
 
 /**
  * @author liuyulong
@@ -29,31 +30,27 @@ public class DefaultUserManager implements UserManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultUserManager.class);
 
-	// private CacheManagerService cacheManagerService;
-	private Instance instance;
+	private Instances instances;
 	private StringRedisTemplate redisTemplate;
 	private RedisNameSpaceKey redisNameSpaceKey;
 
-	private List<? extends User> users;
+	private List<User> users;
 
-	public DefaultUserManager(Instance instance, StringRedisTemplate redisTemplate, RedisNameSpaceKey redisNameSpaceKey,
-			List<? extends User> users) {
+	public DefaultUserManager(Instances instances, StringRedisTemplate redisTemplate,
+			RedisNameSpaceKey redisNameSpaceKey, List<SerializableUser> users) {
 		super();
-		this.instance = instance;
-		// this.cacheManagerService = cacheManagerService;
+		this.instances = instances;
 		this.redisTemplate = redisTemplate;
 		this.redisNameSpaceKey = redisNameSpaceKey;
-		this.users = users;
+		this.users = new ArrayList<>();
+		LangUtils.getStream(users).forEach(serializableUser -> {
+			this.users.add(DefaultUser.toUser(instances, serializableUser));
+		});
 	}
 
-	// private void doCache(Consumer<Cache> consumer) {
-	// cacheManagerService.doCache(UserManager.CACHE_NAME, consumer);
-	// }
-
-	protected User getUserFromRedis(String key) {
+	protected SerializableUser getUserFromRedis(String key) {
 		String userJsonString = redisTemplate.opsForValue().get(key);
-		SerializableUser serializableUser = LangUtils.parseObject(userJsonString, SerializableUser.class);
-		return DefaultUser.toUser(instance, serializableUser);
+		return LangUtils.parseObject(userJsonString, SerializableUser.class);
 	}
 
 	protected User getUserFromConfig(String accessKey) {
@@ -73,7 +70,7 @@ public class DefaultUserManager implements UserManager {
 		long startTimestamp = System.currentTimeMillis();
 		User user = getUserFromConfig(accessKey);
 		if (null == user) {
-			user = getUserFromRedis(getUserRedisKey(accessKey));
+			user = DefaultUser.toUser(instances, getUserFromRedis(getUserRedisKey(accessKey)));
 		}
 		long endTimestamp = System.currentTimeMillis();
 		LOGGER.info("getUser elapsedTime：" + (endTimestamp - startTimestamp) + "ms");
@@ -81,22 +78,20 @@ public class DefaultUserManager implements UserManager {
 	}
 
 	@Override
-	public void setUser(User user, Long timeout, TimeUnit timeUnit) {
+	public void setUser(SerializableUser user, Long timeout, TimeUnit timeUnit) {
 		String key = getUserRedisKey(user.getAccessKey());
-		String value = JSON.toJSONString(DefaultUser.toSerializableUser(user));
+		String value = JSON.toJSONString(user);
 		if (null != timeout && null != timeUnit && 0 != timeout) {
 			redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
 		} else {
 			redisTemplate.opsForValue().set(key, value);
 		}
-		// doCache(cache -> cache.put(user.getAccessKey(), user));
 	}
 
 	@Override
 	public void delete(String accessKey) {
 		String key = getUserRedisKey(accessKey);
 		redisTemplate.delete(key);
-		// doCache(cache -> cache.evict(accessKey));
 	}
 
 	@Override
@@ -108,16 +103,15 @@ public class DefaultUserManager implements UserManager {
 	public void refresh(String accessKey, Boolean enable, String secretKey) {
 		Validate.isTrue(null != enable || null != secretKey, "enable or secret must not be null of one");
 		String key = getUserRedisKey(accessKey);
-		User user = getUserFromRedis(key);
+		SerializableUser user = getUserFromRedis(key);
 		if (null != user) {
-			DefaultUser defaultUser = (DefaultUser) user;
 			if (null != enable) {
-				defaultUser.setEnable(enable);
+				user.setEnable(enable);
 			}
 			if (StringUtils.isNotBlank(secretKey)) {
-				defaultUser.setSecretKey(secretKey);
+				user.setSecretKey(secretKey);
 			}
-			setUser(defaultUser, redisTemplate.getExpire(key, TimeUnit.SECONDS), TimeUnit.SECONDS);
+			setUser(user, redisTemplate.getExpire(key, TimeUnit.SECONDS), TimeUnit.SECONDS);
 		}
 	}
 

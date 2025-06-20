@@ -8,16 +8,15 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.alibaba.fastjson2.JSON;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
+import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.access.RequestResource;
 import com.apoollo.commons.util.request.context.access.RequestResourceManager;
 import com.apoollo.commons.util.request.context.access.core.DefaultRequestResource.SerializableRequestResource;
-import com.apoollo.commons.util.web.spring.Instance;
 
 /**
  * @author liuyulong
@@ -27,28 +26,29 @@ public class DefaultRequestResourceManager implements RequestResourceManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultRequestResourceManager.class);
 
-	private Instance instance;
+	private Instances instances;
 	private StringRedisTemplate redisTemplate;
 	private RedisNameSpaceKey redisNameSpaceKey;
-	private List<? extends RequestResource> requestResources;
+	private List<RequestResource> requestResources;
 
-	public DefaultRequestResourceManager(Instance instance, StringRedisTemplate redisTemplate,
-			RedisNameSpaceKey redisNameSpaceKey, List<? extends RequestResource> requestResources) {
+	public DefaultRequestResourceManager(Instances instances, StringRedisTemplate redisTemplate,
+			RedisNameSpaceKey redisNameSpaceKey, List<RequestResource> requestResources) {
 		super();
-		this.instance = instance;
+		this.instances = instances;
 		this.redisTemplate = redisTemplate;
 		this.redisNameSpaceKey = redisNameSpaceKey;
 		this.requestResources = requestResources;
+		
 	}
 
-
 	@Override
-	@Cacheable(value = RequestResourceManager.CACHE_NAME, key = "#requestMappingPath", sync = true)
+	//@Cacheable(value = RequestResourceManager.CACHE_NAME, key = "#requestMappingPath", sync = true)
 	public RequestResource getRequestResource(String requestMappingPath) {
 		long startTimestamp = System.currentTimeMillis();
 		RequestResource requestResource = getRequestResourceFromConfig(requestMappingPath);
 		if (null == requestResource) {
-			requestResource = getRequestResourceFromRedis(requestMappingPath);
+			requestResource = DefaultRequestResource.toRequestResource(instances,
+					getRequestResourceFromRedis(requestMappingPath));
 		}
 		long endTimestamp = System.currentTimeMillis();
 		LOGGER.info("getRequestResource elapsedTime：" + (endTimestamp - startTimestamp) + "ms");
@@ -62,14 +62,12 @@ public class DefaultRequestResourceManager implements RequestResourceManager {
 				.orElse(null);
 	}
 
-	public RequestResource getRequestResourceFromRedis(String requestMappingPath) {
+	public SerializableRequestResource getRequestResourceFromRedis(String requestMappingPath) {
 		String key = getRequestResourceRedisKey();
 		Object object = redisTemplate.opsForHash().get(key, requestMappingPath);
 		SerializableRequestResource serializableRequestResource = JSON.parseObject((String) object,
 				SerializableRequestResource.class);
-		RequestResource requestResource = DefaultRequestResource.toRequestResource(instance,
-				serializableRequestResource);
-		return requestResource;
+		return serializableRequestResource;
 	}
 
 	public String getRequestResourceRedisKey() {
@@ -77,17 +75,14 @@ public class DefaultRequestResourceManager implements RequestResourceManager {
 	}
 
 	@Override
-	public void setRequestResource(RequestResource requestResource) {
+	public void setRequestResource(SerializableRequestResource requestResource) {
 		redisTemplate.opsForHash().put(getRequestResourceRedisKey(), requestResource.getRequestMappingPath(),
-				JSON.toJSONString(DefaultRequestResource.toSerializableRequestResource(requestResource)));
-		// doCache(cache -> cache.put(requestResource.getRequestMappingPath(),
-		// requestResource));
+				JSON.toJSONString(requestResource));
 	}
 
 	@Override
 	public void deleteRequestResource(String requestMappingPath) {
 		redisTemplate.opsForHash().delete(getRequestResourceRedisKey(), requestMappingPath);
-		// doCache(cache -> cache.evict(requestMappingPath));
 	}
 
 }

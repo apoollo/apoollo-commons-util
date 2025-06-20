@@ -9,10 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
 import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.limiter.core.DefaultLimitersSupport;
 import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
-import com.apoollo.commons.util.web.spring.Instance;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -66,7 +66,7 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 
 	}
 
-	public static void evlaute(Instance instance, SerializebleCapacitySupport source, DefaultCapacitySupport target) {
+	public static void evlaute(Instances instances, SerializebleCapacitySupport source, DefaultCapacitySupport target) {
 		target.setResourcePin(source.getResourcePin());
 		target.setAccessKey(source.getAccessKey());
 		target.setEnableNonceLimiter(source.getEnableNonceLimiter());
@@ -92,16 +92,17 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());
 
 		if (StringUtils.isNotBlank(source.getContentEscapeMethodClass())) {
-			target.setContentEscapeMethod(instance.getInstance(source.getContentEscapeMethodClass()));
+			target.setContentEscapeMethod(instances.getEscapeMethod(source.getContentEscapeMethodClass()));
 		}
 		if (StringUtils.isNotBlank(source.getCorsLimiterConfigurationClass())) {
-			target.setCorsLimiterConfiguration(instance.getInstance(source.getCorsLimiterConfigurationClass()));
+			target.setCorsLimiterConfiguration(
+					instances.getCorsConfiguration(source.getCorsLimiterConfigurationClass()));
 		}
 		if (StringUtils.isNotBlank(source.getNonceLimiterValidatorClass())) {
-			target.setNonceLimiterValidator(instance.getInstance(source.getNonceLimiterValidatorClass()));
+			target.setNonceLimiterValidator(instances.getNonceValidator(source.getNonceLimiterValidatorClass()));
 		}
 		if (StringUtils.isNotBlank(source.getWrapResponseHandlerClass())) {
-			target.setWrapResponseHandler(instance.getInstance(source.getWrapResponseHandlerClass()));
+			target.setWrapResponseHandler(instances.getWrapResponseHandler(source.getWrapResponseHandlerClass()));
 		}
 	}
 

@@ -3,10 +3,10 @@
  */
 package com.apoollo.commons.util.request.context.access.core;
 
+import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserRequestResourceMatcher.UserMatchesRequestResourceCondition;
 import com.apoollo.commons.util.request.context.core.DefaultCapacitySupport;
-import com.apoollo.commons.util.web.spring.Instance;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -63,7 +63,7 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		private UserMatchesRequestResourceCondition countLimiterCondition;
 	}
 
-	public static User toUser(Instance instance, SerializableUser source) {
+	public static User toUser(Instances instances, SerializableUser source) {
 		DefaultUser target = new DefaultUser();
 		target.setEnable(source.getEnable());
 		target.setId(source.getId());
@@ -84,7 +84,7 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		target.setSyncLimiterCondition(source.getSyncLimiterCondition());
 		target.setFlowLimiterCondition(source.getFlowLimiterCondition());
 		target.setCountLimiterCondition(source.getCountLimiterCondition());
-		DefaultCapacitySupport.evlaute(instance, source, target);
+		DefaultCapacitySupport.evlaute(instances, source, target);
 		return target;
 	}
 

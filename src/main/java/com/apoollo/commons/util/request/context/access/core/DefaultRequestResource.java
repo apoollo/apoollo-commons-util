@@ -5,10 +5,10 @@ package com.apoollo.commons.util.request.context.access.core;
 
 import java.util.List;
 
+import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.access.RequestResource;
 import com.apoollo.commons.util.request.context.core.AccessStrategy;
 import com.apoollo.commons.util.request.context.core.DefaultCapacitySupport;
-import com.apoollo.commons.util.web.spring.Instance;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +37,7 @@ public class DefaultRequestResource extends DefaultCapacitySupport implements Re
 		private List<String> roles;
 	}
 
-	public static RequestResource toRequestResource(Instance instance,
+	public static RequestResource toRequestResource(Instances instances,
 			SerializableRequestResource source) {
 		DefaultRequestResource target = new DefaultRequestResource();
 		target.setEnable(source.getEnable());
@@ -45,7 +45,7 @@ public class DefaultRequestResource extends DefaultCapacitySupport implements Re
 		target.setRequestMappingPath(source.getRequestMappingPath());
 		target.setAccessStrategy(source.getAccessStrategy());
 		target.setRoles(source.getRoles());
-		DefaultCapacitySupport.evlaute(instance, source, target);
+		DefaultCapacitySupport.evlaute(instances, source, target);
 		return target;
 	}
 

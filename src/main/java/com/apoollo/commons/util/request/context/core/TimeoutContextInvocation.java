@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +16,7 @@ import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppException;
 import com.apoollo.commons.util.exception.AppParameterIllegalException;
 import com.apoollo.commons.util.model.MinMax;
-import com.apoollo.commons.util.request.context.RequestAccessParameter;
 import com.apoollo.commons.util.request.context.RequestContext;
-import com.apoollo.commons.util.request.context.RequestId;
 import com.apoollo.commons.util.request.context.Timeout;
 
 /**
@@ -37,25 +34,7 @@ public class TimeoutContextInvocation<I, O> extends LoggingInvocation<I, O> {
 	@Override
 	public O invoke(Function<I, O> function, I input) {
 
-		RequestContext requestContext = RequestContext.getRequired();
-		if (input instanceof RequestId) {
-			RequestId requestId = ((RequestId) input);
-			if (StringUtils.isNotBlank(requestId.getRequestId())) {
-				requestContext.setClientRequestId(requestId.getRequestId());
-			}
-			LOGGER.info("clientRequestId：" + requestContext.getClientRequestId());
-		}
-		// RequestAccessParameter requestAccessParameter =
-		// requestContext.getAuthorizedValue(RequestAccessParameter.class);
-		RequestAccessParameter requestAccessParameter = new DefaultRequestAccessParameter();
-		if (null != requestAccessParameter && null != requestAccessParameter.getRequestDefaultTimeoutMillis()
-				&& null != requestAccessParameter.getRequestTimeoutRangeMillis()) {
-			return timeoutExecute(function, input, requestContext,
-					requestAccessParameter.getRequestDefaultTimeoutMillis(),
-					requestAccessParameter.getRequestTimeoutRangeMillis());
-		} else {
-			return super.invoke(function, input);
-		}
+		return super.invoke(function, input);
 	}
 
 	protected O timeoutExecute(Function<I, O> function, I input, RequestContext requestContext,

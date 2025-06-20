@@ -9,12 +9,12 @@ import org.springframework.context.ApplicationContext;
  * @author liuyulong
  * @since 2025-05-29
  */
-public interface Instance {
+public interface Instance<T> {
 
-	public ApplicationContext getApplicationContext();
+	public void initail(ApplicationContext applicationContext);
 
-	public <T> T getInstance(Class<T> clazz);
+	public T getInstance(Class<? extends T> clazz);
 
-	public <T> T getInstance(String clazz);
+	public T getInstance(String clazz);
 
 }
