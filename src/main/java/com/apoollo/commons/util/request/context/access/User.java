@@ -20,7 +20,7 @@ public interface User extends CapacitySupport {
 
 	public String getSecretKey();
 
-	public String getSecretKeySaltValue();
+	public String getSecretKeySsoSalt();
 
 	public String getUsername();
 
@@ -32,7 +32,9 @@ public interface User extends CapacitySupport {
 
 	public UserMatchesRequestResourceCondition getAuthorizationCondition();
 
-	public Long getPasswordExpireTime();
+	public Long getPasswordValidMillis();
+
+	public Long getPasswordLastUpdateTimestamp();
 
 	public Object getAttachement();
 
@@ -52,8 +54,4 @@ public interface User extends CapacitySupport {
 
 	public UserMatchesRequestResourceCondition getCountLimiterCondition();
 
-	public default boolean passwordIsExpired() {
-		return null != getPasswordExpireTime() && getPasswordExpireTime() < System.currentTimeMillis();
-
-	}
 }

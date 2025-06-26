@@ -34,7 +34,7 @@ public abstract class AbstractJwtTokenAuthentication extends AbstractAuthenticat
 	@Override
 	public void authenticate(User user, JwtToken token) {
 		try {
-			JwtUtils.jwtVerify(token.getJwtTokenDecoded(), user.getSecretKey(), user.getSecretKeySaltValue());
+			JwtUtils.jwtVerify(token.getJwtTokenDecoded(), user.getSecretKey(), user.getSecretKeySsoSalt());
 		} catch (TokenExpiredException e) {
 			throw new AppAuthenticationJwtTokenExpiredException("signature expired", e);
 		} catch (SignatureVerificationException e) {

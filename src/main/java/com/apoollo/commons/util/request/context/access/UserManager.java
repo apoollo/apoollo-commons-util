@@ -26,7 +26,7 @@ public interface UserManager {
 	public default String login(SerializableUser user, Long timeout, TimeUnit timeUnit) {
 		int keepSeconds = ((Long) timeUnit.toSeconds(timeout)).intValue();
 		String jwtToken = JwtUtils.generateJwtToken(user.getAccessKey(), user.getSecretKey(),
-				user.getSecretKeySaltValue(), new Date(), keepSeconds);
+				user.getSecretKeySsoSalt(), new Date(), keepSeconds);
 		setUser(user, timeout, timeUnit);
 		return JwtUtils.authorizationConcatJwtToken(jwtToken);
 	}
