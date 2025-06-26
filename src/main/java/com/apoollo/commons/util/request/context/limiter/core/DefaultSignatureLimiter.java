@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.apoollo.commons.util.HttpContentUtils;
 import com.apoollo.commons.util.crypto.hash.HmacSHA256;
 import com.apoollo.commons.util.crypto.hash.MacHash;
-import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureIllegalException;
+import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureRefusedException;
 import com.apoollo.commons.util.request.context.limiter.SignatureLimiter;
 import com.apoollo.commons.util.request.context.model.RequestConstants;
 import com.apoollo.commons.util.request.context.model.ServletInputStreamHelper;
@@ -41,7 +41,7 @@ public class DefaultSignatureLimiter implements SignatureLimiter {
 
 		String requestSignature = request.getHeader(RequestConstants.REQUEST_HEADER_SIGNATURE);
 		if (StringUtils.isBlank(requestSignature)) {
-			throw new AppSignatureLimiterSignatureIllegalException(
+			throw new AppSignatureLimiterSignatureRefusedException(
 					"header [" + RequestConstants.REQUEST_HEADER_SIGNATURE + "] must not be null");
 		}
 		if (StringUtils.isBlank(secret)) {
@@ -61,7 +61,7 @@ public class DefaultSignatureLimiter implements SignatureLimiter {
 			LOGGER.error("secret:" + secret);
 			LOGGER.error("signature:" + signature);
 			LOGGER.error("httpContent:\n" + httpContent);
-			throw new AppSignatureLimiterSignatureIllegalException("signature compared false");
+			throw new AppSignatureLimiterSignatureRefusedException("signature compared false");
 		}
 	}
 

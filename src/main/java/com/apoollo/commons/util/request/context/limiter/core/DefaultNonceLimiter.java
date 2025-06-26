@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.apoollo.commons.util.exception.AppNonceLimiterNonceIllegalException;
+import com.apoollo.commons.util.exception.AppNonceLimiterRefusedException;
 import com.apoollo.commons.util.exception.AppNonceLimiterTimestampIllegalException;
 import com.apoollo.commons.util.request.context.limiter.NonceLimiter;
 import com.apoollo.commons.util.request.context.limiter.NonceValidator;
@@ -54,7 +54,7 @@ public class DefaultNonceLimiter implements NonceLimiter {
 		}
 		String nonce = request.getHeader(RequestConstants.REQUEST_HEADER_NONCE);
 		if (StringUtils.isBlank(nonce)) {
-			throw new AppNonceLimiterNonceIllegalException(
+			throw new AppNonceLimiterRefusedException(
 					"header [" + RequestConstants.REQUEST_HEADER_NONCE + "] must not be null");
 		}
 		NonceValidator nonceValidator = nonceLimiterValidator;
@@ -62,7 +62,7 @@ public class DefaultNonceLimiter implements NonceLimiter {
 			nonceValidator = this.nonceValidator;
 		}
 		if (!nonceValidator.isValid(nonce, nonceLimiterDuration)) {
-			throw new AppNonceLimiterNonceIllegalException("header [" + RequestConstants.REQUEST_HEADER_NONCE + "] invalid");
+			throw new AppNonceLimiterRefusedException("header [" + RequestConstants.REQUEST_HEADER_NONCE + "] invalid");
 		}
 	}
 }

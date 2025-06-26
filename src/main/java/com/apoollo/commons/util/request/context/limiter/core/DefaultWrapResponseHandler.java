@@ -48,14 +48,14 @@ import com.apoollo.commons.util.exception.AppFlowLimiterRefusedException;
 import com.apoollo.commons.util.exception.AppHttpCodeNameMessageException;
 import com.apoollo.commons.util.exception.AppIpLimiterExcludeListRefusedException;
 import com.apoollo.commons.util.exception.AppIpLimiterIncludeListRefusedException;
-import com.apoollo.commons.util.exception.AppNonceLimiterNonceIllegalException;
+import com.apoollo.commons.util.exception.AppNonceLimiterRefusedException;
 import com.apoollo.commons.util.exception.AppNonceLimiterTimestampIllegalException;
 import com.apoollo.commons.util.exception.AppParameterIllegalException;
 import com.apoollo.commons.util.exception.AppRefererLimiterRefusedException;
 import com.apoollo.commons.util.exception.AppRequestResourceDisabledException;
 import com.apoollo.commons.util.exception.AppRequestResourceNotExistsException;
 import com.apoollo.commons.util.exception.AppServerOverloadedException;
-import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureIllegalException;
+import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureRefusedException;
 import com.apoollo.commons.util.exception.AppSyncLimiterRefusedException;
 import com.apoollo.commons.util.request.context.HttpCodeName;
 import com.apoollo.commons.util.request.context.HttpCodeNameMessage;
@@ -119,7 +119,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 			200, "success");
 
 	private static final HttpCodeNameMessage<Integer, String, String> SYSTEM_ERROR = new DefaultHttpCodeNameMessage<>(
-			50000, "AppSystemError", 200, "app system error");
+			50000, "SystemError", 200, "system error");
 
 	private static final Map<Class<? extends AppException>, HttpCodeName<Integer, String>> CODE_NAME_EXCEPTION_MAPPING = new HashMap<>() {
 		private static final long serialVersionUID = 8730699429353651670L;
@@ -133,14 +133,14 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 			put(AppRequestResourceDisabledException.class, new DefaultHttpCodeName<>(42002, "ResourceDisabled", 200));
 
 			// nonce limiter
-			put(AppNonceLimiterNonceIllegalException.class,
-					new DefaultHttpCodeName<>(42010, "NonceLimiterNonceIllegal", 200));
+			put(AppNonceLimiterRefusedException.class,
+					new DefaultHttpCodeName<>(42010, "NonceLimiterRefused", 200));
 			put(AppNonceLimiterTimestampIllegalException.class,
 					new DefaultHttpCodeName<>(42011, "NonceLimiterTimestampIllegal", 200));
 
 			// signature limiter
-			put(AppSignatureLimiterSignatureIllegalException.class,
-					new DefaultHttpCodeName<>(42020, "LimiterSignatureIllegal", 200));
+			put(AppSignatureLimiterSignatureRefusedException.class,
+					new DefaultHttpCodeName<>(42020, "SignatureLimiterSignatureRefused", 200));
 
 			// cors limiter
 			put(AppCorsLimiterRefusedException.class, new DefaultHttpCodeName<>(42030, "CorsLimiterRefused", 200));
