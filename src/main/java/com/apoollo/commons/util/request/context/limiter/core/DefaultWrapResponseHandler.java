@@ -76,7 +76,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWrapResponseHandler.class);
 
-	private static final Map<Class<? extends ErrorResponse>, HttpCodeName<Integer, String>> ERROR_RESPONSE_EXCEPTION_MAPPING = new HashMap<>() {
+	private static final Map<Class<? extends ErrorResponse>, HttpCodeName<Integer, String>> SPRING_BOOT_ERROR_RESPONSE_EXCEPTION_MAPPING = new HashMap<>() {
 		private static final long serialVersionUID = -2202437691642912457L;
 
 		{
@@ -101,7 +101,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		}
 	};
 
-	private static final Map<Class<? extends Exception>, HttpCodeName<Integer, String>> FRAMEWORK_EXCEPTION_MAPPING = new HashMap<>() {
+	private static final Map<Class<? extends Exception>, HttpCodeName<Integer, String>> SPRING_BOOT_FRAMEWORK_EXCEPTION_MAPPING = new HashMap<>() {
 		private static final long serialVersionUID = 3853334954341313585L;
 
 		{
@@ -122,7 +122,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 	private static final HttpCodeNameMessage<Integer, String, String> SYSTEM_ERROR = new DefaultHttpCodeNameMessage<>(
 			50000, "SystemError", 200, "system error");
 
-	private static final Map<Class<? extends AppException>, HttpCodeName<Integer, String>> CODE_NAME_EXCEPTION_MAPPING = new HashMap<>() {
+	private static final Map<Class<? extends AppException>, HttpCodeName<Integer, String>> APOOLLO_CODE_NAME_EXCEPTION_MAPPING = new HashMap<>() {
 		private static final long serialVersionUID = 8730699429353651670L;
 
 		{
@@ -249,15 +249,15 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 				httpCodeNameMessage = new DefaultHttpCodeNameMessage<Integer, String, String>(appException.getCode(),
 						appException.getName(), appException.getHttpCode(), appException.getMessage());
 			} else {
-				httpCodeNameMessage = getHttpCodeNameMessage(CODE_NAME_EXCEPTION_MAPPING, ex);
+				httpCodeNameMessage = getHttpCodeNameMessage(getApoolloCodeNameExceptionMapping(), ex);
 			}
 		} else if (ex instanceof ErrorResponse) {
-			httpCodeNameMessage = getHttpCodeNameMessage(ERROR_RESPONSE_EXCEPTION_MAPPING, ex);
+			httpCodeNameMessage = getHttpCodeNameMessage(getSpringBootErrorResponseExceptionMapping(), ex);
 		} else {
-			httpCodeNameMessage = getHttpCodeNameMessage(FRAMEWORK_EXCEPTION_MAPPING, ex);
+			httpCodeNameMessage = getHttpCodeNameMessage(getSpringBootExceptionMapping(), ex);
 		}
 		if (null == httpCodeNameMessage) {
-			httpCodeNameMessage = SYSTEM_ERROR;
+			httpCodeNameMessage = getSystemErrorCodeMessage();
 		}
 		LOGGER.error(httpCodeNameMessage.getMessage(), ex);
 		Map<String, Object> responseMap = getResponseMap(httpCodeNameMessage.getCode(), httpCodeNameMessage.getName(),
@@ -266,6 +266,22 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 				requestContext.getHintOfExceptionCatchedData());
 
 		writeResponse(response, httpCodeNameMessage.getHttpCode(), responseMap);
+	}
+
+	protected HttpCodeNameMessage<Integer, String, String> getSystemErrorCodeMessage() {
+		return SYSTEM_ERROR;
+	}
+
+	protected Map<Class<? extends AppException>, HttpCodeName<Integer, String>> getApoolloCodeNameExceptionMapping() {
+		return APOOLLO_CODE_NAME_EXCEPTION_MAPPING;
+	}
+
+	protected Map<Class<? extends ErrorResponse>, HttpCodeName<Integer, String>> getSpringBootErrorResponseExceptionMapping() {
+		return SPRING_BOOT_ERROR_RESPONSE_EXCEPTION_MAPPING;
+	}
+
+	protected Map<Class<? extends Exception>, HttpCodeName<Integer, String>> getSpringBootExceptionMapping() {
+		return SPRING_BOOT_FRAMEWORK_EXCEPTION_MAPPING;
 	}
 
 	protected void writeResponse(HttpServletResponse response, int httpCode, Map<String, Object> responseMap) {
