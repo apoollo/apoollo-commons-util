@@ -52,8 +52,10 @@ public class DefaultRequestResourceManager implements RequestResourceManager {
 		long startTimestamp = System.currentTimeMillis();
 		RequestResource requestResource = getRequestResourceFromConfig(requestMappingPath);
 		if (null == requestResource) {
-			requestResource = DefaultRequestResource.toRequestResource(instances,
-					getRequestResourceFromRedis(requestMappingPath));
+			SerializableRequestResource serializableRequestResource = getRequestResourceFromRedis(requestMappingPath);
+			if (null != serializableRequestResource) {
+				requestResource = DefaultRequestResource.toRequestResource(instances, serializableRequestResource);
+			}
 		}
 		long endTimestamp = System.currentTimeMillis();
 		LOGGER.info("getRequestResource elapsedTime：" + (endTimestamp - startTimestamp) + "ms");
@@ -71,7 +73,7 @@ public class DefaultRequestResourceManager implements RequestResourceManager {
 		String key = getRequestResourceRedisKey();
 		Object object = redisTemplate.opsForHash().get(key, requestMappingPath);
 		try {
-			return objectMapper.readValue((String) object, SerializableRequestResource.class);
+			return null == object ? null : objectMapper.readValue((String) object, SerializableRequestResource.class);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

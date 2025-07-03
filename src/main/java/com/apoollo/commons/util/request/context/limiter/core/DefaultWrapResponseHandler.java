@@ -34,6 +34,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppAuthenticationAccessKeyIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationJwtTokenExpiredException;
+import com.apoollo.commons.util.exception.AppAuthenticationJwtTokenForbiddenException;
 import com.apoollo.commons.util.exception.AppAuthenticationJwtTokenIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationKeyPairSecretKeyForbiddenException;
 import com.apoollo.commons.util.exception.AppAuthenticationKeyPairTokenIllegalException;
@@ -133,8 +134,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 			put(AppRequestResourceDisabledException.class, new DefaultHttpCodeName<>(42002, "ResourceDisabled", 200));
 
 			// nonce limiter
-			put(AppNonceLimiterRefusedException.class,
-					new DefaultHttpCodeName<>(42010, "NonceLimiterRefused", 200));
+			put(AppNonceLimiterRefusedException.class, new DefaultHttpCodeName<>(42010, "NonceLimiterRefused", 200));
 			put(AppNonceLimiterTimestampIllegalException.class,
 					new DefaultHttpCodeName<>(42011, "NonceLimiterTimestampIllegal", 200));
 
@@ -177,6 +177,8 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 					new DefaultHttpCodeName<>(42100, "AuthenticationJwtTokenIllegal", 200));
 			put(AppAuthenticationJwtTokenExpiredException.class,
 					new DefaultHttpCodeName<>(42101, "AuthenticationJwtTokenExpired", 200));
+			put(AppAuthenticationJwtTokenForbiddenException.class,
+					new DefaultHttpCodeName<>(42102, "AuthenticationJwtTokenForbidden", 200));
 
 			// key pair
 			put(AppAuthenticationKeyPairTokenIllegalException.class,
@@ -242,11 +244,13 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 	@Override
 	public void writeExceptionResponse(HttpServletResponse response, RequestContext requestContext, Exception ex) {
 		HttpCodeNameMessage<Integer, String, String> httpCodeNameMessage = null;
-		if (ex instanceof AppHttpCodeNameMessageException appException) {
-			httpCodeNameMessage = new DefaultHttpCodeNameMessage<Integer, String, String>(appException.getCode(),
-					appException.getName(), appException.getHttpCode(), appException.getMessage());
-		} else if (ex instanceof AppException) {
-			httpCodeNameMessage = getHttpCodeNameMessage(CODE_NAME_EXCEPTION_MAPPING, ex);
+		if (ex instanceof AppException) {
+			if (ex instanceof AppHttpCodeNameMessageException appException) {
+				httpCodeNameMessage = new DefaultHttpCodeNameMessage<Integer, String, String>(appException.getCode(),
+						appException.getName(), appException.getHttpCode(), appException.getMessage());
+			} else {
+				httpCodeNameMessage = getHttpCodeNameMessage(CODE_NAME_EXCEPTION_MAPPING, ex);
+			}
 		} else if (ex instanceof ErrorResponse) {
 			httpCodeNameMessage = getHttpCodeNameMessage(ERROR_RESPONSE_EXCEPTION_MAPPING, ex);
 		} else {

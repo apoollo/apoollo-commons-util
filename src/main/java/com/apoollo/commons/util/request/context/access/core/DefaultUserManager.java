@@ -54,7 +54,7 @@ public class DefaultUserManager implements UserManager {
 	protected SerializableUser getUserFromRedis(String key) {
 		String user = redisTemplate.opsForValue().get(key);
 		try {
-		return	objectMapper.readValue(user, SerializableUser.class);
+			return null == user ? null : objectMapper.readValue(user, SerializableUser.class);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
@@ -77,7 +77,10 @@ public class DefaultUserManager implements UserManager {
 		long startTimestamp = System.currentTimeMillis();
 		User user = getUserFromConfig(accessKey);
 		if (null == user) {
-			user = DefaultUser.toUser(instances, getUserFromRedis(getUserRedisKey(accessKey)));
+			SerializableUser serializableUser = getUserFromRedis(getUserRedisKey(accessKey));
+			if (null != serializableUser) {
+				user = DefaultUser.toUser(instances, serializableUser);
+			}
 		}
 		long endTimestamp = System.currentTimeMillis();
 		LOGGER.info("getUser elapsedTime：" + (endTimestamp - startTimestamp) + "ms");
