@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey.TimeUnitPattern;
-import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.ContentEscapeMethod;
 import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
@@ -28,7 +28,7 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 
 	private Boolean enableCapacity;
 	private Boolean enableContentEscape;
-	private EscapeMethod contentEscapeMethod;
+	private ContentEscapeMethod contentEscapeMethod;
 	private Boolean enableResponseWrapper;
 	private WrapResponseHandler wrapResponseHandler;
 
@@ -60,7 +60,7 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		private Boolean enableResponseWrapper;
 
 		//
-		private Class<? extends EscapeMethod> contentEscapeMethodClass;
+		private Class<? extends ContentEscapeMethod> contentEscapeMethodClass;
 		private Class<? extends CorsConfiguration> corsLimiterConfigurationClass;
 		private Class<? extends NonceValidator> nonceLimiterValidatorClass;
 		private Class<? extends WrapResponseHandler> wrapResponseHandlerClass;
@@ -99,7 +99,7 @@ public class DefaultCapacitySupport extends DefaultLimitersSupport implements Ca
 		target.setEnableResponseWrapper(source.getEnableResponseWrapper());
 
 		if (null != source.getContentEscapeMethodClass()) {
-			target.setContentEscapeMethod(instances.getEscapeMethod(source.getContentEscapeMethodClass()));
+			target.setContentEscapeMethod(instances.getContentEscapeMethod(source.getContentEscapeMethodClass()));
 		}
 		if (null != source.getCorsLimiterConfigurationClass()) {
 			target.setCorsLimiterConfiguration(

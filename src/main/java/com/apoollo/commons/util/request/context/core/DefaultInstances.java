@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.ContentEscapeMethod;
 import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.limiter.NonceValidator;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
@@ -27,7 +27,8 @@ public class DefaultInstances implements Instances, ApplicationContextAware, Ini
 	private Instance<NonceValidator> nonceValidatorInstance = new DefaultInstance<>(NonceValidator.class);
 	private Instance<WrapResponseHandler> wrapResponseHandlerInstance = new DefaultInstance<>(
 			WrapResponseHandler.class);
-	private Instance<EscapeMethod> escapeMethodInstance = new DefaultInstance<>(EscapeMethod.class);
+	private Instance<ContentEscapeMethod> contentEscapeMethodInstance = new DefaultInstance<>(
+			ContentEscapeMethod.class);
 	private Instance<CorsConfiguration> corsConfigurationInstance = new DefaultInstance<>(CorsConfiguration.class);
 
 	@Override
@@ -43,7 +44,7 @@ public class DefaultInstances implements Instances, ApplicationContextAware, Ini
 	public void afterPropertiesSet() throws Exception {
 		nonceValidatorInstance.initail(applicationContext);
 		wrapResponseHandlerInstance.initail(applicationContext);
-		escapeMethodInstance.initail(applicationContext);
+		contentEscapeMethodInstance.initail(applicationContext);
 		corsConfigurationInstance.initail(applicationContext);
 	}
 
@@ -84,8 +85,8 @@ public class DefaultInstances implements Instances, ApplicationContextAware, Ini
 	}
 
 	@Override
-	public EscapeMethod getEscapeMethod(Class<? extends EscapeMethod> clazz) {
-		EscapeMethod escapeMethod = escapeMethodInstance.getInstance(clazz);
+	public ContentEscapeMethod getContentEscapeMethod(Class<? extends ContentEscapeMethod> clazz) {
+		ContentEscapeMethod escapeMethod = contentEscapeMethodInstance.getInstance(clazz);
 		if (null == escapeMethod) {
 			throw new RuntimeException("can't find escapeMethod by:" + clazz);
 		}
@@ -93,12 +94,12 @@ public class DefaultInstances implements Instances, ApplicationContextAware, Ini
 	}
 
 	@Override
-	public EscapeMethod getEscapeMethod(String clazz) {
-		EscapeMethod escapeMethod = escapeMethodInstance.getInstance(clazz);
-		if (null == escapeMethod) {
-			throw new RuntimeException("can't find escapeMethod by:" + clazz);
+	public ContentEscapeMethod getContentEscapeMethod(String clazz) {
+		ContentEscapeMethod contentEscapeMethod = contentEscapeMethodInstance.getInstance(clazz);
+		if (null == contentEscapeMethod) {
+			throw new RuntimeException("can't find contentEscapeMethod by:" + clazz);
 		}
-		return escapeMethod;
+		return contentEscapeMethod;
 	}
 
 	@Override

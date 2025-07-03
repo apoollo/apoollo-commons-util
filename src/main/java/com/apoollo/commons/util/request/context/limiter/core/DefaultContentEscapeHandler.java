@@ -15,7 +15,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.ContentEscapeMethod;
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.limiter.ContentEscapeHandler;
 import com.apoollo.commons.util.request.context.model.RequestContextCapacitySupport;
@@ -32,7 +32,7 @@ public class DefaultContentEscapeHandler implements ContentEscapeHandler {
 		this.requestContextCapacitySupport = requestContextCapacitySupport;
 	}
 
-	public EscapeMethod getRequestContextEscapeMethod() {
+	public ContentEscapeMethod getRequestContextEscapeMethod() {
 		return requestContextCapacitySupport.getEscapeMethod(RequestContext.getRequired());
 	}
 

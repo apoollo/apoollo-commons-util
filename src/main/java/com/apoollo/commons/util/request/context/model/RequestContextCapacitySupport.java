@@ -14,7 +14,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.apoollo.commons.util.LangUtils;
-import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.ContentEscapeMethod;
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
 import com.apoollo.commons.util.request.context.limiter.support.CapacitySupport;
@@ -27,11 +27,11 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class RequestContextCapacitySupport {
 
-	private EscapeMethod escapeMethod;
+	private ContentEscapeMethod escapeMethod;
 	private WrapResponseHandler wrapResponseHandler;
 	private CapacitySupport capacitySupport;
 
-	public RequestContextCapacitySupport(EscapeMethod escapeMethod, WrapResponseHandler wrapResponseHandler,
+	public RequestContextCapacitySupport(ContentEscapeMethod escapeMethod, WrapResponseHandler wrapResponseHandler,
 			CapacitySupport capacitySupport) {
 		super();
 		this.escapeMethod = escapeMethod;
@@ -44,8 +44,8 @@ public class RequestContextCapacitySupport {
 		}
 	}
 
-	public EscapeMethod getEscapeMethod(RequestContext requestContext) {
-		EscapeMethod escapeMethod = getAbility(requestContext, capacitySupport,
+	public ContentEscapeMethod getEscapeMethod(RequestContext requestContext) {
+		ContentEscapeMethod escapeMethod = getAbility(requestContext, capacitySupport,
 				CapacitySupport::getContentEscapeMethod);
 		if (null == escapeMethod) {
 			escapeMethod = this.escapeMethod;

@@ -10,7 +10,7 @@ import java.util.List;
  * @author liuyulong
  * @since 2025-05-21
  */
-public interface EscapeMethod {
+public interface ContentEscapeMethod {
 
 	public String escape(String input);
 

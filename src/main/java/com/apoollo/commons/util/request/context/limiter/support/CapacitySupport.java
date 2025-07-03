@@ -3,7 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.limiter.support;
 
-import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.ContentEscapeMethod;
 import com.apoollo.commons.util.request.context.limiter.WrapResponseHandler;
 
 /**
@@ -16,7 +16,7 @@ public interface CapacitySupport extends LimitersSupport {
 
 	public Boolean getEnableContentEscape();
 
-	public EscapeMethod getContentEscapeMethod();
+	public ContentEscapeMethod getContentEscapeMethod();
 
 	public Boolean getEnableResponseWrapper();
 

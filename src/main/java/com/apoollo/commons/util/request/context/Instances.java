@@ -25,9 +25,9 @@ public interface Instances {
 
 	public WrapResponseHandler getWrapResponseHandler(String clazz);
 
-	public EscapeMethod getEscapeMethod(Class<? extends EscapeMethod> clazz);
+	public ContentEscapeMethod getContentEscapeMethod(Class<? extends ContentEscapeMethod> clazz);
 
-	public EscapeMethod getEscapeMethod(String clazz);
+	public ContentEscapeMethod getContentEscapeMethod(String clazz);
 
 	public CorsConfiguration getCorsConfiguration(Class<? extends CorsConfiguration> clazz);
 

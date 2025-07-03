@@ -15,13 +15,13 @@ import com.alibaba.fastjson2.JSONFactory;
 import com.alibaba.fastjson2.JSONReader;
 import com.alibaba.fastjson2.filter.ValueFilter;
 import com.alibaba.fastjson2.reader.ObjectReaderProvider;
-import com.apoollo.commons.util.request.context.EscapeMethod;
+import com.apoollo.commons.util.request.context.ContentEscapeMethod;
 
 /**
  * @author liuyulong
  * @since 2025-05-21
  */
-public class DefaultEscapeXss implements EscapeMethod {
+public class DefaultContentEscapeXss implements ContentEscapeMethod {
 
 	@Override
 	public String escape(String input) {
