@@ -24,35 +24,22 @@ public class IpUtils {
 		return value;
 	}
 
-	public static String tryGetRealIp(HttpServletRequest request) {
-		String headerValue = LangUtils.getStream(IP_HEADERS)//
-				.map(header -> {
-					String value = getValue(request.getHeader(header));
-					// if (null == value) {
-					// value = getValue(request.getHeader(header.toUpperCase()));
-					// }
-					// if (null == value) {
-					// value = getValue(request.getHeader(header.toLowerCase()));
-					// }
-					return value;
-				})//
+	public static String tryGetClientRealIp(HttpServletRequest request) {
+		return LangUtils.getStream(IP_HEADERS)//
+				.map(headerKey -> getValue(request.getHeader(headerKey)))//
 				.filter(Objects::nonNull)//
+				.map(headerValue->{
+					if (headerValue.contains(",")) {
+						return LangUtils.getStream(StringUtils.split(headerValue, ","))//
+								.filter(StringUtils::isNotBlank)//
+								.findFirst()//
+								.orElse(null);
+					}else {
+						return headerValue;
+					}
+				})
 				.findFirst()//
-				.orElse(null);
-		String ip = null;
-		if (null != headerValue) {
-			if (headerValue.contains(",")) {
-				ip = LangUtils.getStream(StringUtils.split(headerValue, ","))//
-						.filter(StringUtils::isNotBlank)//
-						.findFirst()//
-						.orElse(null);
-			} else {
-				ip = headerValue;
-			}
-		} else {
-			ip = request.getRemoteAddr();
-		}
-		return ip;
+				.orElseGet(()->request.getRemoteAddr());
 	}
 
 	public static boolean matchesIp(String input) {

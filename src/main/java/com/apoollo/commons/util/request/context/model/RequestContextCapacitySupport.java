@@ -63,13 +63,14 @@ public class RequestContextCapacitySupport {
 	}
 
 	public Object getNormallyResponse(RequestContext requestContext, Object object) {
-		Object result = null;
+		Object responseObject = null;
 		if (null != requestContext
 				&& supportAbility(requestContext, capacitySupport, CapacitySupport::getEnableResponseWrapper)) {
 			requestContext.setResponseTime(System.currentTimeMillis());
-			result = getWrapResponseHandler(requestContext).getNormallyResponse(requestContext, object);
+			responseObject = getWrapResponseHandler(requestContext).getNormallyResponse(requestContext, object);
+			requestContext.setResponseBody(responseObject);
 		}
-		return result;
+		return responseObject;
 	}
 
 	public <T> T writeExceptionResponse(HttpServletResponse response, RequestContext requestContext, Exception ex,
@@ -78,11 +79,14 @@ public class RequestContextCapacitySupport {
 		if (!response.isCommitted() && null != requestContext
 				&& supportAbility(requestContext, capacitySupport, CapacitySupport::getEnableResponseWrapper)) {
 			requestContext.setResponseTime(System.currentTimeMillis());
-			getWrapResponseHandler(requestContext).writeExceptionResponse(response, requestContext, ex);
+			Object responseObject = getWrapResponseHandler(requestContext).writeAndGetExceptionResponse(response,
+					requestContext, ex);
+			requestContext.setResponseBody(responseObject);
 			result = supplier.get();
 		}
 		return result;
 	}
+
 
 	public boolean supportAbility(RequestContext requestContext, Function<CapacitySupport, Boolean> function) {
 		return supportAbility(requestContext, capacitySupport, function);
@@ -93,7 +97,8 @@ public class RequestContextCapacitySupport {
 	}
 
 	public void doSupport(RequestContext requestContext, Consumer<CapacitySupport> consumer) {
-		doSupport(LangUtils.getStream(capacitySupport, requestContext.getUser(), requestContext.getRequestResource())
+		doSupport(LangUtils
+				.getStream(capacitySupport, requestContext.getRequestUser(), requestContext.getRequestResource())
 				.toList(), consumer);
 	}
 
@@ -108,8 +113,8 @@ public class RequestContextCapacitySupport {
 	public static boolean supportAbility(RequestContext requestContext, CapacitySupport capacitySupport,
 			Function<CapacitySupport, Boolean> function) {
 		return getAbilityStream(LangUtils
-				.getStream(requestContext.getUser(), requestContext.getRequestResource(), capacitySupport).toList(),
-				function)//
+				.getStream(requestContext.getRequestUser(), requestContext.getRequestResource(), capacitySupport)
+				.toList(), function)//
 				.filter(BooleanUtils::isTrue)//
 				.findAny()//
 				.orElse(false)//
@@ -119,8 +124,8 @@ public class RequestContextCapacitySupport {
 	public static <T> T getAbility(RequestContext requestContext, CapacitySupport capacitySupport,
 			Function<CapacitySupport, T> function) {
 		return getAbility(LangUtils
-				.getStream(requestContext.getUser(), requestContext.getRequestResource(), capacitySupport).toList(),
-				function);
+				.getStream(requestContext.getRequestUser(), requestContext.getRequestResource(), capacitySupport)
+				.toList(), function);
 	}
 
 	public static <T> T getAbility(List<CapacitySupport> capacitySupports, Function<CapacitySupport, T> function) {

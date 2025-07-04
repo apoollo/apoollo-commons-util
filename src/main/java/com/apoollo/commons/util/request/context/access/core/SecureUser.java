@@ -47,7 +47,7 @@ public class SecureUser implements SecurePrincipal<User> {
 				.map(authentication -> {
 					Authority<?> authority = authentication.authenticate(request, requestContext);
 					User user = authority.getUser();
-					requestContext.setUser(user);
+					requestContext.setRequestUser(user);
 					authorization.authorize(user, requestResource);
 					Object token = authority.getToken();
 					if (token instanceof JwtToken jwtToken) {

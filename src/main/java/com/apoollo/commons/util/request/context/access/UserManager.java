@@ -40,7 +40,7 @@ public interface UserManager {
 	public void delete(String accessKey);
 
 	public default void logout() {
-		delete(RequestContext.getRequired().getUser().getAccessKey());
+		delete(RequestContext.getRequired().getRequestUser().getAccessKey());
 	}
 
 }

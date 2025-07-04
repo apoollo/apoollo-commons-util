@@ -69,7 +69,7 @@ public class DefaultLimiters<T extends LimitersSupport> implements Limiters<T> {
 		}
 		if (enableIpLimiter(requestContext, support)) {
 			ipLimiter.limit(support.getIpLimiterExcludes(), support.getIpLimiterIncludes(),
-					requestContext.getRequestIp());
+					requestContext.getClientRealIp());
 		}
 		if (enableRefererLimiter(requestContext, support)) {
 			refererLimiter.limit(request, support.getRefererLimiterIncludeReferers());

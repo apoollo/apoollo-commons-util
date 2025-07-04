@@ -5,10 +5,8 @@ package com.apoollo.commons.util.request.context.core;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import com.apoollo.commons.util.request.context.RequestContext;
-import com.apoollo.commons.util.request.context.Response;
 import com.apoollo.commons.util.request.context.access.RequestResource;
 import com.apoollo.commons.util.request.context.access.User;
 
@@ -18,17 +16,13 @@ import com.apoollo.commons.util.request.context.access.User;
  */
 public class DefaultRequestContext implements RequestContext {
 
-	private Long requestTime;
+	private String clientRequestId;
+
+	private String clientRealIp;
 
 	private String requestId;
 
-	private String requestIp;
-
-	private String clientRequestId;
-
-	private Long clientTimeout;
-
-	private Long requestTimeout;
+	private Long requestTime;
 
 	private String contextPath;
 
@@ -36,54 +30,46 @@ public class DefaultRequestContext implements RequestContext {
 
 	private String requestMappingPath;
 
-	private User user;
-
 	private RequestResource requestResource;
 
-	private Long responseTime;
-
-	private Response<?> response;
-
-	private ThreadPoolExecutor threadPoolExecutor;
-
-	private String requestServerName;
-
-	private Map<String, Object> hint = new HashMap<>();
+	private User requestUser;
 
 	private byte[] requestBody;
 
-	/**
-	 * @return the startTime
-	 */
+	private Long responseTime;
+
+	private Object responseBody;
+
+	private Map<String, Object> hint = new HashMap<>();
+
+	@Override
+	public String getClientRequestId() {
+		return clientRequestId;
+	}
+
+	@Override
+	public void setClientRequestId(String clientRequestId) {
+		this.clientRequestId = clientRequestId;
+	}
+
+	@Override
+	public String getClientRealIp() {
+		return clientRealIp;
+	}
+
+	@Override
+	public void setClientRealIp(String clientRealIp) {
+		this.clientRealIp = clientRealIp;
+	}
+
 	@Override
 	public Long getRequestTime() {
 		return requestTime;
 	}
 
-	/**
-	 * @return the requestId
-	 */
 	@Override
 	public String getRequestId() {
 		return requestId;
-	}
-
-	@Override
-	public String getContextPath() {
-		return contextPath;
-	}
-
-	/**
-	 * @return the requestUri
-	 */
-	@Override
-	public String getRequestUri() {
-		return requestUri;
-	}
-
-	@Override
-	public String getRequestMappingPath() {
-		return requestMappingPath;
 	}
 
 	@Override
@@ -96,34 +82,49 @@ public class DefaultRequestContext implements RequestContext {
 	}
 
 	@Override
-	public User getUser() {
-		return user;
+	public String getContextPath() {
+		return contextPath;
 	}
 
 	@Override
-	public void setUser(User user) {
-		this.user = user;
-
+	public String getRequestUri() {
+		return requestUri;
 	}
 
-	/**
-	 * @return the requestResource
-	 */
+	@Override
+	public String getRequestMappingPath() {
+		return requestMappingPath;
+	}
+
+	@Override
 	public RequestResource getRequestResource() {
 		return requestResource;
 	}
 
-	/**
-	 * @param requestResource the requestResource to set
-	 */
+	@Override
 	public void setRequestResource(RequestResource requestResource) {
 		this.requestResource = requestResource;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends User> T getCastUser() {
-		return (T) getUser();
+	public User getRequestUser() {
+		return requestUser;
+	}
+
+	@Override
+	public void setRequestUser(User user) {
+		this.requestUser = user;
+
+	}
+
+	@Override
+	public byte[] getRequestBody() {
+		return requestBody;
+	}
+
+	@Override
+	public void setRequestBody(byte[] requestBody) {
+		this.requestBody = requestBody;
 	}
 
 	@Override
@@ -137,8 +138,13 @@ public class DefaultRequestContext implements RequestContext {
 	}
 
 	@Override
-	public void setResponse(Response<?> response) {
-		this.response = response;
+	public Object getResponseBody() {
+		return responseBody;
+	}
+
+	@Override
+	public void setResponseBody(Object responseBody) {
+		this.responseBody = responseBody;
 	}
 
 	@Override
@@ -147,74 +153,6 @@ public class DefaultRequestContext implements RequestContext {
 			throw new RuntimeException("endTime not init");
 		}
 		return responseTime - requestTime;
-	}
-
-	@Override
-	public Response<?> getResponse() {
-		return response;
-	}
-
-	@Override
-	public ThreadPoolExecutor getThreadPoolExecutor() {
-		return threadPoolExecutor;
-	}
-
-	@Override
-	public void setThreadPoolExecutor(ThreadPoolExecutor threadPoolExecutor) {
-		this.threadPoolExecutor = threadPoolExecutor;
-
-	}
-
-	@Override
-	public String getClientRequestId() {
-		return clientRequestId;
-	}
-
-	@Override
-	public void setClientRequestId(String clientRequestId) {
-		this.clientRequestId = clientRequestId;
-	}
-
-	@Override
-	public Long getClientTimeout() {
-		return clientTimeout;
-	}
-
-	@Override
-	public Long getRequestTimeout() {
-		return requestTimeout;
-	}
-
-	@Override
-	public void setClientTimeout(Long clientTimeout) {
-		this.clientTimeout = clientTimeout;
-
-	}
-
-	@Override
-	public void setRequestTimeout(Long requestTimeout) {
-		this.requestTimeout = requestTimeout;
-
-	}
-
-	@Override
-	public String getRequestIp() {
-		return requestIp;
-	}
-
-	@Override
-	public void setRequestIp(String requestIp) {
-		this.requestIp = requestIp;
-	}
-
-	@Override
-	public String getRequestServerName() {
-		return requestServerName;
-	}
-
-	@Override
-	public void setRequestServerName(String requestServerName) {
-		this.requestServerName = requestServerName;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -228,14 +166,6 @@ public class DefaultRequestContext implements RequestContext {
 		if (null != key && null != value) {
 			hint.put(key, value);
 		}
-	}
-
-	public byte[] getRequestBody() {
-		return requestBody;
-	}
-
-	public void setRequestBody(byte[] requestBody) {
-		this.requestBody = requestBody;
 	}
 
 }

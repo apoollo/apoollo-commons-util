@@ -212,8 +212,8 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 	}
 
 	@Override
-	public Map<String, Object> getNormallyResponse(RequestContext requestContext, Object object) {
-		Map<String, Object> responseBody = null;
+	public Object getNormallyResponse(RequestContext requestContext, Object object) {
+		Object responseObject = null;
 		if (object instanceof Response response) {
 			Integer code = null;
 			String name = null;
@@ -230,19 +230,19 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 				message = response.getMessage();
 				success = response.getSuccess();
 			}
-			responseBody = getResponseMap(code, name, message, success,
+			responseObject = getResponse(code, name, message, success,
 					LangUtils.defaultString(response.getRequestId(), requestContext.getRequestId()),
 					LangUtils.defaultValue(response.getElapsedTime(), requestContext.getElapsedTime()),
 					response.getData());
 		} else {
-			responseBody = getResponseMap(OK.getCode(), OK.getName(), OK.getMessage(), true,
+			responseObject = getResponse(OK.getCode(), OK.getName(), OK.getMessage(), true,
 					requestContext.getRequestId(), requestContext.getElapsedTime(), object);
 		}
-		return responseBody;
+		return responseObject;
 	}
 
 	@Override
-	public void writeExceptionResponse(HttpServletResponse response, RequestContext requestContext, Exception ex) {
+	public Object writeAndGetExceptionResponse(HttpServletResponse response, RequestContext requestContext, Exception ex) {
 		HttpCodeNameMessage<Integer, String, String> httpCodeNameMessage = null;
 		if (ex instanceof AppException) {
 			if (ex instanceof AppHttpCodeNameMessageException appException) {
@@ -260,12 +260,13 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 			httpCodeNameMessage = getSystemErrorCodeMessage();
 		}
 		LOGGER.error(httpCodeNameMessage.getMessage(), ex);
-		Map<String, Object> responseMap = getResponseMap(httpCodeNameMessage.getCode(), httpCodeNameMessage.getName(),
+		Object responseObject = getResponse(httpCodeNameMessage.getCode(), httpCodeNameMessage.getName(),
 				httpCodeNameMessage.getMessage(), OK.getCode().equals(httpCodeNameMessage.getCode()),
 				requestContext.getRequestId(), requestContext.getElapsedTime(),
 				requestContext.getHintOfExceptionCatchedData());
 
-		writeResponse(response, httpCodeNameMessage.getHttpCode(), responseMap);
+		writeResponse(response, httpCodeNameMessage.getHttpCode(), responseObject);
+		return responseObject;
 	}
 
 	protected HttpCodeNameMessage<Integer, String, String> getSystemErrorCodeMessage() {
@@ -284,7 +285,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		return SPRING_BOOT_FRAMEWORK_EXCEPTION_MAPPING;
 	}
 
-	protected void writeResponse(HttpServletResponse response, int httpCode, Map<String, Object> responseMap) {
+	protected void writeResponse(HttpServletResponse response, int httpCode, Object responseMap) {
 		try {
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			response.setStatus(httpCode);
@@ -305,7 +306,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		return httpCodeNameMessage;
 	}
 
-	protected Map<String, Object> getResponseMap(Integer code, String name, String message, Boolean success,
+	protected Object getResponse(Integer code, String name, String message, Boolean success,
 			String requestId, Long elapsedTime, Object data) {
 		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("code", code);

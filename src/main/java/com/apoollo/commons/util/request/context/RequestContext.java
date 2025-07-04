@@ -3,7 +3,6 @@
  */
 package com.apoollo.commons.util.request.context;
 
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
@@ -87,13 +86,21 @@ public interface RequestContext {
 		addHint("exception.catched.data", object);
 	}
 
+	// getters setters
+
 	public String getClientRequestId();
+
+	public void setClientRequestId(String clientRequestId);
+
+	public String getClientRealIp();
+
+	public void setClientRealIp(String clientRealIp);
 
 	public String getRequestId();
 
-	public String getRequestIp();
-
 	public Long getRequestTime();
+
+	public void set(String requestId, Long requestTime, String contextPath, String requestUri);
 
 	public String getContextPath();
 
@@ -101,54 +108,30 @@ public interface RequestContext {
 
 	public String getRequestMappingPath();
 
-	public User getUser();
-
 	public RequestResource getRequestResource();
-
-	public Long getResponseTime();
-
-	public Long getElapsedTime();
-
-	public Response<?> getResponse();
-
-	public <T extends User> T getCastUser();
-
-	public ThreadPoolExecutor getThreadPoolExecutor();
-
-	public Long getClientTimeout();
-
-	public Long getRequestTimeout();
-
-	public String getRequestServerName();
-
-	public <T> T getHint(String key);
-
-	public byte[] getRequestBody();
-
-	public void setRequestIp(String requestIp);
-
-	public void setClientRequestId(String clientRequestId);
-
-	public void setUser(User user);
 
 	public void setRequestResource(RequestResource requestResource);
 
-	public void setResponseTime(Long endTime);
+	public User getRequestUser();
 
-	public void set(String requestId, Long requestTime, String contextPath, String requestUri);
+	public void setRequestUser(User user);
 
-	public void setResponse(Response<?> response);
-
-	public void setThreadPoolExecutor(ThreadPoolExecutor threadPoolExecutor);
-
-	public void setClientTimeout(Long clientTimeout);
-
-	public void setRequestTimeout(Long requestTimeout);
-
-	public void setRequestServerName(String requestServerName);
-
-	public void addHint(String key, Object value);
+	public byte[] getRequestBody();
 
 	public void setRequestBody(byte[] requestBody);
+
+	public Long getResponseTime();
+
+	public void setResponseTime(Long endTime);
+
+	public Object getResponseBody();
+
+	public void setResponseBody(Object response);
+
+	public Long getElapsedTime();
+
+	public <T> T getHint(String key);
+
+	public void addHint(String key, Object value);
 
 }

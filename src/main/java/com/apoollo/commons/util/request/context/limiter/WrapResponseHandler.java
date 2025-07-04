@@ -3,8 +3,6 @@
  */
 package com.apoollo.commons.util.request.context.limiter;
 
-import java.util.Map;
-
 import com.apoollo.commons.util.request.context.RequestContext;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public interface WrapResponseHandler {
 
-	public void writeExceptionResponse(HttpServletResponse response, RequestContext requestContext, Exception ex);
+	public Object writeAndGetExceptionResponse(HttpServletResponse response, RequestContext requestContext, Exception ex);
 
-	public Map<String, Object> getNormallyResponse(RequestContext requestContext, Object object);
+	public Object getNormallyResponse(RequestContext requestContext, Object object);
 
 }
