@@ -3,14 +3,12 @@
  */
 package com.apoollo.commons.util.request.context.access.core;
 
-import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.redis.service.RedisNameSpaceKey;
 import com.apoollo.commons.util.request.context.Instances;
 import com.apoollo.commons.util.request.context.access.RequestResource;
@@ -31,18 +29,17 @@ public class DefaultRequestResourceManager implements RequestResourceManager {
 	private Instances instances;
 	private StringRedisTemplate redisTemplate;
 	private RedisNameSpaceKey redisNameSpaceKey;
-	private List<RequestResource> requestResources;
+	private Map<String, RequestResource> requestResources;
 
 	public DefaultRequestResourceManager(ObjectMapper objectMapper, Instances instances,
 			StringRedisTemplate redisTemplate, RedisNameSpaceKey redisNameSpaceKey,
-			List<RequestResource> requestResources) {
+			Map<String, RequestResource> requestResources) {
 		super();
 		this.objectMapper = objectMapper;
 		this.instances = instances;
 		this.redisTemplate = redisTemplate;
 		this.redisNameSpaceKey = redisNameSpaceKey;
 		this.requestResources = requestResources;
-
 	}
 
 	@Override
@@ -63,10 +60,7 @@ public class DefaultRequestResourceManager implements RequestResourceManager {
 	}
 
 	public RequestResource getRequestResourceFromConfig(String requestMappingPath) {
-		return LangUtils.getStream(requestResources)//
-				.filter(resource -> StringUtils.equals(resource.getRequestMappingPath(), requestMappingPath))//
-				.findFirst()//
-				.orElse(null);
+		return requestResources.get(requestMappingPath);
 	}
 
 	public SerializableRequestResource getRequestResourceFromRedis(String requestMappingPath) {

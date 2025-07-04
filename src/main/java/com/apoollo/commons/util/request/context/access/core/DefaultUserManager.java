@@ -3,8 +3,9 @@
  */
 package com.apoollo.commons.util.request.context.access.core;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,7 @@ public class DefaultUserManager implements UserManager {
 	private StringRedisTemplate redisTemplate;
 	private RedisNameSpaceKey redisNameSpaceKey;
 
-	private List<User> users;
+	private Map<String, User> users;
 
 	public DefaultUserManager(ObjectMapper objectMapper, Instances instances, StringRedisTemplate redisTemplate,
 			RedisNameSpaceKey redisNameSpaceKey, List<SerializableUser> users) {
@@ -45,9 +46,9 @@ public class DefaultUserManager implements UserManager {
 		this.instances = instances;
 		this.redisTemplate = redisTemplate;
 		this.redisNameSpaceKey = redisNameSpaceKey;
-		this.users = new ArrayList<>();
+		this.users = new HashMap<>();
 		LangUtils.getStream(users).forEach(serializableUser -> {
-			this.users.add(DefaultUser.toUser(instances, serializableUser));
+			this.users.put(serializableUser.getAccessKey(), DefaultUser.toUser(instances, serializableUser));
 		});
 	}
 
@@ -61,10 +62,7 @@ public class DefaultUserManager implements UserManager {
 	}
 
 	protected User getUserFromConfig(String accessKey) {
-		return LangUtils.getStream(users)//
-				.filter(user -> StringUtils.equals(accessKey, user.getAccessKey()))//
-				.findFirst()//
-				.orElse(null);
+		return users.get(accessKey);
 	}
 
 	protected String getUserRedisKey(String accessKey) {
