@@ -59,6 +59,12 @@ public class SecureUser implements SecurePrincipal<User> {
 					RequestContextCapacitySupport.doSupport(List.of(user), capacitySupport -> {
 						limiters.limit(request, response, requestContext, capacitySupport);
 					});
+
+					if (null != user.getPasswordLastUpdateTimestamp() && null != user.getPasswordValidMillis()) {
+						response.setHeader(RequestConstants.RESPONSE_HEADER_USER_PASSWORD_EXPIRE_REMAIN_DURATION,
+								String.valueOf(user.getPasswordLastUpdateTimestamp() + user.getPasswordValidMillis()
+										- System.currentTimeMillis()));
+					}
 					return user;
 				})//
 				.findAny()//
