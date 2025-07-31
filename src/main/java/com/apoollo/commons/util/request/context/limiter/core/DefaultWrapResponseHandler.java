@@ -58,7 +58,7 @@ import com.apoollo.commons.util.exception.AppRequestResourceNotExistsException;
 import com.apoollo.commons.util.exception.AppServerOverloadedException;
 import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureRefusedException;
 import com.apoollo.commons.util.exception.AppSyncLimiterRefusedException;
-import com.apoollo.commons.util.exception.AppUserPasswordExpiredException;
+import com.apoollo.commons.util.exception.AppAuthenticationUserPasswordExpiredException;
 import com.apoollo.commons.util.request.context.HttpCodeName;
 import com.apoollo.commons.util.request.context.HttpCodeNameMessage;
 import com.apoollo.commons.util.request.context.RequestContext;
@@ -187,12 +187,13 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 			put(AppAuthenticationKeyPairSecretKeyForbiddenException.class,
 					new DefaultHttpCodeName<>(42111, "AuthenticationKeyPairSecretKeyForbidden", 200));
 
+			// password expired
+			put(AppAuthenticationUserPasswordExpiredException.class,
+					new DefaultHttpCodeName<>(42120, "AuthenticationUserPasswordExpired", 200));
+
 			// authorization
 			put(AppAuthorizationForbiddenException.class,
-					new DefaultHttpCodeName<>(42120, "AuthorizationForbidden", 200));
-
-			// password expired
-			put(AppUserPasswordExpiredException.class, new DefaultHttpCodeName<>(42130, "UserPasswordExpired", 200));
+					new DefaultHttpCodeName<>(42130, "AuthorizationForbidden", 200));
 
 			// overloaded
 			put(AppServerOverloadedException.class, new DefaultHttpCodeName<>(42990, "ServerOverloaded", 200));
