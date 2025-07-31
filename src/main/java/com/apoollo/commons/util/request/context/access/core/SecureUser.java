@@ -5,7 +5,10 @@ package com.apoollo.commons.util.request.context.access.core;
 
 import java.util.List;
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import com.apoollo.commons.util.JwtUtils.JwtToken;
+import com.apoollo.commons.util.exception.AppUserPasswordExpiredException;
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.access.Authentication;
 import com.apoollo.commons.util.request.context.access.Authorization;
@@ -49,6 +52,24 @@ public class SecureUser implements SecurePrincipal<User> {
 					User user = authority.getUser();
 					requestContext.setRequestUser(user);
 					authorization.authorize(user, requestResource);
+
+					RequestContextCapacitySupport.doSupport(List.of(user), capacitySupport -> {
+						limiters.limit(request, response, requestContext, capacitySupport);
+					});
+
+					if (null != user.getPasswordLastUpdateTimestamp() && null != user.getPasswordValidMillis()) {
+						Long userPasswordExpireRemainDuration = user.getPasswordLastUpdateTimestamp()
+								+ user.getPasswordValidMillis() - System.currentTimeMillis();
+
+						if (BooleanUtils.isTrue(user.getEnableForceChangePassword())
+								&& userPasswordExpireRemainDuration <= 0) {
+							throw new AppUserPasswordExpiredException("user password already expired");
+						}
+
+						response.setHeader(RequestConstants.RESPONSE_HEADER_USER_PASSWORD_EXPIRE_REMAIN_DURATION,
+								String.valueOf(userPasswordExpireRemainDuration));
+					}
+
 					Object token = authority.getToken();
 					if (token instanceof JwtToken jwtToken) {
 						authorizationRenewal.renewal(user, jwtToken, (renewal) -> {
@@ -56,15 +77,7 @@ public class SecureUser implements SecurePrincipal<User> {
 									renewal.getRenewalAuthorizationJwtToken());
 						});
 					}
-					RequestContextCapacitySupport.doSupport(List.of(user), capacitySupport -> {
-						limiters.limit(request, response, requestContext, capacitySupport);
-					});
 
-					if (null != user.getPasswordLastUpdateTimestamp() && null != user.getPasswordValidMillis()) {
-						response.setHeader(RequestConstants.RESPONSE_HEADER_USER_PASSWORD_EXPIRE_REMAIN_DURATION,
-								String.valueOf(user.getPasswordLastUpdateTimestamp() + user.getPasswordValidMillis()
-										- System.currentTimeMillis()));
-					}
 					return user;
 				})//
 				.findAny()//

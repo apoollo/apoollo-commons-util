@@ -58,6 +58,7 @@ import com.apoollo.commons.util.exception.AppRequestResourceNotExistsException;
 import com.apoollo.commons.util.exception.AppServerOverloadedException;
 import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureRefusedException;
 import com.apoollo.commons.util.exception.AppSyncLimiterRefusedException;
+import com.apoollo.commons.util.exception.AppUserPasswordExpiredException;
 import com.apoollo.commons.util.request.context.HttpCodeName;
 import com.apoollo.commons.util.request.context.HttpCodeNameMessage;
 import com.apoollo.commons.util.request.context.RequestContext;
@@ -190,8 +191,11 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 			put(AppAuthorizationForbiddenException.class,
 					new DefaultHttpCodeName<>(42120, "AuthorizationForbidden", 200));
 
+			// password expired
+			put(AppUserPasswordExpiredException.class, new DefaultHttpCodeName<>(42130, "UserPasswordExpired", 200));
+
 			// overloaded
-			put(AppServerOverloadedException.class, new DefaultHttpCodeName<>(42130, "ServerOverloaded", 200));
+			put(AppServerOverloadedException.class, new DefaultHttpCodeName<>(42990, "ServerOverloaded", 200));
 
 			// coarse grain
 			put(AppParameterIllegalException.class, new DefaultHttpCodeName<>(42998, "ParameterIllegal", 200));
@@ -242,7 +246,8 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 	}
 
 	@Override
-	public Object writeAndGetExceptionResponse(HttpServletResponse response, RequestContext requestContext, Exception ex) {
+	public Object writeAndGetExceptionResponse(HttpServletResponse response, RequestContext requestContext,
+			Exception ex) {
 		HttpCodeNameMessage<Integer, String, String> httpCodeNameMessage = null;
 		if (ex instanceof AppException) {
 			if (ex instanceof AppHttpCodeNameMessageException appException) {
@@ -306,8 +311,8 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		return httpCodeNameMessage;
 	}
 
-	protected Object getResponse(Integer code, String name, String message, Boolean success,
-			String requestId, Long elapsedTime, Object data) {
+	protected Object getResponse(Integer code, String name, String message, Boolean success, String requestId,
+			Long elapsedTime, Object data) {
 		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("code", code);
 		responseMap.put("name", name);

@@ -31,6 +31,8 @@ public interface User extends CapacitySupport {
 	public Boolean getEnableRenewal();
 
 	public UserMatchesRequestResourceCondition getAuthorizationCondition();
+	
+	public Boolean getEnableForceChangePassword();
 
 	public Long getPasswordValidMillis();
 

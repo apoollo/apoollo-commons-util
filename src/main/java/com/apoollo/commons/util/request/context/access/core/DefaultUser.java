@@ -28,6 +28,7 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 	private String userTypeName;
 	private Boolean enableRenewal;
 	private UserMatchesRequestResourceCondition authorizationCondition;
+	private Boolean enableForceChangePassword;
 	private Long passwordValidMillis;
 	private Long passwordLastUpdateTimestamp;
 	private Object attachement;
@@ -52,6 +53,7 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		private String userTypeName;
 		private Boolean enableRenewal;
 		private UserMatchesRequestResourceCondition authorizationCondition;
+		private Boolean enableForceChangePassword;
 		private Long passwordValidMillis;
 		private Long passwordLastUpdateTimestamp;
 		private Object attachement;
@@ -76,8 +78,9 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		target.setUserTypeName(source.getUserTypeName());
 		target.setEnableRenewal(source.getEnableRenewal());
 		target.setAuthorizationCondition(source.getAuthorizationCondition());
-		target.setPasswordLastUpdateTimestamp(source.getPasswordLastUpdateTimestamp());
+		target.setEnableForceChangePassword(source.getEnableForceChangePassword());
 		target.setPasswordValidMillis(source.getPasswordValidMillis());
+		target.setPasswordLastUpdateTimestamp(source.getPasswordLastUpdateTimestamp());
 		target.setAttachement(source.getAttachement());
 		target.setNonceLimiterCondition(source.getNonceLimiterCondition());
 		target.setSignatureLimiterCondition(source.getSignatureLimiterCondition());
@@ -102,8 +105,9 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		target.setUserTypeName(source.getUserTypeName());
 		target.setEnableRenewal(source.getEnableRenewal());
 		target.setAuthorizationCondition(source.getAuthorizationCondition());
-		target.setPasswordLastUpdateTimestamp(source.getPasswordLastUpdateTimestamp());
+		target.setEnableForceChangePassword(source.getEnableForceChangePassword());
 		target.setPasswordValidMillis(source.getPasswordValidMillis());
+		target.setPasswordLastUpdateTimestamp(source.getPasswordLastUpdateTimestamp());
 		target.setAttachement(source.getAttachement());
 		target.setNonceLimiterCondition(source.getNonceLimiterCondition());
 		target.setSignatureLimiterCondition(source.getSignatureLimiterCondition());
