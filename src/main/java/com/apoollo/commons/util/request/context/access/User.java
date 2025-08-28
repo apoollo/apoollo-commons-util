@@ -24,9 +24,9 @@ public interface User extends CapacitySupport {
 
 	public String getUsername();
 
-	public String getUserType();
+	public Long getOrganizationId();
 
-	public String getUserTypeName();
+	public String getOrganizationName();
 
 	public Boolean getEnableRenewal();
 

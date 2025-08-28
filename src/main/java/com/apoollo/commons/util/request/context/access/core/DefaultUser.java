@@ -24,8 +24,8 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 	private String secretKey;
 	private String secretKeySsoSalt;
 	private String username;
-	private String userType;
-	private String userTypeName;
+	private Long organizationId;
+	private String organizationName;
 	private Boolean enableRenewal;
 	private UserMatchesRequestResourceCondition authorizationCondition;
 	private Boolean enableForceChangePassword;
@@ -49,8 +49,8 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		private String secretKey;
 		private String secretKeySsoSalt;
 		private String username;
-		private String userType;
-		private String userTypeName;
+		private Long organizationId;
+		private String organizationName;
 		private Boolean enableRenewal;
 		private UserMatchesRequestResourceCondition authorizationCondition;
 		private Boolean enableForceChangePassword;
@@ -74,8 +74,8 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		target.setSecretKey(source.getSecretKey());
 		target.setSecretKeySsoSalt(source.getSecretKeySsoSalt());
 		target.setUsername(source.getUsername());
-		target.setUserType(source.getUserType());
-		target.setUserTypeName(source.getUserTypeName());
+		target.setOrganizationId(source.getOrganizationId());
+		target.setOrganizationName(source.getOrganizationName());
 		target.setEnableRenewal(source.getEnableRenewal());
 		target.setAuthorizationCondition(source.getAuthorizationCondition());
 		target.setEnableForceChangePassword(source.getEnableForceChangePassword());
@@ -101,8 +101,8 @@ public class DefaultUser extends DefaultCapacitySupport implements User {
 		target.setSecretKey(source.getSecretKey());
 		target.setSecretKeySsoSalt(source.getSecretKeySsoSalt());
 		target.setUsername(source.getUsername());
-		target.setUserType(source.getUserType());
-		target.setUserTypeName(source.getUserTypeName());
+		target.setOrganizationId(source.getOrganizationId());
+		target.setOrganizationName(source.getOrganizationName());
 		target.setEnableRenewal(source.getEnableRenewal());
 		target.setAuthorizationCondition(source.getAuthorizationCondition());
 		target.setEnableForceChangePassword(source.getEnableForceChangePassword());

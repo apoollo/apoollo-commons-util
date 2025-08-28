@@ -3,6 +3,13 @@
  */
 package com.apoollo.commons.util;
 
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +24,64 @@ public class IpUtils {
 	private static final String[] IP_HEADERS = new String[] { "x-forwarded-for", "x-real-ip", "proxy_protocol_addr",
 			"remote-host", "Proxy-Client-IP", "WL-Proxy-Client-IP" };
 
+	private static volatile String LOCAL = null;
+
+	static {
+		try {
+			InetAddress address = IpUtils.getIPv4();
+			if (address != null) {
+				LOCAL = address.getHostAddress();
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	public static String getLocalIP() {
+		return LOCAL;
+	}
+
+	private static InetAddress getIPv4() throws SocketException, UnknownHostException {
+		final ArrayList<InetAddress> v4Interfaces = new ArrayList<>();
+
+		Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
+		while (enumeration.hasMoreElements()) {
+			NetworkInterface interfaces = enumeration.nextElement();
+			Enumeration<InetAddress> addresses = interfaces.getInetAddresses();
+			while (addresses.hasMoreElements()) {
+				InetAddress address = addresses.nextElement();
+				if (address.isLoopbackAddress()) {
+					continue;
+				}
+
+				if (address instanceof Inet6Address) {
+					continue;
+				}
+
+				v4Interfaces.add(address);
+			}
+		}
+
+		int v4InterfacesSize = v4Interfaces.size();
+		if (v4InterfacesSize == 0) {
+			return null;
+		}
+
+		for (InetAddress address : v4Interfaces) {
+
+			final String host = address.getHostAddress();
+			if (host == null) {
+				continue;
+			}
+			if (host.startsWith("127.0")) {
+				continue;
+			}
+
+			return address;
+		}
+
+		return v4Interfaces.get(v4InterfacesSize - 1);
+	}
+
 	private static String getValue(String value) {
 		if (StringUtils.isBlank(value) || "unknown".equalsIgnoreCase(value)) {
 			return null;
@@ -28,18 +93,17 @@ public class IpUtils {
 		return LangUtils.getStream(IP_HEADERS)//
 				.map(headerKey -> getValue(request.getHeader(headerKey)))//
 				.filter(Objects::nonNull)//
-				.map(headerValue->{
+				.map(headerValue -> {
 					if (headerValue.contains(",")) {
 						return LangUtils.getStream(StringUtils.split(headerValue, ","))//
 								.filter(StringUtils::isNotBlank)//
 								.findFirst()//
 								.orElse(null);
-					}else {
+					} else {
 						return headerValue;
 					}
-				})
-				.findFirst()//
-				.orElseGet(()->request.getRemoteAddr());
+				}).findFirst()//
+				.orElseGet(() -> request.getRemoteAddr());
 	}
 
 	public static boolean matchesIp(String input) {
