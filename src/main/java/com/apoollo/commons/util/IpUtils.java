@@ -11,8 +11,11 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.hisign.commons.util.LangUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -107,10 +110,12 @@ public class IpUtils {
 	}
 
 	public static boolean matchesIp(String input) {
+		return matchesIp(input, null);
+	}
+
+	public static boolean matchesIp(String input, Predicate<String> partAllow) {
 		boolean ret = false;
 		if (StringUtils.isNotBlank(input)) {
-			// String regex0To255Group = "^0|1[0-9]{0,2}|2[0-5]{0,2}$";
-			// String regex0To255Group = "^[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-5]{2}$";
 			// 1位数|2位数|3位数1开头|3位数2开头,小于250|3位数,250至255
 			String regex0To255Group = "^[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]$";
 
@@ -118,9 +123,17 @@ public class IpUtils {
 
 			if (parts.length == 4 || parts.length == 5) {
 
-				ret = !(LangUtils.getStream(parts).filter(part -> !part.matches(regex0To255Group)
+				if (null == partAllow) {
+					ret = !(LangUtils.getStream(parts).filter(part -> !(part.matches(regex0To255Group))
 
-				).findAny().isPresent());
+					).findAny().isPresent());
+
+				} else {
+					ret = !(LangUtils.getStream(parts)
+							.filter(part -> !(partAllow.test(part) || part.matches(regex0To255Group))).findAny()
+							.isPresent());
+				}
+
 			}
 		}
 		return ret;
