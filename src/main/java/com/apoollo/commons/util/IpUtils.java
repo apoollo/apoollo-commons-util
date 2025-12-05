@@ -15,8 +15,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.hisign.commons.util.LangUtils;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
