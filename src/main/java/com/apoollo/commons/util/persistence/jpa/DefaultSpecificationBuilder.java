@@ -200,6 +200,28 @@ public class DefaultSpecificationBuilder<Z, X> implements SpecificationBuilder<Z
 	}
 
 	@Override
+	public SpecificationBuilder<Z, X> isNull(String propertyName, String entityPropertyName) {
+		return applyPredicate(propertyName, (value) -> {
+			Predicate predicate = null;
+			if (value instanceof Boolean bool && bool) {
+				predicate = criteriaBuilder.isNull(from.get(entityPropertyName));
+			}
+			return predicate;
+		});
+	}
+
+	@Override
+	public SpecificationBuilder<Z, X> isNotNull(String propertyName, String entityPropertyName) {
+		return applyPredicate(propertyName, (value) -> {
+			Predicate predicate = null;
+			if (value instanceof Boolean bool && bool) {
+				predicate = criteriaBuilder.isNotNull(from.get(entityPropertyName));
+			}
+			return predicate;
+		});
+	}
+
+	@Override
 	public SpecificationBuilder<Z, X> groupBy(String... entityPropertyNames) {
 		List<Expression<?>> expressions = LangUtils.getStream(entityPropertyNames).map(from::get)
 				.collect(Collectors.toList());

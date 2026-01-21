@@ -57,6 +57,10 @@ public interface SpecificationBuilder<Z, X> {
 	public <Y extends Comparable<? super Y>> SpecificationBuilder<Z, X> range(String requestPropertyName,
 			String entityPropertyName);
 
+	public SpecificationBuilder<Z, X> isNull(String propertyName, String entityPropertyName);
+
+	public SpecificationBuilder<Z, X> isNotNull(String propertyName, String entityPropertyName);
+
 	public SpecificationBuilder<Z, X> groupBy(String... entityPropertyNames);
 
 	public SpecificationBuilder<Z, X> groupBy(Expression<?>... grouping);
