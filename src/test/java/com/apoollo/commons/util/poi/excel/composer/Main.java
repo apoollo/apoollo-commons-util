@@ -15,7 +15,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 
 import com.apoollo.commons.util.LangUtils;
-import com.apoollo.commons.util.poi.excel.ExportUtils;
+import com.apoollo.commons.util.poi.excel.ExcelUtils;
 import com.apoollo.commons.util.poi.excel.model.ListSheet;
 import com.apoollo.commons.util.poi.excel.model.NestedProperties;
 import com.apoollo.commons.util.poi.excel.model.PositionCell;
@@ -37,10 +37,10 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
 
-        ExportUtils.exportExcel(excel1(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\1.xlsx"));
-        ExportUtils.exportExcel(excel2(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\2.xlsx"));
-        ExportUtils.exportExcel(excel3(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\3.xlsx"));
-        ExportUtils.exportExcel(excel4(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\4.xlsx"));
+        ExcelUtils.export(excel1(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\1.xlsx"));
+        ExcelUtils.export(excel2(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\2.xlsx"));
+        ExcelUtils.export(excel3(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\3.xlsx"));
+        ExcelUtils.export(excel4(), new FileOutputStream("C:\\Users\\DELL\\Desktop\\4.xlsx"));
 
     }
 

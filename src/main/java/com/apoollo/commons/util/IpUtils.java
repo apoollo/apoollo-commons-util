@@ -3,13 +3,14 @@
  */
 package com.apoollo.commons.util;
 
-import java.net.Inet6Address;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -41,32 +42,32 @@ public class IpUtils {
 		return LOCAL;
 	}
 
-	private static InetAddress getIPv4() throws SocketException, UnknownHostException {
-		final ArrayList<InetAddress> v4Interfaces = new ArrayList<>();
+	public static List<InetAddress> getIpV4s() throws SocketException {
+		ArrayList<InetAddress> v4Interfaces = new ArrayList<>();
 
 		Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
 		while (enumeration.hasMoreElements()) {
 			NetworkInterface interfaces = enumeration.nextElement();
-			Enumeration<InetAddress> addresses = interfaces.getInetAddresses();
-			while (addresses.hasMoreElements()) {
-				InetAddress address = addresses.nextElement();
-				if (address.isLoopbackAddress()) {
-					continue;
+			if (interfaces.isUp() && !interfaces.isLoopback() && !interfaces.isVirtual()) {
+				Enumeration<InetAddress> addresses = interfaces.getInetAddresses();
+				while (addresses.hasMoreElements()) {
+					InetAddress address = addresses.nextElement();
+					if (!address.isLoopbackAddress() && address instanceof Inet4Address) {
+						v4Interfaces.add(address);
+					}
 				}
-
-				if (address instanceof Inet6Address) {
-					continue;
-				}
-
-				v4Interfaces.add(address);
 			}
 		}
+		return v4Interfaces;
+	}
 
+	private static InetAddress getIPv4() throws SocketException, UnknownHostException {
+
+		List<InetAddress> v4Interfaces = getIpV4s();
 		int v4InterfacesSize = v4Interfaces.size();
 		if (v4InterfacesSize == 0) {
 			return null;
 		}
-
 		for (InetAddress address : v4Interfaces) {
 
 			final String host = address.getHostAddress();
@@ -76,7 +77,6 @@ public class IpUtils {
 			if (host.startsWith("127.0")) {
 				continue;
 			}
-
 			return address;
 		}
 

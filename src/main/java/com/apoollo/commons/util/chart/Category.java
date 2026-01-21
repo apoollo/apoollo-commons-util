@@ -15,16 +15,16 @@ import com.apoollo.commons.util.request.context.core.DefaultCodeName;
 /**
  * @author liuyulong
  */
-public interface CategoryGetter {
+public interface Category {
 
 	public List<CodeName<String, String>> getCategories();
 
 	public default List<CodeName<String, String>> getCategories(
-			List<? extends DataStatistcItemGetter> dataStatistcGetterList) {
+			List<? extends DataStatistcItem> dataStatisticItemList) {
 		List<CodeName<String, String>> codeNames = getCategories();
 		if (null == codeNames) {
 			Map<String, CodeName<String, String>> categoryMap = new HashMap<>();
-			LangUtils.getStream(dataStatistcGetterList).forEach(dataStatistcGetter -> {
+			LangUtils.getStream(dataStatisticItemList).forEach(dataStatistcGetter -> {
 				if (categoryMap.isEmpty() || !categoryMap.containsKey(dataStatistcGetter.getCategoryCode())) {
 					categoryMap.put(dataStatistcGetter.getCategoryCode(), new DefaultCodeName<String, String>(
 							dataStatistcGetter.getCategoryCode(), dataStatistcGetter.getCategoryName()));
