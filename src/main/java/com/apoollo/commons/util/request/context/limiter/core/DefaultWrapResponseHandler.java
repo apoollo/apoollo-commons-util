@@ -40,6 +40,7 @@ import com.apoollo.commons.util.exception.AppAuthenticationKeyPairSecretKeyForbi
 import com.apoollo.commons.util.exception.AppAuthenticationKeyPairTokenIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationTokenIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationUserDisabledException;
+import com.apoollo.commons.util.exception.AppAuthenticationUserPasswordExpiredException;
 import com.apoollo.commons.util.exception.AppAuthorizationForbiddenException;
 import com.apoollo.commons.util.exception.AppClientRequestIdIllegalException;
 import com.apoollo.commons.util.exception.AppCorsLimiterRefusedException;
@@ -58,7 +59,6 @@ import com.apoollo.commons.util.exception.AppRequestResourceNotExistsException;
 import com.apoollo.commons.util.exception.AppServerOverloadedException;
 import com.apoollo.commons.util.exception.AppSignatureLimiterSignatureRefusedException;
 import com.apoollo.commons.util.exception.AppSyncLimiterRefusedException;
-import com.apoollo.commons.util.exception.AppAuthenticationUserPasswordExpiredException;
 import com.apoollo.commons.util.request.context.HttpCodeName;
 import com.apoollo.commons.util.request.context.HttpCodeNameMessage;
 import com.apoollo.commons.util.request.context.RequestContext;

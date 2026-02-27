@@ -22,7 +22,6 @@ import com.apoollo.commons.util.request.context.access.TokenPair;
 import com.apoollo.commons.util.request.context.access.User;
 import com.apoollo.commons.util.request.context.access.UserManager;
 import com.apoollo.commons.util.request.context.model.ServletInputStreamHelper;
-import com.hisign.commons.util.request.context.access.core.AbstractAuthentication;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -33,7 +32,7 @@ import lombok.Setter;
  * liuyulong
  */
 public abstract class AbstractAuthentication<T> implements Authentication<T> {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAuthentication.class);
 
 	protected UserManager userManager;
@@ -58,9 +57,9 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 		if (null == user) {
 			throw new AppAuthenticationAccessKeyIllegalException("Not Logged In : " + accessKey);
 		}
-		
+
 		LOGGER.info("user info :" + JSON.toJSONString(user));
-		
+
 		if (!BooleanUtils.isTrue(user.getEnable())) {
 			throw new AppAuthenticationUserDisabledException("user disabled : " + accessKey);
 		}
