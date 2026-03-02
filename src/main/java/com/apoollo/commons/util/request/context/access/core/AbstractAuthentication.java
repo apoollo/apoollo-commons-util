@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppAuthenticationAccessKeyIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationTokenIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationUserDisabledException;
@@ -58,7 +59,7 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 			throw new AppAuthenticationAccessKeyIllegalException("Not Logged In : " + accessKey);
 		}
 
-		LOGGER.info("user info :" + JSON.toJSONString(user));
+		LOGGER.info("user info :" + LangUtils.toLoggingJsonString(user, new String[] { "secretKey" }));
 
 		if (!BooleanUtils.isTrue(user.getEnable())) {
 			throw new AppAuthenticationUserDisabledException("user disabled : " + accessKey);
