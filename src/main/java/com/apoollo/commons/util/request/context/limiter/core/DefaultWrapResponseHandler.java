@@ -235,13 +235,14 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 				message = response.getMessage();
 				success = response.getSuccess();
 			}
-			responseObject = getResponse(code, name, message, success,
+			responseObject = getResponse(code, name, message, success, requestContext.getClientRequestId(),
 					LangUtils.defaultString(response.getRequestId(), requestContext.getRequestId()),
 					LangUtils.defaultValue(response.getElapsedTime(), requestContext.getElapsedTime()),
 					response.getData());
 		} else {
 			responseObject = getResponse(OK.getCode(), OK.getName(), OK.getMessage(), true,
-					requestContext.getRequestId(), requestContext.getElapsedTime(), object);
+					requestContext.getClientRequestId(), requestContext.getRequestId(), requestContext.getElapsedTime(),
+					object);
 		}
 		return responseObject;
 	}
@@ -268,7 +269,7 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		LOGGER.error(httpCodeNameMessage.getMessage(), ex);
 		Object responseObject = getResponse(httpCodeNameMessage.getCode(), httpCodeNameMessage.getName(),
 				httpCodeNameMessage.getMessage(), OK.getCode().equals(httpCodeNameMessage.getCode()),
-				requestContext.getRequestId(), requestContext.getElapsedTime(),
+				requestContext.getClientRequestId(), requestContext.getRequestId(), requestContext.getElapsedTime(),
 				requestContext.getHintOfExceptionCatchedData());
 
 		writeResponse(response, httpCodeNameMessage.getHttpCode(), responseObject);
@@ -312,14 +313,15 @@ public class DefaultWrapResponseHandler implements WrapResponseHandler {
 		return httpCodeNameMessage;
 	}
 
-	protected Object getResponse(Integer code, String name, String message, Boolean success, String requestId,
-			Long elapsedTime, Object data) {
+	protected Object getResponse(Integer code, String name, String message, Boolean success, String clientRequestId,
+			String requestId, Long elapsedTime, Object data) {
 		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("code", code);
 		responseMap.put("name", name);
 		responseMap.put("message", message);
 		responseMap.put("success", success);
-		responseMap.put("requestId", requestId);
+		responseMap.put("clientRequestId", clientRequestId);
+		responseMap.put("serverResponseId", requestId);
 		responseMap.put("elapsedTime", elapsedTime);
 		responseMap.put("data", data);
 		return responseMap;

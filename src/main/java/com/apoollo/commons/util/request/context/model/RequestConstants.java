@@ -11,7 +11,7 @@ public class RequestConstants {
 
 	public static final String REQUEST_HEADER_REFERER = "referer";
 
-	public static final String REQUEST_HEADER_REQUEST_ID = "request-id";
+	public static final String REQUEST_HEADER_CLIENT_REQUEST_ID = "client-request-id";
 
 	public static final String REQUEST_HEADER_TIMESTAMP = "x-timestamp";
 
