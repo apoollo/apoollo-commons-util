@@ -4,6 +4,7 @@
 package com.apoollo.commons.util.request.context;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author liuyulong
@@ -11,6 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface LoggerWriter {
 
-	public void write(HttpServletRequest request, RequestContext requestContext);
+	public void write(HttpServletRequest request, HttpServletResponse response, RequestContext requestContext);
 
 }

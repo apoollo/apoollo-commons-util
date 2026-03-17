@@ -6,6 +6,7 @@ package com.apoollo.commons.util.request.context;
 import org.springframework.core.Ordered;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author liuyulong
@@ -13,8 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface RequestContextDataBus extends Ordered {
 
-	public void transport(HttpServletRequest request, RequestContext requestContext);
-	
+	public void transport(HttpServletRequest request, HttpServletResponse response, RequestContext requestContext);
+
 	public boolean asyncSupport();
 
 }

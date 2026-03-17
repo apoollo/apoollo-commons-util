@@ -17,6 +17,7 @@ import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.RequestContextDataBus;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author liuyulong
@@ -35,21 +36,21 @@ public class DefaultLoggerWriter implements LoggerWriter {
 	}
 
 	@Override
-	public void write(HttpServletRequest request, RequestContext requestContext) {
+	public void write(HttpServletRequest request, HttpServletResponse response, RequestContext requestContext) {
 		this.requestContextDataBuses.stream().forEach(requestContextDataBus -> {
 			if (requestContextDataBus.asyncSupport()) {
 
 				CompletableFuture.runAsync(() -> {
 					MdcUtils.addAll(requestContext.getRequestId());
-					requestContextDataBus.transport(request, requestContext);
-				}).whenComplete((response, throwable) -> {
+					requestContextDataBus.transport(request, response, requestContext);
+				}).whenComplete((asyncResponse, throwable) -> {
 					MdcUtils.releaseAll();
 					if (null != throwable) {
 						LOGGER.error("AsyncRequestContextDataBus transport error:", throwable);
 					}
 				});
 			} else {
-				requestContextDataBus.transport(request, requestContext);
+				requestContextDataBus.transport(request, response, requestContext);
 			}
 		});
 
