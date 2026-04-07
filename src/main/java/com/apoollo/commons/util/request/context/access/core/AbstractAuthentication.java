@@ -3,6 +3,7 @@
  */
 package com.apoollo.commons.util.request.context.access.core;
 
+import java.util.List;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -17,6 +18,8 @@ import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppAuthenticationAccessKeyIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationTokenIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationUserDisabledException;
+import com.apoollo.commons.util.model.MaskProperty;
+import com.apoollo.commons.util.model.MaskProperty.TriggerModel;
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.access.Authentication;
 import com.apoollo.commons.util.request.context.access.TokenPair;
@@ -59,7 +62,8 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 			throw new AppAuthenticationAccessKeyIllegalException("Not Logged In : " + accessKey);
 		}
 
-		LOGGER.info("user info :" + LangUtils.toLoggingJsonString(user, new String[] { "secretKey" }));
+		LOGGER.info("userInfo :" + LangUtils.toLoggingJsonString(user,
+				List.of(new MaskProperty("secretKey", TriggerModel.IMMEDIATE_MASK))));
 
 		if (!BooleanUtils.isTrue(user.getEnable())) {
 			throw new AppAuthenticationUserDisabledException("user disabled : " + accessKey);
