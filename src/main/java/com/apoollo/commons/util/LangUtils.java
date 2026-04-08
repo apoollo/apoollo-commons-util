@@ -427,4 +427,14 @@ public class LangUtils {
 		return map;
 	}
 
+	public static String truncateString(String input, int maxLen, Function<String, String> function) {
+		if (maxLen <= 0 || null == input || input.length() <= maxLen) {
+			return input;
+		}
+		return function.apply(input.substring(0, maxLen));
+	}
+
+	public static String truncateString(String input, int maxLen) {
+		return truncateString(input, maxLen, substring -> substring + "...");
+	}
 }
