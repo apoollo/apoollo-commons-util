@@ -6,7 +6,7 @@ package com.apoollo.commons.util.model;
 /**
  * liuyulong
  */
-public interface Function3<ONE, TWO, THREE, R> {
+public interface Function3<P1, P2, P3, R> {
 
-	R apply(ONE one, TWO two, THREE three);
+	R apply(P1 p1, P2 p2, P3 p3);
 }

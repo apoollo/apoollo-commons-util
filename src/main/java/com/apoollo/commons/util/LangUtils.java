@@ -3,7 +3,6 @@
  */
 package com.apoollo.commons.util;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -30,11 +29,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONWriter;
-import com.alibaba.fastjson2.filter.Filter;
-import com.alibaba.fastjson2.filter.ValueFilter;
-import com.apoollo.commons.util.model.MaskProperty;
-import com.apoollo.commons.util.model.MaskProperty.TriggerModel;
 import com.apoollo.commons.util.model.MinMax;
 import com.apoollo.commons.util.model.OneTwo;
 import com.apoollo.commons.util.model.Processor;
@@ -272,54 +266,6 @@ public class LangUtils {
 
 	public static String toString(Object object) {
 		return null == object ? null : object.toString();
-	}
-
-	public static String toLoggingJsonString(Object object, List<MaskProperty> maskProperties) {
-		return toJsonString(object, getMaskValueFilter(maskProperties), JSONWriter.Feature.WriteMapNullValue);
-	}
-
-	public static String toJsonString(Object object, Filter filter, JSONWriter.Feature... features) {
-		String ret = null;
-		if (object instanceof String) {
-			ret = (String) object;
-		} else {
-			ret = JSON.toJSONString(object, filter, features);
-		}
-		return ret;
-	}
-
-	public static ValueFilter getMaskValueFilter(List<MaskProperty> maskProperties) {
-		ValueFilter valueFilter = null;
-		if (null != maskProperties && !maskProperties.isEmpty()) {
-			valueFilter = (Object object, String name, Object value) -> {
-				Object targetValue = value;
-				if (value instanceof Serializable) {
-					targetValue = maskProperties.stream()//
-							.filter(Objects::nonNull)//
-							.filter(property -> StringUtils.equals(property.getTriggerPropertyName(), name))//
-							.map(property -> {
-								Object mask = null;
-								if (TriggerModel.IMMEDIATE_MASK == property.getTriggerModel()) {
-									mask = "***";
-								} else if (TriggerModel.MASK_BY_LENGTH == property.getTriggerModel()) {
-									String stringValue = value.toString();
-									int diff = stringValue.length() - property.getPropertyValueLimitLength();
-									if (diff > 0) {
-										mask = stringValue.substring(0, property.getPropertyValueLimitLength()) + "***";
-									}
-								} else {
-									mask = "***";
-								}
-								return mask;
-							})//
-							.findAny()//
-							.orElse(value);
-
-				}
-				return targetValue;
-			};
-		}
-		return valueFilter;
 	}
 
 	public static Integer toInteger(Object value) {

@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.apoollo.commons.util.LangUtils;
 import com.apoollo.commons.util.exception.AppAuthenticationAccessKeyIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationTokenIllegalException;
 import com.apoollo.commons.util.exception.AppAuthenticationUserDisabledException;
-import com.apoollo.commons.util.model.MaskProperty;
-import com.apoollo.commons.util.model.MaskProperty.TriggerModel;
+import com.apoollo.commons.util.json.JSONUtils;
+import com.apoollo.commons.util.json.MaskProperty;
+import com.apoollo.commons.util.json.TriggerModel;
 import com.apoollo.commons.util.request.context.RequestContext;
 import com.apoollo.commons.util.request.context.access.Authentication;
 import com.apoollo.commons.util.request.context.access.TokenPair;
@@ -62,8 +62,8 @@ public abstract class AbstractAuthentication<T> implements Authentication<T> {
 			throw new AppAuthenticationAccessKeyIllegalException("Not Logged In : " + accessKey);
 		}
 
-		LOGGER.info("userInfo :" + LangUtils.toLoggingJsonString(user,
-				List.of(new MaskProperty("secretKey", TriggerModel.IMMEDIATE_MASK))));
+		LOGGER.info("userInfo :" + JSONUtils.toJsonMaskString(user,
+				List.of(new MaskProperty("secretKey", null, TriggerModel.IMMEDIATE_MASK, null, null))));
 
 		if (!BooleanUtils.isTrue(user.getEnable())) {
 			throw new AppAuthenticationUserDisabledException("user disabled : " + accessKey);

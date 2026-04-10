@@ -6,7 +6,7 @@ package com.apoollo.commons.util.model;
 /**
  * @author liuyulong
  */
-public interface Consumer3<ONE, TWO, THREE> {
+public interface Consumer3<P1, P2, P3> {
 
-    void accept(ONE one, TWO two, THREE three);
+	void accept(P1 p1, P2 p2, P3 p3);
 }
