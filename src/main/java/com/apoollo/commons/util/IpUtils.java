@@ -137,4 +137,24 @@ public class IpUtils {
 		return ret;
 	}
 
+	public static long ipv4AddressToLong(String ip) {
+		return Integer.toUnsignedLong(ipv4AddressToInt(ip));
+	}
+
+	public static int ipv4AddressToInt(String ip) {
+		try {
+			Inet4Address inetAddress = (Inet4Address) Inet4Address.getByName(ip);
+			return ipv4AddressToInt(inetAddress);
+		} catch (UnknownHostException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static int ipv4AddressToInt(Inet4Address ipAddress) {
+		byte[] octets = ipAddress.getAddress();
+		return (octets[0] & 0xff) << 24 | //
+				(octets[1] & 0xff) << 16 | //
+				(octets[2] & 0xff) << 8 | //
+				octets[3] & 0xff;
+	}
 }
